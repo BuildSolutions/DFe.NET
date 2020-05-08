@@ -59,7 +59,7 @@ namespace NFe.AppTeste
             EnderecoEmitente = new enderEmit();
             ConfiguracaoEmail = new ConfiguracaoEmail("email@dominio.com", "senha", "Envio de NFE", Resources.MensagemHtml, "smtp.dominio.com", 587, true, true);
             ConfiguracaoCsc = new ConfiguracaoCsc("000001", "");
-            ConfiguracaoDanfeNfce = new ConfiguracaoDanfeNfce(NfceDetalheVendaNormal.UmaLinha, NfceDetalheVendaContigencia.UmaLinha);
+            ConfiguracaoDanfeNfce = new ConfiguracaoDanfeNfce(NfceDetalheVendaNormal.UmaLinha, NfceDetalheVendaContigencia.UmaLinha, documentoCancelado: true);
         }
 
         public ConfiguracaoServico CfgServico

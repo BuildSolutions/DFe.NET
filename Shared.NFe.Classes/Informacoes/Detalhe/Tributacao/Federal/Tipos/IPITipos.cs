@@ -55,71 +55,71 @@ namespace NFe.Classes.Informacoes.Detalhe.Tributacao.Federal.Tipos
         /// <summary>
         /// 00 - Entrada com recuperação de crédito
         /// </summary>
-        [XmlEnum("00")] ipi00,
+        [XmlEnum("00")] ipi00 = 00,
 
         /// <summary>
         /// 49 - Outras entradas
         /// </summary>
-        [XmlEnum("49")] ipi49,
+        [XmlEnum("49")] ipi49 = 49,
 
         /// <summary>
         /// 50 - Saída tributada
         /// </summary>
-        [XmlEnum("50")] ipi50,
+        [XmlEnum("50")] ipi50 = 50,
 
         /// <summary>
         /// 99 - Outras saídas
         /// </summary>
-        [XmlEnum("99")] ipi99,
+        [XmlEnum("99")] ipi99 = 99,
 
         /// <summary>
         /// 01 - Entrada tributada com alíquota zero
         /// </summary>
-        [XmlEnum("01")] ipi01,
+        [XmlEnum("01")] ipi01 = 01,
 
         /// <summary>
         /// 02 - Entrada isenta
         /// </summary>
-        [XmlEnum("02")] ipi02,
+        [XmlEnum("02")] ipi02 = 02,
 
         /// <summary>
         /// 03 - Entrada não-tributada
         /// </summary>
-        [XmlEnum("03")] ipi03,
+        [XmlEnum("03")] ipi03 = 03,
 
         /// <summary>
         /// 04 - Entrada imune
         /// </summary>
-        [XmlEnum("04")] ipi04,
+        [XmlEnum("04")] ipi04 = 04,
 
         /// <summary>
         /// 05 - Entrada com suspensão
         /// </summary>
-        [XmlEnum("05")] ipi05,
+        [XmlEnum("05")] ipi05 = 05,
 
         /// <summary>
         /// 51 - Saída tributada com alíquota zero
         /// </summary>
-        [XmlEnum("51")] ipi51,
+        [XmlEnum("51")] ipi51 = 51,
 
         /// <summary>
         /// 52 - Saída isenta
         /// </summary>
-        [XmlEnum("52")] ipi52,
+        [XmlEnum("52")] ipi52 = 52,
 
         /// <summary>
         /// 53 - Saída não-tributada
         /// </summary>
-        [XmlEnum("53")] ipi53,
+        [XmlEnum("53")] ipi53 = 53,
 
         /// <summary>
         /// 54 - Saída imune
         /// </summary>
-        [XmlEnum("54")] ipi54,
+        [XmlEnum("54")] ipi54 = 54,
 
         /// <summary>
         /// 55 - Saída com suspensão
         /// </summary>
-        [XmlEnum("55")] ipi55
+        [XmlEnum("55")] ipi55 = 55
     }
 }

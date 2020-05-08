@@ -118,12 +118,12 @@ namespace NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.Tipos
         /// <summary>
         /// 00 - Tributada integralmente
         /// </summary>
-        [XmlEnum("00")] Cst00,
+        [XmlEnum("00")] Cst00 = 0,
 
         /// <summary>
         /// 10 - Tributada e com cobrança do ICMS por substituição tributária
         /// </summary>
-        [XmlEnum("10")] Cst10,
+        [XmlEnum("10")] Cst10 = 10,
 
         /// <summary>
         /// 10 - Tributada e com cobrança do ICMS por substituição tributária
@@ -133,22 +133,22 @@ namespace NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.Tipos
         /// <summary>
         /// 20 - Com redução de base de cálculo
         /// </summary>
-        [XmlEnum("20")] Cst20,
+        [XmlEnum("20")] Cst20 = 20,
 
         /// <summary>
         /// 30 - Isenta ou não tributada e com cobrança do ICMS por substituição tributária
         /// </summary>
-        [XmlEnum("30")] Cst30,
+        [XmlEnum("30")] Cst30 = 30,
 
         /// <summary>
         /// 40 - Isenta
         /// </summary>
-        [XmlEnum("40")] Cst40,
+        [XmlEnum("40")] Cst40 = 40,
 
         /// <summary>
         /// 41 - Não tributada
         /// </summary>
-        [XmlEnum("41")] Cst41,
+        [XmlEnum("41")] Cst41 = 41,
 
         /// <summary>
         /// 41 - Não tributada
@@ -158,27 +158,27 @@ namespace NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.Tipos
         /// <summary>
         /// 50 - Suspensão
         /// </summary>
-        [XmlEnum("50")] Cst50,
+        [XmlEnum("50")] Cst50 = 50,
 
         /// <summary>
         /// 51 - Diferimento
         /// </summary>
-        [XmlEnum("51")] Cst51,
+        [XmlEnum("51")] Cst51 = 51,
 
         /// <summary>
         /// 60 - ICMS cobrado anteriormente por substituição tributária
         /// </summary>
-        [XmlEnum("60")] Cst60,
+        [XmlEnum("60")] Cst60 = 60,
 
         /// <summary>
         /// 70 - Com redução de base de cálculo e cobrança do ICMS por substituição tributária
         /// </summary>
-        [XmlEnum("70")] Cst70,
+        [XmlEnum("70")] Cst70 = 70,
 
         /// <summary>
         /// 90 - Outras
         /// </summary>
-        [XmlEnum("90")] Cst90,
+        [XmlEnum("90")] Cst90 = 90,
 
         /// <summary>
         /// 90 - Outras

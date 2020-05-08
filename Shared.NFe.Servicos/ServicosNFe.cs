@@ -110,13 +110,45 @@ namespace NFe.Servicos
 
         private string SalvarArquivoXml(string nomeArquivo, string xmlString)
         {
+            //if (!_cFgServico.SalvarXmlServicos) return null;
+            //var dir = string.IsNullOrEmpty(_cFgServico.DiretorioSalvarXml) ? _path : _cFgServico.DiretorioSalvarXml;
+            //var filename = Path.Combine(dir, nomeArquivo);
+            //var stw = new StreamWriter(filename);
+            //stw.WriteLine(xmlString);
+            //stw.Close();
+            //return filename;
+
             if (!_cFgServico.SalvarXmlServicos) return null;
-            var dir = string.IsNullOrEmpty(_cFgServico.DiretorioSalvarXml) ? _path : _cFgServico.DiretorioSalvarXml;
-            var filename = Path.Combine(dir, nomeArquivo);
-            var stw = new StreamWriter(filename);
-            stw.WriteLine(xmlString);
-            stw.Close();
-            return filename;
+
+            return PathHelper.SalvarArquivoXML(_cFgServico, EFolderType.LOTES, nomeArquivo, DateTime.Now, xmlString);
+
+            //var dir = string.IsNullOrEmpty(_cFgServico.DiretorioSalvarXml) ? _path : _cFgServico.DiretorioSalvarXml;
+
+            //var data = DateTime.Now;
+            //var strFolderYear = data.ToString("yyyy");
+            //var strFolderMonth = data.ToString("MM_yyyy");
+
+            //var fileName = Path.Combine(dir, "lotes", strFolderYear, strFolderMonth, nomeArquivo);
+            ////if (nomeArquivo.EndsWith("-procEventoNFe.xml") || nomeArquivo.EndsWith("-proc-inu.xml"))
+            ////    fileName = Path.Combine(dir, "processados", strFolderYear, strFolderMonth, nomeArquivo);
+
+            //var directoryName = Path.GetDirectoryName(fileName);
+
+            //try
+            //{
+            //    if (!Directory.Exists(directoryName))
+            //        Directory.CreateDirectory(directoryName);
+            //}
+            //catch
+            //{
+            //    throw;
+            //}
+
+            //var stw = new StreamWriter(fileName);
+            //stw.WriteLine(xmlString);
+            //stw.Close();
+
+            //return fileName;
         }
 
         private INfeServicoAutorizacao CriarServicoAutorizacao(ServicoNFe servico, bool compactarMensagem)

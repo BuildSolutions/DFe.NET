@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.352
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1062
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFe.Classes", "NFe.Classes\NFe.Classes.csproj", "{29CA1DA2-440D-484B-951A-CF1B2EB27984}"
 EndProject
@@ -150,7 +150,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NFe.Danfe.Fast.Standard", "
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared.NFe.Danfe.Fast", "Shared.NFe.Danfe.Fast\Shared.NFe.Danfe.Fast.shproj", "{5794AB8A-FF29-4F55-ABC2-9AAFE333BD27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFe.Danfe.AppTeste.NetCore", "NFe.Danfe.AppTeste.NetCore\NFe.Danfe.AppTeste.NetCore.csproj", "{0999204F-594C-4996-88A2-93D015EBDE33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NFe.Danfe.AppTeste.NetCore", "NFe.Danfe.AppTeste.NetCore\NFe.Danfe.AppTeste.NetCore.csproj", "{0999204F-594C-4996-88A2-93D015EBDE33}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared.NFe.BLL", "Shared.NFe.BLL\Shared.NFe.BLL.shproj", "{F839EDF0-3BF9-4F09-80CB-22DA68E8D0F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFe.BLL", "NFe.BLL\NFe.BLL.csproj", "{55F27E3F-5CBC-483A-8406-EB311F411D30}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NFe.BLL.Standard", "NFe.BLL.Standard\NFe.BLL.Standard.csproj", "{AE3DC013-357D-4803-9482-DC956DBC6ECE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFe.BLL.Testes", "NFe.BLL.Testes\NFe.BLL.Testes.csproj", "{A98E6AB9-FED7-4468-8A32-B05999AC95CA}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -160,6 +168,7 @@ Global
 		Shared.NFe.Classes\Shared.NFe.Classes.projitems*{29ca1da2-440d-484b-951a-cf1b2eb27984}*SharedItemsImports = 4
 		Shared.DFe.Classes\Shared.DFe.Classes.projitems*{3108968d-d505-4365-966f-bbe3cbf63c35}*SharedItemsImports = 13
 		Shared.NFe.Classes\Shared.NFe.Classes.projitems*{4cc78350-9e01-465a-ac60-e31a53cefe24}*SharedItemsImports = 13
+		Shared.NFe.BLL\Shared.NFe.BLL.projitems*{55f27e3f-5cbc-483a-8406-eb311f411d30}*SharedItemsImports = 4
 		Shared.NFe.Servicos\Shared.NFe.Servicos.projitems*{57631341-c61b-49c6-a6ed-317ec42b1581}*SharedItemsImports = 13
 		Shared.NFe.Danfe.Fast\Shared.NFe.Danfe.Fast.projitems*{5794ab8a-ff29-4f55-abc2-9aafe333bd27}*SharedItemsImports = 13
 		Shared.CTe.Servicos\Shared.CTe.Servicos.projitems*{63227402-2b1e-4bc7-a6df-362129923cf6}*SharedItemsImports = 4
@@ -180,6 +189,7 @@ Global
 		Shared.NFe.Utils\Shared.NFe.Utils.projitems*{e35e7c4a-5690-4979-8b43-002975b48eaa}*SharedItemsImports = 4
 		Shared.NFe.Utils\Shared.NFe.Utils.projitems*{e7a4800f-b2ed-4495-b847-c4bf5654e24e}*SharedItemsImports = 13
 		Shared.CTe.Wsdl\Shared.CTe.Wsdl.projitems*{eda9f90e-7e03-4869-b341-e56071f70e06}*SharedItemsImports = 13
+		Shared.NFe.BLL\Shared.NFe.BLL.projitems*{f839edf0-3bf9-4f09-80cb-22da68e8d0f2}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -580,6 +590,30 @@ Global
 		{0999204F-594C-4996-88A2-93D015EBDE33}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0999204F-594C-4996-88A2-93D015EBDE33}.Release|x86.ActiveCfg = Release|Any CPU
 		{0999204F-594C-4996-88A2-93D015EBDE33}.Release|x86.Build.0 = Release|Any CPU
+		{55F27E3F-5CBC-483A-8406-EB311F411D30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55F27E3F-5CBC-483A-8406-EB311F411D30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55F27E3F-5CBC-483A-8406-EB311F411D30}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{55F27E3F-5CBC-483A-8406-EB311F411D30}.Debug|x86.Build.0 = Debug|Any CPU
+		{55F27E3F-5CBC-483A-8406-EB311F411D30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55F27E3F-5CBC-483A-8406-EB311F411D30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55F27E3F-5CBC-483A-8406-EB311F411D30}.Release|x86.ActiveCfg = Release|Any CPU
+		{55F27E3F-5CBC-483A-8406-EB311F411D30}.Release|x86.Build.0 = Release|Any CPU
+		{AE3DC013-357D-4803-9482-DC956DBC6ECE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE3DC013-357D-4803-9482-DC956DBC6ECE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE3DC013-357D-4803-9482-DC956DBC6ECE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AE3DC013-357D-4803-9482-DC956DBC6ECE}.Debug|x86.Build.0 = Debug|Any CPU
+		{AE3DC013-357D-4803-9482-DC956DBC6ECE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE3DC013-357D-4803-9482-DC956DBC6ECE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE3DC013-357D-4803-9482-DC956DBC6ECE}.Release|x86.ActiveCfg = Release|Any CPU
+		{AE3DC013-357D-4803-9482-DC956DBC6ECE}.Release|x86.Build.0 = Release|Any CPU
+		{A98E6AB9-FED7-4468-8A32-B05999AC95CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A98E6AB9-FED7-4468-8A32-B05999AC95CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A98E6AB9-FED7-4468-8A32-B05999AC95CA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A98E6AB9-FED7-4468-8A32-B05999AC95CA}.Debug|x86.Build.0 = Debug|Any CPU
+		{A98E6AB9-FED7-4468-8A32-B05999AC95CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A98E6AB9-FED7-4468-8A32-B05999AC95CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A98E6AB9-FED7-4468-8A32-B05999AC95CA}.Release|x86.ActiveCfg = Release|Any CPU
+		{A98E6AB9-FED7-4468-8A32-B05999AC95CA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -642,6 +676,10 @@ Global
 		{637870E1-DF27-43CD-B771-3685E3D0BE01} = {003B008B-F388-4FB5-A081-12C0FBA84B57}
 		{5794AB8A-FF29-4F55-ABC2-9AAFE333BD27} = {F367DB7F-2170-48C6-9966-D6F9DF1808DB}
 		{0999204F-594C-4996-88A2-93D015EBDE33} = {3AC1A3D4-91D0-471A-AF9C-5EF8442F3F27}
+		{F839EDF0-3BF9-4F09-80CB-22DA68E8D0F2} = {A802BD59-CC36-4CB1-95B1-64CD72E1DC0C}
+		{55F27E3F-5CBC-483A-8406-EB311F411D30} = {F981A8AC-E660-492B-8BF3-CBF70B66E392}
+		{AE3DC013-357D-4803-9482-DC956DBC6ECE} = {F981A8AC-E660-492B-8BF3-CBF70B66E392}
+		{A98E6AB9-FED7-4468-8A32-B05999AC95CA} = {164EF13E-7F27-4BC8-92A4-A82B1696B279}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C8C4D9F7-EF86-49A2-83AF-13FA5D4E8DBB}
