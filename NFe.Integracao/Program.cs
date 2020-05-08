@@ -39,8 +39,13 @@
 
 using System;
 using System.IO;
+using NFe.BLL.Configuracao.Entidades;
+using NFe.BLL.Configuracao.ValueObjects;
+using NFe.BLL.Validators;
+// using NFe.BLL.Configuracao.Entidades;
 using NFe.Classes.Servicos.ConsultaCadastro;
 using NFe.Integracao.Enums;
+using DFe.Utils.Extensoes;
 
 namespace NFe.Integracao
 {
@@ -49,6 +54,57 @@ namespace NFe.Integracao
 
         public static void Main(string[] args)
         {
+            Enum.TryParse("99", out NFe.Classes.Informacoes.Detalhe.Tributacao.Federal.Tipos.CSTPIS cstPIS);
+            Enum.TryParse("99", out NFe.Classes.Informacoes.Detalhe.Tributacao.Federal.Tipos.CSTCOFINS cstCOFINS);
+            Enum.TryParse("99", out NFe.Classes.Informacoes.Detalhe.Tributacao.Federal.Tipos.CSTIPI cstIPI);
+
+            DFe.Classes.Entidades.Estado? teste = ((DFe.Classes.Entidades.Estado)88);
+            var teste1 = teste.NuloSeInvalido();
+            teste = null;
+            var teste2 = teste.NuloSeInvalido();
+            teste = ((DFe.Classes.Entidades.Estado)12);
+            var teste3 = teste.NuloSeInvalido();
+            teste = ((DFe.Classes.Entidades.Estado)99);
+            var teste7 = teste.NuloSeInvalido();
+
+            DFe.Classes.Entidades.Estado iteste = ((DFe.Classes.Entidades.Estado)88);
+            var iteste1 = iteste.NuloSeInvalido();
+            teste = null;
+            var iteste2 = iteste.NuloSeInvalido();
+            teste = ((DFe.Classes.Entidades.Estado)12);
+            var iteste3 = iteste.NuloSeInvalido();
+            teste = ((DFe.Classes.Entidades.Estado)99);
+            var iteste7 = iteste.NuloSeInvalido();
+
+
+            //NFe.BLL.Configuracao.Entidades.Duplicata dup = new NFe.BLL.Configuracao.Entidades.Duplicata(null, new DateTime(2021, 01, 01), 5552);
+
+            //var validator = new DuplicataValidator(5552);
+
+            //var teste = validator.Validate(dup);
+            var certificado = new DFe.Utils.ConfiguracaoCertificado();
+            //certificado.Serial = "sdsdsd";
+            var endereco = new Endereco("13920000", "Rua ", null, null, "bairro", 1234567, "sssdsds", DFe.Classes.Entidades.Estado.SP);
+            Pessoa dup = new Pessoa( BLL.Enums.ETipoPessoa.Fisica,
+                "TESTE", "AAAAA", null, "41833177894", "125");
+            var destinatario = new Destinatario(dup, true, false, null, Classes.Informacoes.Identificacao.Tipos.ConsumidorFinal.cfConsumidorFinal);
+            var nfe = new NotaFiscal(0, 0, 0, Classes.Informacoes.Identificacao.Tipos.TipoNFe.tnEntrada,
+                null, DateTime.Now, DateTime.Now, Classes.Informacoes.Identificacao.Tipos.FinalidadeNFe.fnNormal,
+                null, destinatario, null, null, null, null, null, null, Classes.Informacoes.Identificacao.Tipos.PresencaComprador.pcNao,
+                null);
+            var validator = new DestinatarioValidator();
+
+            var teste4 = validator.Validate(destinatario);
+
+            if (teste4.IsValid)
+            {
+
+            }
+            else
+            {
+
+            }
+
             //Uncomment for debug
             //args = new[] { "consultarCadastro","BA","00000000000" };
             //args = new[] { "recibo","00000000000","","" };

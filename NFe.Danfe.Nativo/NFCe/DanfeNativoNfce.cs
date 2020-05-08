@@ -405,6 +405,12 @@ namespace NFe.Danfe.Nativo.NFCe
                     }
             }
 
+            if(_nfe.infNFe.pag?[0].detPag != null)
+            {
+                _totalPago = _nfe.infNFe.pag[0].detPag.Sum(t => t.vPag);
+                _troco = _totalPago - valorTotal;
+            }
+
             _y += 2;
 
             if (_troco > 0)

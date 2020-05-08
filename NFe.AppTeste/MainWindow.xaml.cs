@@ -1725,7 +1725,7 @@ namespace NFe.AppTeste
                     _configuracoes.ConfiguracaoDanfeNfce,
                     _configuracoes.ConfiguracaoCsc.CIdToken,
                     _configuracoes.ConfiguracaoCsc.Csc,
-                    0 /*troco*//*, "Arial Black"*/);
+                    30, 50, viaEstabelecimento: true /*troco*//*, "Arial Black"*/);
 
                 SaveFileDialog fileDialog = new SaveFileDialog();
 
@@ -1736,7 +1736,7 @@ namespace NFe.AppTeste
 
 
 
-                //impr.Imprimir(salvarArquivoPdfEm: fileDialog.FileName.Replace(".pdf", "") + ".pdf");
+                impr.Imprimir("EPSON TM-T20 Receipt5");
                 impr.GerarJPEG(fileDialog.FileName.Replace(".jpeg", "") + ".jpeg");
 
             }

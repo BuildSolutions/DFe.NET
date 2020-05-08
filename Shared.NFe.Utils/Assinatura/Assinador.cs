@@ -131,7 +131,50 @@ namespace NFe.Utils.Assinatura
                 //if (!manterDadosEmCache & certificadoDigital == null)
                 //     certificadoDigital.Reset();
             }
-
         }
+
+        public static bool IsPinCertificadoValido<T>(T objeto, ConfiguracaoCertificado certificado) where T : class
+        {
+            try
+            {
+                var certificadoDigital = CertificadoDigital.ObterCertificado(certificado);
+                var documento = new XmlDocument { PreserveWhitespace = true };
+
+                documento.LoadXml(FuncoesXml.ClasseParaXmlString(objeto));
+
+                var docXml = new SignedXml(documento) { SigningKey = certificadoDigital.PrivateKey };
+
+                //docXml.SignedInfo.SignatureMethod = signatureMethod;
+
+                var reference = new Reference { Uri = "" };
+
+                // adicionando EnvelopedSignatureTransform a referencia
+                var envelopedSigntature = new XmlDsigEnvelopedSignatureTransform();
+                reference.AddTransform(envelopedSigntature);
+
+                var c14Transform = new XmlDsigC14NTransform();
+                reference.AddTransform(c14Transform);
+
+                docXml.AddReference(reference);
+
+                // carrega o certificado em KeyInfoX509Data para adicionar a KeyInfo
+                var keyInfo = new KeyInfo();
+                keyInfo.AddClause(new KeyInfoX509Data(certificadoDigital));
+
+                docXml.KeyInfo = keyInfo;
+                docXml.ComputeSignature();
+
+                return true;
+            }
+            finally
+            {
+                //Marcos Gerene 04/08/2018 - o objeto certificadoDigital nunca será nulo, porque se ele for nulo nem as configs para criar ele teria.
+
+                //Se não mantém os dados do certificado em cache libera o certificado, chamando o método reset.
+                //if (!manterDadosEmCache & certificadoDigital == null)
+                //     certificadoDigital.Reset();
+            }
+        }
+
     }
 }

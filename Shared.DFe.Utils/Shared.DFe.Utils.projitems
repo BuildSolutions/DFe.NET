@@ -16,6 +16,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)DataHora.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataHoraOffSet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EnumExt.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensoes\DecimalExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensoes\EnumExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensoes\StringExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FuncoesXml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Reflexao.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringExtencoes.cs" />

@@ -52,4 +52,16 @@ namespace NFe.Utils
         [Description("Versão 2.0 do QR-Code")]
         QrCodeVersao2 = 2
     }
+
+    public enum EFolderType
+    {
+        AUTORIZADA,
+        INUTILIZADA,
+        CANCELADA,
+        DENEGADA,
+        TEMP,
+        GERADOS,
+        CARTACORRECAO,
+        LOTES
+    }
 }

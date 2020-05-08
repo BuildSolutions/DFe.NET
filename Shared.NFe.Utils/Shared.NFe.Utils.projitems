@@ -44,6 +44,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)NfeSituacao.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NFe\ExtNFe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NFe\ExtNfeProc.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PathHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Recepcao\ExtconsReciNFe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Recepcao\ExtenviNFe2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Recepcao\ExtretConsReciNFe.cs" />

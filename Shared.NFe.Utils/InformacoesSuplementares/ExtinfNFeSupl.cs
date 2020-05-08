@@ -383,7 +383,7 @@ namespace NFe.Utils.InformacoesSuplementares
 
         /// <summary>
         ///     Obtém a URL para montagem do QR-Code
-        /// </summary>
+        /// </summary>k
         public static string ObterUrlQrCode(this infNFeSupl infNFeSupl, Classes.NFe nfe, VersaoQrCode versaoQrCode, string cIdToken, string csc)
         {
             Func<string, string> msgErro = parametro => $"O {parametro} não foi informado!";

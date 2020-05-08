@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>f839edf0-3bf9-4f09-80cb-22da68e8d0f2</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Shared.NFe.BLL</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ConfiguracaoApp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConfiguracaoNFCe.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConfiguracaoNFe.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\ConfiguracaoCsc.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Pagamento.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DadosNFe.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enums\EDocumentoReferenciado.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\DadosCombustivel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\DeclaracaoImportacao.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Destinatario.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enums\EFolderType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\DocumentoReferenciado.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\DocumentoReferenciadoECF.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\DocumentoReferenciadoNF.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Duplicata.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Emitente.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\DocumentoReferenciadoNFe.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Impostos\COFINS.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enums\ECstIcms40.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enums\EIcms102.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Impostos\ICMS\ICMS.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Impostos\ICMS\ICMS00.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Impostos\ICMS\ICMS10.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Impostos\ICMS\ICMSSN101.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Impostos\ICMS\ICMS20.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Impostos\ICMS\ICMS30.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Impostos\ICMS\ICMS40.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Impostos\ICMS\ICMS51.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Impostos\ICMS\ICMS60.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Impostos\ICMS\ICMS70.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Impostos\ICMS\ICMS90.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Impostos\ICMS\ICMSSN102.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Impostos\ICMS\ICMSSN201.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Impostos\ICMS\ICMSSN202.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Impostos\ICMS\ICMSSN500.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Impostos\ICMS\ICMSSN900.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Impostos\Imposto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Impostos\ImpostoImportacao.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Impostos\IPI.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Impostos\PartilhaICMS.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Impostos\PIS.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Impostos\TributosIBPT.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Produto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Totalizador.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enums\EPessoa.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enums\ETipoPessoa.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\NotaFiscal.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Transporte.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\ValueObjects\Pessoa.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\ValueObjects\Endereco.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OperacoesNFe.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\ConfiguracaoCscValidator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\ConfiguracaoServicoValidator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\DadosTransporteValidator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\DestinatarioValidator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\DuplicataValidator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\EmitenteValidator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\EnderecoValidator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\NotaFiscalValidator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\PagamentoValidator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\PessoaValidator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\Produtos\Impostos\COFINSValidator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\Produtos\Impostos\ICMS\ICMS00Validator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\Produtos\Impostos\ICMS\ICMS10Validator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\Produtos\Impostos\ICMS\ICMS20Validator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\Produtos\Impostos\ICMS\ICMS30Validator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\Produtos\Impostos\ICMS\ICMS70Validator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\Produtos\Impostos\ICMS\ICMS90Validator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\Produtos\Impostos\ICMS\ICMSSN101Validator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\Produtos\Impostos\ICMS\ICMSSN201Validator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\Produtos\Impostos\ICMS\ICMSSN202Validator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\Produtos\Impostos\ImpostoValidator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\Produtos\Impostos\IPIValidator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\Produtos\Impostos\PISValidator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\Produtos\ProdutoValidator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\TotalizadorValidator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Operacoes\" />
+  </ItemGroup>
+</Project>
