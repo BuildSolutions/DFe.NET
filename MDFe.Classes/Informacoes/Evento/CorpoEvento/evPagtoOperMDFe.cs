@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace MDFe.Classes.Informacoes.Evento.CorpoEvento
 {
@@ -17,14 +18,31 @@ namespace MDFe.Classes.Informacoes.Evento.CorpoEvento
 
         public infViagens infViagens { get; set; }
 
+        [XmlElement(ElementName = "infPag")]
         public List<infPag> infPag { get; set; }
     }
 
     [Serializable]
     public class infViagens
     {
+        [XmlIgnore]
         public int qtdViagens { get; set; }
 
-        public int nroViagens { get; set; }
+        [XmlElement("qtdViagens")]
+        public string qtdViagensProxy
+        {
+            get { return qtdViagens.ToString("D5"); }
+            set { qtdViagens = int.Parse(value); }
+        }
+
+        [XmlIgnore]
+        public int nroViagem { get; set; }
+
+        [XmlElement("nroViagem")]
+        public string nroViagemProxy
+        {
+            get { return nroViagem.ToString("D5"); }
+            set { nroViagem = int.Parse(value); }
+        }
     }
 }
