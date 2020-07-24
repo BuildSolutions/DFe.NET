@@ -13,6 +13,12 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
             Origem = origem;
         }
 
+        public ICMS51(NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMS51 icms)
+        {
+            CST = Csticms.Cst51;
+            Origem = icms.orig;
+        }
+
         //public ICMS51(OrigemMercadoria origem,
         //    DeterminacaoBaseIcms? modalidadeCalculo = null,
         //    decimal? baseCalculo = null,

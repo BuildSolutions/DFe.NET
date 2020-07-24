@@ -32,5 +32,18 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
                 MotivoDesoneracao = MotivoDesoneracaoIcms.MdiSuframa;
             }
         }
+
+        public ICMS40(NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMS40 icms)
+        {
+            CST = icms.CST;
+            Origem = icms.orig;
+
+            ValorICMSDesonerado = icms.vICMSDeson.NuloSeZero();
+
+            if (ValorICMSDesonerado == 0)
+            {
+                MotivoDesoneracao = MotivoDesoneracaoIcms.MdiSuframa;
+            }
+        }
     }
 }

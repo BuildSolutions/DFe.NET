@@ -24,5 +24,17 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
             //ValorICMSDesonerado = valorICMSDesonerado;
             //MotivoDesoneracao = motivoDesoneracao;
         }
+
+        public ICMS20(NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMS20 icms)
+        {
+            CST = Csticms.Cst20;
+            Origem = icms.orig;
+            ModalidadeCalculo = icms.modBC;
+            BaseCalculo = icms.vBC;
+            Aliquota = icms.pICMS;
+            ValorTotal = icms.vICMS;
+
+            AliquotaReducaoBaseCalculo = icms.pRedBC;
+        }
     }
 }

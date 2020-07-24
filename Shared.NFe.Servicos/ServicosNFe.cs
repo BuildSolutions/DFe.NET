@@ -742,76 +742,86 @@ namespace NFe.Servicos
         public RetornoNfeConsultaCadastro NfeConsultaCadastro(string uf, ConsultaCadastroTipoDocumento tipoDocumento,
             string documento)
         {
-            var versaoServico = ServicoNFe.NfeConsultaCadastro.VersaoServicoParaString(_cFgServico.VersaoNfeConsultaCadastro);
-
-            #region Cria o objeto wdsl para consulta
-
-            var ws = CriarServico(ServicoNFe.NfeConsultaCadastro);
-
-            if (_cFgServico.VersaoNfeConsultaCadastro != VersaoServico.Versao400)
-            {
-                ws.nfeCabecMsg = new nfeCabecMsg
-                {
-                    cUF = _cFgServico.cUF,
-                    versaoDados = versaoServico
-                };
-            }
-
-            #endregion
-
-            #region Cria o objeto ConsCad
-
-            var pedConsulta = new ConsCad
-            {
-                versao = versaoServico,
-                infCons = new infConsEnv { UF = uf }
-            };
-
-            switch (tipoDocumento)
-            {
-                case ConsultaCadastroTipoDocumento.Ie:
-                    pedConsulta.infCons.IE = documento;
-                    break;
-                case ConsultaCadastroTipoDocumento.Cnpj:
-                    pedConsulta.infCons.CNPJ = documento;
-                    break;
-                case ConsultaCadastroTipoDocumento.Cpf:
-                    pedConsulta.infCons.CPF = documento;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException("tipoDocumento", tipoDocumento, null);
-            }
-
-            #endregion
-
-            #region Valida, Envia os dados e obtém a resposta
-
-            var xmlConsulta = pedConsulta.ObterXmlString();
-            Validador.Valida(ServicoNFe.NfeConsultaCadastro, _cFgServico.VersaoNfeConsultaCadastro, xmlConsulta, cfgServico: _cFgServico);
-            var dadosConsulta = new XmlDocument();
-            dadosConsulta.LoadXml(xmlConsulta);
-
-            SalvarArquivoXml(DateTime.Now.ParaDataHoraString() + "-ped-cad.xml", xmlConsulta);
-
-            XmlNode retorno;
+            var ufOriginal = _cFgServico.cUF;
             try
             {
-                retorno = ws.Execute(dadosConsulta);
+                Enum.TryParse(uf, out Estado eUF);
+                _cFgServico.cUF = eUF;
+                var versaoServico = ServicoNFe.NfeConsultaCadastro.VersaoServicoParaString(_cFgServico.VersaoNfeConsultaCadastro);
+
+                #region Cria o objeto wdsl para consulta
+
+                var ws = CriarServico(ServicoNFe.NfeConsultaCadastro);
+
+                if (_cFgServico.VersaoNfeConsultaCadastro != VersaoServico.Versao400)
+                {
+                    ws.nfeCabecMsg = new nfeCabecMsg
+                    {
+                        cUF = _cFgServico.cUF,
+                        versaoDados = versaoServico
+                    };
+                }
+
+                #endregion
+
+                #region Cria o objeto ConsCad
+
+                var pedConsulta = new ConsCad
+                {
+                    versao = versaoServico,
+                    infCons = new infConsEnv { UF = uf }
+                };
+
+                switch (tipoDocumento)
+                {
+                    case ConsultaCadastroTipoDocumento.Ie:
+                        pedConsulta.infCons.IE = documento;
+                        break;
+                    case ConsultaCadastroTipoDocumento.Cnpj:
+                        pedConsulta.infCons.CNPJ = documento;
+                        break;
+                    case ConsultaCadastroTipoDocumento.Cpf:
+                        pedConsulta.infCons.CPF = documento;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException("tipoDocumento", tipoDocumento, null);
+                }
+
+                #endregion
+
+                #region Valida, Envia os dados e obtém a resposta
+
+                var xmlConsulta = pedConsulta.ObterXmlString();
+                Validador.Valida(ServicoNFe.NfeConsultaCadastro, _cFgServico.VersaoNfeConsultaCadastro, xmlConsulta, cfgServico: _cFgServico);
+                var dadosConsulta = new XmlDocument();
+                dadosConsulta.LoadXml(xmlConsulta);
+
+                SalvarArquivoXml(DateTime.Now.ParaDataHoraString() + "-ped-cad.xml", xmlConsulta);
+
+                XmlNode retorno;
+                try
+                {
+                    retorno = ws.Execute(dadosConsulta);
+                }
+                catch (WebException ex)
+                {
+                    throw FabricaComunicacaoException.ObterException(ServicoNFe.NfeConsultaCadastro, ex);
+                }
+
+                var retornoXmlString = retorno.OuterXml;
+                var retConsulta = new retConsCad().CarregarDeXmlString(retornoXmlString);
+
+                SalvarArquivoXml(DateTime.Now.ParaDataHoraString() + "-cad.xml", retornoXmlString);
+
+                return new RetornoNfeConsultaCadastro(pedConsulta.ObterXmlString(), retConsulta.ObterXmlString(),
+                    retornoXmlString, retConsulta);
+
+                #endregion
             }
-            catch (WebException ex)
+            finally
             {
-                throw FabricaComunicacaoException.ObterException(ServicoNFe.NfeConsultaCadastro, ex);
+                _cFgServico.cUF = ufOriginal;
             }
-
-            var retornoXmlString = retorno.OuterXml;
-            var retConsulta = new retConsCad().CarregarDeXmlString(retornoXmlString);
-
-            SalvarArquivoXml(DateTime.Now.ParaDataHoraString() + "-cad.xml", retornoXmlString);
-
-            return new RetornoNfeConsultaCadastro(pedConsulta.ObterXmlString(), retConsulta.ObterXmlString(),
-                retornoXmlString, retConsulta);
-
-            #endregion
         }
 
         /// <summary>

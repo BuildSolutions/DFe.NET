@@ -1,4 +1,6 @@
-﻿namespace NFe.BLL.Configuracao.Entidades
+﻿using NFe.Classes.Informacoes.Total;
+
+namespace NFe.BLL.Configuracao.Entidades
 {
     public class Totalizador
     {
@@ -44,6 +46,30 @@
             ICMSUFDestino = icmsUFDestino;
             ICMSUFOrigem = icmsUFOrigem;
             FCPUFDestino = fcpUFDestino;
+        }
+
+        public Totalizador(ICMSTot total)
+        {
+            ICMSBaseCalculo = total.vBC;
+            ICMSTotal = total.vICMS;
+            ICMSDesonerado = total.vICMSDeson ?? 0M;
+            ICMSSTBaseCalculo = total.vBCST;
+            ICMSSTTotal = total.vST;
+            FCPSubstituicaoTributaria = total.vFCPST ?? 0M;
+            ProdutosTotal = total.vProd;
+            Frete = total.vFrete;
+            Seguro = total.vSeg;
+            Desconto = total.vDesc;
+            ImpostoImportacao = total.vII;
+            IPI = total.vIPI;
+            PIS = total.vPIS;
+            COFINS = total.vCOFINS;
+            OutrasDespesasAcessorias = total.vOutro;
+            NFeValorTotal = total.vNF;
+            TributosIBPT = total.vTotTrib;
+            ICMSUFDestino = total.vICMSUFDest ?? 0M;
+            ICMSUFOrigem = total.vICMSUFRemet ?? 0M;
+            FCPUFDestino = total.vFCPUFDest ?? 0M;
         }
 
         public decimal ICMSBaseCalculo { get; }

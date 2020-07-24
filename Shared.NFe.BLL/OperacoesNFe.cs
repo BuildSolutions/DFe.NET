@@ -70,7 +70,7 @@ namespace NFe.BLL
 
             if (retornoConsulta.Retorno.infCons.cStat != 0)
             {
-                string dataBaixaContribuinte = retornoConsulta.Retorno.infCons.infCad.dBaixa;
+                string dataBaixaContribuinte = retornoConsulta.Retorno.infCons?.infCad?.dBaixa;
                 if (!string.IsNullOrEmpty(dataBaixaContribuinte))
                 {
                     dataBaixaContribuinte = string.Format("Empresa baixada em: {0:dd/MM/yyyy HH:mm:ss}", retornoConsulta.Retorno.infCons.infCad.dBaixa);
@@ -232,8 +232,14 @@ namespace NFe.BLL
                     && retornoAutorizacao.protNFe.infProt.cStat != 302)
                 {
                     erro = string.Format("({0}) {1}",
-                            retornoAutorizacao.protNFe.infProt.cStat,
-                            retornoAutorizacao.protNFe.infProt.xMotivo);
+                        retornoAutorizacao.protNFe.infProt.cStat,
+                        retornoAutorizacao.protNFe.infProt.xMotivo);
+
+                    if (retornoAutorizacao.protNFe.infProt.cStat == 204)
+                    {
+                        erro += "\r\n\r\nClique no botão Serializar Protocolo.";
+                    }
+
                     return false;
                 }
 

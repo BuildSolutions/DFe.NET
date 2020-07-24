@@ -32,6 +32,26 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
             }
         }
 
+        public ICMS30(NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMS30 icms)
+        {
+            CST = Csticms.Cst30;
+            Origem = icms.orig;
+
+            ModalidadeCalculoST = icms.modBCST;
+            BaseCalculoST = icms.vBCST;
+            ValorTotalST = icms.vICMSST;
+            AliquotaST = icms.pICMSST ;
+            AliquotaMVAST = icms.pMVAST.NuloSeZero();
+
+            AliquotaReducaoBaseCalculo = icms.pRedBCST.NuloSeZero();
+            ValorICMSDesonerado = icms.vICMSDeson.NuloSeZero();
+
+            if (ValorICMSDesonerado == 0)
+            {
+                MotivoDesoneracao = MotivoDesoneracaoIcms.MdiSuframa;
+            }
+        }
+
         //public ICMS30(OrigemMercadoria origem,
         //    DeterminacaoBaseIcmsSt modalidadeCalculoST,
         //    decimal baseCalculoST,

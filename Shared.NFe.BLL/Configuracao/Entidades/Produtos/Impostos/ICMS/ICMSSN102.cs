@@ -26,5 +26,11 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
 
             Origem = origem;
         }
+
+        public ICMSSN102(NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMSSN102 icms)
+        {
+            CSOSN = icms.CSOSN;
+            Origem = icms.orig;
+        }
     }
 }

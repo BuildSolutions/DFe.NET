@@ -1,4 +1,5 @@
-﻿using NFe.Classes.Informacoes.Detalhe.Tributacao.Federal.Tipos;
+﻿using NFe.Classes.Informacoes.Detalhe.Tributacao.Federal;
+using NFe.Classes.Informacoes.Detalhe.Tributacao.Federal.Tipos;
 using System.Collections.Generic;
 
 namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos
@@ -11,6 +12,21 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos
             BaseCalculo = baseCalculo;
             ValorTotal = valorTotal;
             Aliquota = aliquota;
+            CodigoEnquadramento = codigoEnquadramento;
+        }
+
+        public IPI(IPITrib ipi, int codigoEnquadramento)
+        {
+            CST = ipi.CST;
+            BaseCalculo = ipi.vBC ?? 0;
+            ValorTotal = ipi.vIPI ?? 0;
+            Aliquota = ipi.pIPI ?? 0;
+            CodigoEnquadramento = codigoEnquadramento;
+        }
+
+        public IPI(IPINT ipi, int codigoEnquadramento)
+        {
+            CST = ipi.CST;
             CodigoEnquadramento = codigoEnquadramento;
         }
 
@@ -31,5 +47,18 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos
         {
             CSTIPI.ipi00, CSTIPI.ipi49, CSTIPI.ipi50, CSTIPI.ipi99
         };
+
+        public static IPI ObterIpi(NFe.Classes.Informacoes.Detalhe.Tributacao.Federal.IPI ipi)
+        {
+            switch (ipi.TipoIPI.GetType().Name)
+            {
+                case nameof(IPITrib):
+                    return new IPI((IPITrib)ipi.TipoIPI, ipi.cEnq);
+                case nameof(IPINT):
+                    return new IPI((IPINT)ipi.TipoIPI, ipi.cEnq);
+                default:
+                    return null;
+            }
+        }
     }
 }

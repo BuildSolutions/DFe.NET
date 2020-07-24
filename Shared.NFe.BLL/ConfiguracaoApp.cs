@@ -30,13 +30,13 @@ namespace NFe.BLL
             _cfgServico.TimeOut = 30000;
             _cfgServico.cUF = Emitente.Pessoa.Endereco.MunicipioEstadoSigla.GetValueOrDefault();
 
-#if DEBUG
-            _cfgServico.tpAmb = TipoAmbiente.Homologacao;
-#else
-            _cfgServico.tpAmb = TipoAmbiente.Homologacao;
-            //_cfgServico.tpAmb = TipoAmbiente.Producao;
-#endif
-            _cfgServico.tpAmb = TipoAmbiente.Homologacao;
+//#if DEBUG
+            //            _cfgServico.tpAmb = TipoAmbiente.Homologacao;
+            //#else
+            //            _cfgServico.tpAmb = TipoAmbiente.Homologacao;
+            //            //_cfgServico.tpAmb = TipoAmbiente.Producao;
+            //#endif
+            _cfgServico.tpAmb = TipoAmbiente.Producao;
             _cfgServico.tpEmis = TipoEmissao.teNormal;
             _cfgServico.ModeloDocumento = modeloDocumento;
             _cfgServico.VersaoLayout = VersaoServico.Versao400;

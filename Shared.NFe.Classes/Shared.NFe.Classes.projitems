@@ -108,6 +108,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Informacoes\Pagamento\detPag.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Informacoes\Pagamento\pag.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Informacoes\Pagamento\pagTipos.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Informacoes\Pessoa.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Informacoes\retirada.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Informacoes\Total\ICMSTot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Informacoes\Total\ISSQNtot.cs" />

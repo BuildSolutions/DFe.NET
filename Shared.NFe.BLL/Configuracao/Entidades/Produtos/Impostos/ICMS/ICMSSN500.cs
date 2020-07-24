@@ -9,5 +9,11 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
             CSOSN = Csosnicms.Csosn500;
             Origem = origem;
         }
+
+        public ICMSSN500(NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMSSN500 icms)
+        {
+            CSOSN = Csosnicms.Csosn500;
+            Origem = icms.orig;
+        }
     }
 }

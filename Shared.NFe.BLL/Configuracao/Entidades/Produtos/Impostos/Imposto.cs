@@ -1,4 +1,7 @@
-﻿namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos
+﻿using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS;
+using NFe.Classes.Informacoes.Detalhe.Tributacao;
+
+namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos
 {
     public class Imposto
     {
@@ -18,6 +21,36 @@
             PartilhaICMS = partilhaICMS;
             TributosIBPT = tributosIBPT;
             ICMS = icms;
+        }
+
+        public Imposto(imposto imposto)
+        {
+            if (imposto.IPI != null)
+            {
+                IPI = IPI.ObterIpi(imposto.IPI);
+            }
+            if (imposto.PIS != null)
+            {
+                PIS = PIS.ObterPis(imposto.PIS);
+            }
+            if (imposto.COFINS != null)
+            {
+                COFINS = COFINS.ObterCOFINS(imposto.COFINS);
+            }
+            if (imposto.II != null)
+            {
+                ImpostoImportacao = new ImpostoImportacao(imposto.II);
+            }
+            if (imposto.ICMSUFDest != null)
+            {
+                PartilhaICMS = new PartilhaICMS(imposto.ICMSUFDest);
+            }
+            if (imposto.ICMS != null)
+            {
+                ICMS = Impostos.ICMS.ICMS.ObterIcms(imposto.ICMS.TipoICMS);
+            }
+
+            TributosIBPT = new TributosIBPT(0, 0, 0, imposto.vTotTrib ?? 0);
         }
 
         public IPI IPI { get; set; }

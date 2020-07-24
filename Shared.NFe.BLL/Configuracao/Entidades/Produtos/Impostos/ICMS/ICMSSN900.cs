@@ -29,5 +29,21 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
             AliquotaST = aliquotaST;
             AliquotaMVAST = aliquotaMVAST.NuloSeZero();
         }
+
+        public ICMSSN900(NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMSSN900 icms)
+        {
+            CSOSN = Csosnicms.Csosn900;
+            Origem = icms.orig;
+            ModalidadeCalculo = icms.modBC;
+            BaseCalculo = icms.vBC.GetValueOrDefault();
+            Aliquota = icms.pICMS.GetValueOrDefault();
+            ValorTotal = icms.vICMS.GetValueOrDefault();
+
+            ModalidadeCalculoST = icms.modBCST.GetValueOrDefault();
+            BaseCalculoST = icms.vBCST.GetValueOrDefault();
+            ValorTotalST = icms.vICMSST.GetValueOrDefault();
+            AliquotaST = icms.pICMSST.GetValueOrDefault();
+            AliquotaMVAST = icms.pMVAST.NuloSeZero();
+        }
     }
 }

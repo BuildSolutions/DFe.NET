@@ -30,13 +30,22 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
             BaseCaluloFCP = baseCaluloFCP.NuloSeZero();
             AliquotaFCP = aliquotaFCP.NuloSeZero();
             ValorTotalFCP = valorTotalFCP.NuloSeZero();
+        }
 
-            if (aliquotaFCP == 0)
-            {
-                AliquotaFCP = null;
-                BaseCaluloFCP = null;
-                ValorTotalFCP = null;
-            }
+        public ICMSSN202(NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMSSN202 icms)
+        {
+            CSOSN = Csosnicms.Csosn201;
+            Origem = icms.orig;
+
+            ModalidadeCalculoST = icms.modBCST;
+            BaseCalculoST = icms.vBCST;
+            ValorTotalST = icms.vICMSST;
+            AliquotaST = icms.pICMSST;
+            AliquotaMVAST = icms.pMVAST.NuloSeZero();
+
+            BaseCaluloFCP = icms.vBCFCPST.NuloSeZero();
+            AliquotaFCP = icms.pFCPST.NuloSeZero();
+            ValorTotalFCP = icms.vFCPST.NuloSeZero();
         }
     }
 }
