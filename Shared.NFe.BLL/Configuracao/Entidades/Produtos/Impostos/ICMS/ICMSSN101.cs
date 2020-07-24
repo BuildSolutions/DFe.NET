@@ -14,5 +14,14 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
             RepasseCreditoAliquota = repasseCreditoAliquota;
             RepasseCreditoValor = repasseCreditoValor;
         }
+
+        public ICMSSN101(NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMSSN101 icms)
+        {
+            CSOSN = Csosnicms.Csosn101;
+            Origem = icms.orig;
+
+            RepasseCreditoAliquota = icms.pCredSN;
+            RepasseCreditoValor = icms.vCredICMSSN;
+        }
     }
 }

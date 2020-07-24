@@ -27,6 +27,7 @@ using NFe.Classes.Informacoes.Transporte;
 using NFe.Utils;
 using NFe.Utils.InformacoesSuplementares;
 using NFe.Utils.NFe;
+using Shared.NFe.Classes.Informacoes.InfRespTec;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,6 +64,18 @@ namespace NFe.BLL
             _cfgApp = cfgApp;
             NotaFiscal = notaFiscal;
             GetNFe();
+        }
+
+        public DadosNFe(string notaFiscalXMLPath, ConfiguracaoApp cfgApp)
+        {
+            _cfgApp = cfgApp;
+            var nFeProcessada = new nfeProc().CarregarDeArquivoXml(notaFiscalXMLPath);
+
+            if (nFeProcessada != null)
+            {
+                NFeXML = nFeProcessada.NFe;
+                NotaFiscal = new NotaFiscal(nFeProcessada);
+            }
         }
 
         public Classes.NFe AssinaNFe()
@@ -129,6 +142,8 @@ namespace NFe.BLL
             return true;
         }
 
+
+
         private infNFe GetNFe()
         {
             var infNFe = new infNFe
@@ -148,8 +163,14 @@ namespace NFe.BLL
             infNFe.infAdic = GetInfAdic();
             infNFe.exporta = GetExporta();
 
+            if (_cfgApp.Emitente.Pessoa.Endereco.MunicipioEstadoSigla != DFe.Classes.Entidades.Estado.SP)
+            {
+                infNFe.infRespTec = GetRespTec();
+            }
+
             NFeXML = new Classes.NFe { infNFe = infNFe };
             NFeXML.infNFeSupl = GetNFCeQrCode();
+
             return infNFe;
         }
 
@@ -1260,10 +1281,17 @@ namespace NFe.BLL
 
         private IPIBasico InformarIPI(IPI item)
         {
-            decimal vBC = item.BaseCalculo;
-            decimal pIPI = item.Aliquota;
-            decimal vIPI = item.ValorTotal;
             CSTIPI cstIPI = item.CST;
+            decimal vBC = 0;
+            decimal pIPI = 0;
+            decimal vIPI = 0;
+
+            if (NotaFiscal.EFinalidadeNFe != FinalidadeNFe.fnDevolucao)
+            {
+                vBC = item.BaseCalculo;
+                pIPI = item.Aliquota;
+                vIPI = item.ValorTotal;
+            }
 
             switch (cstIPI)
             {
@@ -1735,6 +1763,17 @@ namespace NFe.BLL
             qrCodeDados.qrCode = qrCodeDados.ObterUrlQrCode(NFeXML, VersaoQrCode.QrCodeVersao2, ((ConfiguracaoNFCe)_cfgApp)._configuracaoCsc.CIdToken.ToString(), ((ConfiguracaoNFCe)_cfgApp)._configuracaoCsc.Csc);
 
             return qrCodeDados;
+        }
+
+        private infRespTec GetRespTec()
+        {
+            return new infRespTec()
+            {
+                CNPJ = "12566641000197",
+                xContato = "PEDRO WILLIAM BAIARDI DE MORAES",
+                fone = "1938522979",
+                email = "suporte@buildsolutions.com.br"
+            };
         }
     }
 }

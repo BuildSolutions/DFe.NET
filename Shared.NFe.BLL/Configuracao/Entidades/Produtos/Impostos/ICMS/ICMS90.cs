@@ -17,5 +17,16 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
             Aliquota = aliquota;
             ValorTotal = valorTotal;
         }
+
+        public ICMS90(NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMS90 icms)
+        {
+            CST = Csticms.Cst90;
+            Origem = icms.orig;
+            ModalidadeCalculo = icms.modBC;
+            BaseCalculo = icms.vBC ?? 0;
+            Aliquota = icms.pICMS ?? 0;
+            ValorTotal = icms.vICMS ?? 0;
+            AliquotaReducaoBaseCalculoST = icms.pRedBCST;
+        }
     }
 }

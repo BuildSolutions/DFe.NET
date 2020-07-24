@@ -33,6 +33,25 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
             AliquotaMVAST = aliquotaMVAST.NuloSeZero();
         }
 
+        public ICMS70(NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMS70 icms)
+        {
+            CST = Csticms.Cst70;
+            Origem = icms.orig;
+            ModalidadeCalculo = icms.modBC;
+            BaseCalculo = icms.vBC;
+            Aliquota = icms.pICMS;
+            ValorTotal = icms.vICMS;
+
+            AliquotaReducaoBaseCalculo = icms.pRedBC;
+
+            ModalidadeCalculoST = icms.modBCST;
+            BaseCalculoST = icms.vBCST;
+            ValorTotalST = icms.vICMSST;
+            AliquotaST = icms.pICMSST;
+            AliquotaMVAST = icms.pMVAST.NuloSeZero();
+            AliquotaReducaoBaseCalculoST = icms.pRedBCST;
+        }
+
         //public ICMS70(OrigemMercadoria origem,
         //    DeterminacaoBaseIcms modalidadeCalculo,
         //    decimal baseCalculo,

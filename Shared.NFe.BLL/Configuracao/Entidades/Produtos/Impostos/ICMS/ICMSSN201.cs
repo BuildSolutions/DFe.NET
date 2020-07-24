@@ -1,4 +1,5 @@
-﻿using NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.Tipos;
+﻿using DFe.Utils.Extensoes;
+using NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.Tipos;
 
 namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
 {
@@ -21,26 +22,33 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
             BaseCalculoST = baseCalculoST;
             ValorTotalST = valorTotalST;
             AliquotaST = aliquotaST;
-            AliquotaMVAST = aliquotaMVAST;
+            AliquotaMVAST = aliquotaMVAST.NuloSeZero();
 
-            BaseCaluloFCP = baseCaluloFCP;
-            AliquotaFCP = aliquotaFCP;
-            ValorTotalFCP = valorTotalFCP;
+            BaseCaluloFCP = baseCaluloFCP.NuloSeZero();
+            AliquotaFCP = aliquotaFCP.NuloSeZero();
+            ValorTotalFCP = valorTotalFCP.NuloSeZero();
 
             RepasseCreditoAliquota = 0;
             RepasseCreditoValor = 0;
+        }
 
-            if(aliquotaMVAST == 0)
-            {
-                AliquotaMVAST = null;
-            }
+        public ICMSSN201(NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMSSN201 icms)
+        {
+            CSOSN = Csosnicms.Csosn201;
+            Origem = icms.orig;
 
-            if(aliquotaFCP == 0)
-            {
-                AliquotaFCP = null;
-                BaseCaluloFCP = null;
-                ValorTotalFCP = null;
-            }
+            ModalidadeCalculoST = icms.modBCST;
+            BaseCalculoST = icms.vBCST;
+            ValorTotalST = icms.vICMSST;
+            AliquotaST = icms.pICMSST;
+            AliquotaMVAST = icms.pMVAST.NuloSeZero();
+
+            BaseCaluloFCP = icms.vBCFCPST.NuloSeZero();
+            AliquotaFCP = icms.pFCPST.NuloSeZero();
+            ValorTotalFCP = icms.vFCPST.NuloSeZero();
+
+            RepasseCreditoAliquota = 0;
+            RepasseCreditoValor = 0;
         }
     }
 }

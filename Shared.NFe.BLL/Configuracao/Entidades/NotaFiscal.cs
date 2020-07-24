@@ -61,9 +61,51 @@ namespace NFe.BLL.Configuracao.Entidades
             IsZonaFrancaManaus = isZonaFrancaManaus;
         }
 
+        public NotaFiscal(Classes.nfeProc notafiscalProcessada)
+        {
+            var nfe = notafiscalProcessada.NFe;
+            var duplicatas = new List<Duplicata>();
+            var produtos = new List<Produto>();
+            Transporte transportadora = null;
+
+            if (nfe.infNFe.transp != null)
+            {
+                transportadora = new Transporte(nfe.infNFe.transp);
+            }
+
+            foreach (var item in nfe.infNFe.cobr?.dup)
+            {
+                duplicatas.Add(new Duplicata(item.nDup, item.dVenc.GetValueOrDefault(), item.vDup));
+            }
+
+            foreach (var item in nfe.infNFe.det)
+            {
+                produtos.Add(new Produto(item));
+            }
+
+            Id = 0;
+            Serie = nfe.infNFe.ide.serie;
+            Numero = nfe.infNFe.ide.nNF;
+            ETipoNFe = nfe.infNFe.ide.tpNF;
+            NaturezaOperacaoDescricao = nfe.infNFe.ide.natOp;
+            DataEmissao = nfe.infNFe.ide.dhEmi.DateTime;
+            DataSaida = nfe.infNFe.ide.dhSaiEnt?.DateTime ?? nfe.infNFe.ide.dhEmi.DateTime;
+            EFinalidadeNFe = nfe.infNFe.ide.finNFe;
+            Emitente = new Emitente(nfe.infNFe.emit);
+            Destinatario = new Destinatario(nfe.infNFe.dest);
+            DadosTransporte = transportadora;
+            Total = new Totalizador(nfe.infNFe.total.ICMSTot);
+            Produtos = produtos;
+            Duplicatas = duplicatas;
+            DadosAdicionaisFisco = nfe.infNFe.infAdic.infAdFisco;
+            DadosAdicionaisContribuinte = nfe.infNFe.infAdic.infCpl;
+            EPresencaComprador = nfe.infNFe.ide.indPres.GetValueOrDefault();
+            Protocolo = new Protocolo(notafiscalProcessada.protNFe.infProt);
+        }
+
         public int Id { get; private set; }
 
-        public string ChaveAcesso { get; private set; }
+        //public string ChaveAcesso { get; private set; }
 
         public int Serie { get; private set; }
 
@@ -111,6 +153,8 @@ namespace NFe.BLL.Configuracao.Entidades
 
         public bool IsZonaFrancaManaus { get; private set; }
 
+        public Protocolo Protocolo { get; private set; }
+
         private DestinoOperacao _obterDestinoOperacao(Estado estadoEmitente, Estado? estadoDestinatario)
         {
             if(estadoDestinatario == null
@@ -130,7 +174,12 @@ namespace NFe.BLL.Configuracao.Entidades
 
         public void AtualizarChaveAcesso(string chaveAcesso)
         {
-            ChaveAcesso = chaveAcesso;
+            if(Protocolo == null)
+            {
+                Protocolo = new Protocolo(null, null, null, null);
+            }
+
+            Protocolo.AtualizarChaveAcesso(chaveAcesso);
         }
     }
 }

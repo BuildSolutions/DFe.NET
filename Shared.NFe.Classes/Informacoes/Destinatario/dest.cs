@@ -157,8 +157,7 @@ namespace NFe.Classes.Informacoes.Destinatario
 
         public bool ShouldSerializeIE()
         {
-            var teste = _versao == VersaoServico.Versao200 | !string.IsNullOrEmpty(IE);
-            return teste;
+            return _versao == VersaoServico.Versao200 || !string.IsNullOrEmpty(IE);
         }
     }
 }

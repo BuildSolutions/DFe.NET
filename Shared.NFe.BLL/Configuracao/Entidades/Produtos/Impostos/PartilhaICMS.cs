@@ -1,4 +1,6 @@
-﻿namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos
+﻿using NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual;
+
+namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos
 {
     public class PartilhaICMS
     {
@@ -13,6 +15,19 @@
             BaseCalculoFCP = 0;
             ValorFCP = valorFCP;
             AliquotaFCP = aliquotaFCP;
+        }
+
+        public PartilhaICMS(ICMSUFDest icmsUfDest)
+        {
+            BaseCalculoICMSDestino = icmsUfDest.vBCUFDest;
+            AliquotaInternaUFDestino = icmsUfDest.pICMSUFDest;
+            ValorICMSUFDestino = icmsUfDest.vICMSUFDest;
+            AliquotaInterestadual = icmsUfDest.pICMSInter;
+            AliquotaICMSPartilha = icmsUfDest.pICMSInterPart;
+            ValorICMSUFOrigem = icmsUfDest.vICMSUFRemet;
+            BaseCalculoFCP = icmsUfDest.vBCFCPUFDest ?? 0M;
+            ValorFCP = icmsUfDest.vFCPUFDest ?? 0M;
+            AliquotaFCP = icmsUfDest.pFCPUFDest ?? 0M;
         }
 
         public decimal BaseCalculoICMSDestino { get; }

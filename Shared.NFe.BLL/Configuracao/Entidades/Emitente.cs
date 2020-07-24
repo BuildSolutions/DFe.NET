@@ -26,6 +26,18 @@ namespace NFe.BLL.Configuracao.Entidades
             DiretorioSchemas = diretorioSchemas?.FullName;
         }
 
+        public Emitente(
+            emit emitente)
+        {
+            Pessoa = new Pessoa(emitente);
+            InscricaoEstadualSubstituicaoTributaria = emitente.IEST.RetornaNumeros();
+            ECRT = emitente.CRT;
+            HabilitarDetalhamentoImposto = true;
+            Certificado = null;
+            DiretorioSalvarXML = null;
+            DiretorioSchemas = null;
+        }
+
         public Pessoa Pessoa { get; }
 
         public string InscricaoEstadualSubstituicaoTributaria { get; }

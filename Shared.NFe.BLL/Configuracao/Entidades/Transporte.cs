@@ -22,6 +22,20 @@ namespace NFe.BLL.Configuracao.Entidades
             PesoBruto = pesoBruto;
         }
 
+        public Transporte(transp dadosTransporte)
+        {
+            if (dadosTransporte.transporta != null)
+            {
+                Transportadora = new Pessoa(dadosTransporte.transporta);
+            }
+
+            ModalidadeFrete = dadosTransporte.modFrete.GetValueOrDefault();
+            QuantidadeVolumes = dadosTransporte.vol[0].qVol;
+            EspecieVolumeDescricao = dadosTransporte.vol[0].esp;
+            PesoLiquido = dadosTransporte.vol[0].pesoL;
+            PesoBruto = dadosTransporte.vol[0].pesoB;
+        }
+
         public ModalidadeFrete ModalidadeFrete { get; }
 
         public Pessoa Transportadora { get; }

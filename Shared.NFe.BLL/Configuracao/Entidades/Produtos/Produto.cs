@@ -61,6 +61,38 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos
             }
         }
 
+        public Produto(det produto)
+        {
+            Referencia = produto.prod.cProd.SanitizeString();
+            CodigoBarras = produto.prod.cEAN.SanitizeString();
+            Descricao = produto.prod.xProd.SanitizeString();
+            NCM = produto.prod.NCM.SanitizeString();
+            CEST = produto.prod.CEST.SanitizeString();
+            CFOP = produto.prod.CFOP;
+            UnidadeCompra = produto.prod.uCom.SanitizeString();
+            Quantidade = produto.prod.qCom;
+            ValorUnitario = produto.prod.vUnCom;
+            ValorTotal = produto.prod.vProd;
+            Desconto = produto.prod.vDesc ?? 0;
+            UnidadeTributacao = produto.prod.uTrib.SanitizeString();
+            QuantidadeTributacao = produto.prod.qTrib;
+            ValorUnitarioTributacao = produto.prod.vUnTrib;
+            Frete = produto.prod.vFrete ?? 0;
+            OutrasDespesasAcessorias = produto.prod.vOutro ?? 0;
+            //EIndicadorTotal = indicadorTotal;
+            PedidoCompraNumero = produto.prod.xPed.SanitizeString();
+            PedidoCompraItem = produto.prod.nItemPed;
+            DadosCombustivel = null;
+            DeclaracaoImportacao = null;
+            Impostos = new Imposto(produto.imposto);
+            IBPTValor = produto.imposto.vTotTrib ?? 0;
+
+            if (string.IsNullOrEmpty(PedidoCompraNumero))
+            {
+                PedidoCompraItem = null;
+            }
+        }
+
         public string Referencia { get; }
 
         public string CodigoBarras { get; }
