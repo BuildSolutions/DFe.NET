@@ -16,7 +16,7 @@ namespace NFe.BLL.Configuracao.Entidades
         public Protocolo(infProt protocolo)
         {
             ChaveAcesso = protocolo.chNFe;
-            DataRecebimento = protocolo.dhRecbto;
+            DataRecebimento = protocolo.dhRecbto.DateTime;
             NumeroProtocolo = protocolo.nProt;
             DigestValue = protocolo.digVal;
         }

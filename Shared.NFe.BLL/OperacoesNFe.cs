@@ -1,4 +1,5 @@
-﻿using NFe.Classes.Servicos.Consulta;
+﻿using DFe.Utils;
+using NFe.Classes.Servicos.Consulta;
 using NFe.Classes.Servicos.ConsultaCadastro;
 using NFe.Classes.Servicos.DistribuicaoDFe;
 using NFe.Classes.Servicos.Inutilizacao;
@@ -51,6 +52,27 @@ namespace NFe.BLL
                             statusServico.Retorno.cStat,
                             statusServico.Retorno.xMotivo);
             return false;
+        }
+
+        public RetornoNfeDistDFeInt DownloadXmlNFe(string uf, string cnpj, string chaveAcesso, out string erro)
+        {
+            erro = string.Empty;
+            var retornoConsulta = _servicosNFeInstancia.NfeDistDFeInteresse(uf, cnpj, chNFE: chaveAcesso);
+
+            if (retornoConsulta.Retorno.cStat == 138)
+            {
+                return retornoConsulta;
+            }
+            else if (retornoConsulta.Retorno.cStat == 137)
+            {
+                erro = "Arquivo xml não liberado para download.\r\n\rPrazo de até 24hrs para ser liberado o download do arquivo xml.";
+                return null;
+            }
+
+            erro = string.Format("({0}) {1}",
+                    retornoConsulta.Retorno.cStat,
+                    retornoConsulta.Retorno.xMotivo);
+            return null;
         }
 
         /// <summary>
@@ -121,6 +143,14 @@ namespace NFe.BLL
             correcao, cpfcnpj, out erro);
         }
 
+        public RetornoRecepcaoEvento RecepcaoEventoManifestoDestinatario(int idlote, NFeTipoEvento nfeTipoEventoManifestacaoDestinatario, int sequenciaEvento,
+            string chaveNFe, string correcao, string cpfcnpj, out string erro)
+        {
+            return RecepcaoEvento(nfeTipoEventoManifestacaoDestinatario,
+            idlote, sequenciaEvento, chaveNFe,
+            correcao, cpfcnpj, out erro);
+        }
+
         private RetornoRecepcaoEvento RecepcaoEvento(NFeTipoEvento tipoEvento, 
             int idlote, int sequenciaEvento, string chaveNFe,
             string correcao, string cpfcnpj, out string erro, string protocoloCancelamento = null)
@@ -139,13 +169,14 @@ namespace NFe.BLL
                     break;
                 //case NFeTipoEvento.TeNfeCancelamentoSubstituicao:
                 //    break;
-                //case NFeTipoEvento.TeMdConfirmacaoDaOperacao:
+                case NFeTipoEvento.TeMdConfirmacaoDaOperacao:
+                case NFeTipoEvento.TeMdCienciaDaOperacao:
+                case NFeTipoEvento.TeMdDesconhecimentoDaOperacao:
+                case NFeTipoEvento.TeMdOperacaoNaoRealizada:
+                    retornoConsulta = _servicosNFeInstancia.RecepcaoEventoManifestacaoDestinatario(idlote, sequenciaEvento, chaveNFe, tipoEvento, cpfcnpj, null);
+                    break;
                 //    break;
-                //case NFeTipoEvento.TeMdCienciaDaEmissao:
                 //    break;
-                //case NFeTipoEvento.TeMdDesconhecimentoDaOperacao:
-                //    break;
-                //case NFeTipoEvento.TeMdOperacaoNaoRealizada:
                 //    break;
                 default:
                     erro = $"Serviço de não configurado.\r\n\r\nEntre em contato com o suporte técnico do sistema.";
@@ -158,7 +189,6 @@ namespace NFe.BLL
             }
 
             return retornoConsulta;
-
         }
 
         private bool ValidarRetornoEvento(RetornoRecepcaoEvento retornoEvento, out string erro)
@@ -175,16 +205,25 @@ namespace NFe.BLL
                 return false;
             }
 
-            var tpEvento = retornoEvento.ProcEventosNFe[0].evento.infEvento.tpEvento;
-            int strCStat = retornoEvento.ProcEventosNFe[0].retEvento.infEvento.cStat;
+            var tpEvento = retornoEvento.ProcEventosNFe[0]?.evento.infEvento.tpEvento;
+            int strCStat = retornoEvento.ProcEventosNFe[0]?.retEvento?.infEvento?.cStat ?? 0;
             string strchNFe = retornoEvento.ProcEventosNFe[0].evento.infEvento.chNFe;
-            int nroNFe = Convert.ToInt32(strchNFe.Substring(25, 9));
-            string xMotivo = retornoEvento.ProcEventosNFe[0].retEvento.infEvento.xMotivo;
+            int.TryParse(strchNFe.Substring(25, 9), out int nroNFe);
+            string xMotivo = retornoEvento.ProcEventosNFe[0]?.retEvento?.infEvento?.xMotivo;
 
             if (strCStat != 135
                 && strCStat != 138 // Recebido pelo Sistema de Registro de Eventos – vinculação do evento à respectiva NF-e prejudicada 
                 && strCStat != 155) // Cancelamento homologado fora de prazo
             {
+                if (strCStat == 573
+                    && (tpEvento == NFeTipoEvento.TeMdCienciaDaOperacao
+                        || tpEvento == NFeTipoEvento.TeMdDesconhecimentoDaOperacao
+                        || tpEvento == NFeTipoEvento.TeMdConfirmacaoDaOperacao
+                        || tpEvento == NFeTipoEvento.TeMdOperacaoNaoRealizada))
+                {
+                    return true;
+                }
+
                 if (tpEvento == NFeTipoEvento.TeNfeCancelamento // Cancelamento
                     && strCStat == 690)
                 {
@@ -196,7 +235,7 @@ namespace NFe.BLL
                     Environment.NewLine,
                     strCStat,
                     xMotivo,
-                    tpEvento == NFeTipoEvento.TeNfeCartaCorrecao ? "Carta de Correção" : "Cancelamento");
+                    tpEvento.Descricao());
                 return false;
             }
 

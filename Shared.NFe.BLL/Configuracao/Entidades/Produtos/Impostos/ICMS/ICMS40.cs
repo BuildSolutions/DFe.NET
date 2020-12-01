@@ -27,7 +27,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
 
             ValorICMSDesonerado = valorICMSDesonerado.NuloSeZero();
 
-            if (valorICMSDesonerado == 0)
+            if (valorICMSDesonerado > 0)
             {
                 MotivoDesoneracao = MotivoDesoneracaoIcms.MdiSuframa;
             }
@@ -40,7 +40,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
 
             ValorICMSDesonerado = icms.vICMSDeson.NuloSeZero();
 
-            if (ValorICMSDesonerado == 0)
+            if (ValorICMSDesonerado > 0)
             {
                 MotivoDesoneracao = MotivoDesoneracaoIcms.MdiSuframa;
             }
