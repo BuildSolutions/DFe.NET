@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1062
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30320.27
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFe.Classes", "NFe.Classes\NFe.Classes.csproj", "{29CA1DA2-440D-484B-951A-CF1B2EB27984}"
 EndProject
@@ -151,7 +151,6 @@ EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared.NFe.Danfe.Fast", "Shared.NFe.Danfe.Fast\Shared.NFe.Danfe.Fast.shproj", "{5794AB8A-FF29-4F55-ABC2-9AAFE333BD27}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NFe.Danfe.AppTeste.NetCore", "NFe.Danfe.AppTeste.NetCore\NFe.Danfe.AppTeste.NetCore.csproj", "{0999204F-594C-4996-88A2-93D015EBDE33}"
-<<<<<<< HEAD
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared.NFe.BLL", "Shared.NFe.BLL\Shared.NFe.BLL.shproj", "{F839EDF0-3BF9-4F09-80CB-22DA68E8D0F2}"
 EndProject
@@ -160,8 +159,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NFe.BLL.Standard", "NFe.BLL.Standard\NFe.BLL.Standard.csproj", "{AE3DC013-357D-4803-9482-DC956DBC6ECE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFe.BLL.Testes", "NFe.BLL.Testes\NFe.BLL.Testes.csproj", "{A98E6AB9-FED7-4468-8A32-B05999AC95CA}"
-=======
->>>>>>> upstream/master
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -174,11 +171,8 @@ Global
 		Shared.DFe.Classes\Shared.DFe.Classes.projitems*{3108968d-d505-4365-966f-bbe3cbf63c35}*SharedItemsImports = 13
 		Shared.CTe.Classes\Shared.CTe.Classes.projitems*{46314f7c-49d9-4165-b3cf-15741aa14cf1}*SharedItemsImports = 5
 		Shared.NFe.Classes\Shared.NFe.Classes.projitems*{4cc78350-9e01-465a-ac60-e31a53cefe24}*SharedItemsImports = 13
-<<<<<<< HEAD
-		Shared.NFe.BLL\Shared.NFe.BLL.projitems*{55f27e3f-5cbc-483a-8406-eb311f411d30}*SharedItemsImports = 4
-=======
 		Shared.CTe.Servicos\Shared.CTe.Servicos.projitems*{4dfca6f0-9892-42db-a0ae-c833b6071a15}*SharedItemsImports = 5
->>>>>>> upstream/master
+		Shared.NFe.BLL\Shared.NFe.BLL.projitems*{55f27e3f-5cbc-483a-8406-eb311f411d30}*SharedItemsImports = 4
 		Shared.NFe.Servicos\Shared.NFe.Servicos.projitems*{57631341-c61b-49c6-a6ed-317ec42b1581}*SharedItemsImports = 13
 		Shared.NFe.Danfe.Fast\Shared.NFe.Danfe.Fast.projitems*{5794ab8a-ff29-4f55-abc2-9aafe333bd27}*SharedItemsImports = 13
 		Shared.CTe.Servicos\Shared.CTe.Servicos.projitems*{63227402-2b1e-4bc7-a6df-362129923cf6}*SharedItemsImports = 4
@@ -194,6 +188,7 @@ Global
 		Shared.CTe.Wsdl\Shared.CTe.Wsdl.projitems*{9cc914f9-4c3e-43bb-a34b-a12ae4923548}*SharedItemsImports = 4
 		Shared.NFe.Servicos\Shared.NFe.Servicos.projitems*{9dc6c14c-fb0e-4b49-9d85-5d41991884ff}*SharedItemsImports = 5
 		Shared.CTe.Servicos\Shared.CTe.Servicos.projitems*{ab5f2a04-a1cf-4d42-8b26-38ebebc8319b}*SharedItemsImports = 13
+		Shared.NFe.BLL\Shared.NFe.BLL.projitems*{ae3dc013-357d-4803-9482-dc956dbc6ece}*SharedItemsImports = 5
 		Shared.DFe.Utils\Shared.DFe.Utils.projitems*{b4e1a7a6-5d66-4326-8a8d-39338e6fc84c}*SharedItemsImports = 4
 		Shared.NFe.Danfe.Fast\Shared.NFe.Danfe.Fast.projitems*{b7f6a2ff-fd0e-4b44-82b3-371605cd0510}*SharedItemsImports = 4
 		Shared.CTe.Classes\Shared.CTe.Classes.projitems*{c86e3921-f0b8-4bfe-9ef1-0e9084326b13}*SharedItemsImports = 4
@@ -207,11 +202,8 @@ Global
 		Shared.NFe.Utils\Shared.NFe.Utils.projitems*{e35e7c4a-5690-4979-8b43-002975b48eaa}*SharedItemsImports = 4
 		Shared.NFe.Utils\Shared.NFe.Utils.projitems*{e7a4800f-b2ed-4495-b847-c4bf5654e24e}*SharedItemsImports = 13
 		Shared.CTe.Wsdl\Shared.CTe.Wsdl.projitems*{eda9f90e-7e03-4869-b341-e56071f70e06}*SharedItemsImports = 13
-<<<<<<< HEAD
-		Shared.NFe.BLL\Shared.NFe.BLL.projitems*{f839edf0-3bf9-4f09-80cb-22da68e8d0f2}*SharedItemsImports = 13
-=======
 		Shared.CTe.Wsdl\Shared.CTe.Wsdl.projitems*{f22f5c86-f71f-4e67-bbb7-7f0e837282dd}*SharedItemsImports = 5
->>>>>>> upstream/master
+		Shared.NFe.BLL\Shared.NFe.BLL.projitems*{f839edf0-3bf9-4f09-80cb-22da68e8d0f2}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

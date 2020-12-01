@@ -33,6 +33,7 @@
 
 using System;
 using System.IO;
+using DFe.Utils.Extensoes;
 
 namespace NFe.Utils
 {
@@ -66,10 +67,11 @@ namespace NFe.Utils
             DateTime dataOperacao,
             string extensaoArquivo)
         {
-            var nomeArquivoXML = string.Empty;
+            nomeArquivo = nomeArquivo.RetornaNumeros();
             var ano = dataOperacao.ToString("yyyy");
             var mes = dataOperacao.ToString("MM_yyyy");
 
+            string nomeArquivoXML;
             switch (eFolderType)
             {
                 case EFolderType.AUTORIZADA:
