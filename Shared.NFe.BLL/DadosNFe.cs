@@ -163,7 +163,7 @@ namespace NFe.BLL
             infNFe.infAdic = GetInfAdic();
             infNFe.exporta = GetExporta();
 
-            if (_cfgApp.Emitente.Pessoa.Endereco.MunicipioEstadoSigla != DFe.Classes.Entidades.Estado.SP)
+            if (_cfgApp.Emitente.Pessoa.Endereco.MunicipioEstadoSigla == DFe.Classes.Entidades.Estado.SC)
             {
                 infNFe.infRespTec = GetRespTec();
             }
@@ -191,7 +191,7 @@ namespace NFe.BLL
             var tpAmb = _cfgApp.CfgServico.tpAmb;
             FinalidadeNFe finNFe = NotaFiscal.EFinalidadeNFe;
             ConsumidorFinal indFinal = NotaFiscal.Destinatario?.EConsumidorFinal ?? ConsumidorFinal.cfConsumidorFinal;
-            PresencaComprador indPres = NotaFiscal.EPresencaComprador;
+            PresencaComprador indPres = NotaFiscal.EFinalidadeNFe == FinalidadeNFe.fnAjuste || NotaFiscal.EFinalidadeNFe == FinalidadeNFe.fnComplementar ? PresencaComprador.pcNao : NotaFiscal.EPresencaComprador;
             var verProc = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(); //Versão da DLL: PWNFe.BLL
             ModeloDocumento modeloDocumento = _cfgApp.CfgServico.ModeloDocumento;
 
@@ -280,7 +280,8 @@ namespace NFe.BLL
             var cpf = string.Empty;
             var blnClienteMEIIncidenciaICMS = NotaFiscal.Destinatario.IsMEIIsentoIncideICMS;
             var blnProdutorRural = NotaFiscal.Destinatario.IsProdutorRural;
-            var xNome = NotaFiscal.Destinatario.Pessoa.NomeRazaoSocial.Length > 60 ? NotaFiscal.Destinatario.Pessoa.NomeRazaoSocial.Substring(0, 60) : NotaFiscal.Destinatario.Pessoa.NomeRazaoSocial;
+            var isIsentoIE = NotaFiscal.Destinatario.Pessoa.InscricaoEstadualIsento;
+            var xNome = NotaFiscal.Destinatario.Pessoa.NomeRazaoSocial;
 
             var email = string.IsNullOrEmpty(NotaFiscal.Destinatario.Pessoa.Email) ? null : NotaFiscal.Destinatario.Pessoa.Email;
             if (email?.Contains(";") == true)
@@ -382,7 +383,7 @@ namespace NFe.BLL
                 return null;
             }
 
-            var xLgr = NotaFiscal.Destinatario.Pessoa.Endereco.Logradouro.Length > 60 ? NotaFiscal.Destinatario.Pessoa.Endereco.Logradouro.Substring(0, 60) : NotaFiscal.Destinatario.Pessoa.Endereco.Logradouro;
+            var xLgr = NotaFiscal.Destinatario.Pessoa.Endereco.Logradouro;
             var nro = NotaFiscal.Destinatario.Pessoa.Endereco.Numero;
             var xCpl = NotaFiscal.Destinatario.Pessoa.Endereco.Complemento;
             var xBairro = NotaFiscal.Destinatario.Pessoa.Endereco.Bairro;
@@ -453,14 +454,14 @@ namespace NFe.BLL
 
             var cpf = NotaFiscal.DadosTransporte.Transportadora.PessoaTipo == ETipoPessoa.Juridica ? null : NotaFiscal.DadosTransporte.Transportadora.CPFCNPJ;
             var cnpj = NotaFiscal.DadosTransporte.Transportadora.PessoaTipo == ETipoPessoa.Juridica ? NotaFiscal.DadosTransporte.Transportadora.CPFCNPJ : null;
-            var xNome = NotaFiscal.DadosTransporte.Transportadora.NomeRazaoSocial.Length > 60 ? NotaFiscal.DadosTransporte.Transportadora.NomeRazaoSocial.Substring(0, 60) : NotaFiscal.DadosTransporte.Transportadora.NomeRazaoSocial;
+            var xNome = NotaFiscal.DadosTransporte.Transportadora.NomeRazaoSocial;
             var ie = string.IsNullOrEmpty(NotaFiscal.DadosTransporte.Transportadora.RGInscricaoEstadual) ? null : NotaFiscal.DadosTransporte.Transportadora.RGInscricaoEstadual;
 
-            var xEnder = string.Join(", ", new string[] { NotaFiscal.DadosTransporte.Transportadora.Endereco.Logradouro, NotaFiscal.DadosTransporte.Transportadora.Endereco.Numero }.Where(c => !string.IsNullOrEmpty(c))).SanitizeString();
-            if (!string.IsNullOrEmpty(xEnder) && xEnder.Length > 60)
-            {
-                xEnder = xEnder.Substring(0, 60);
-            }
+            var xEnder = string.Join(", ", new string[] { NotaFiscal.DadosTransporte.Transportadora.Endereco.Logradouro, NotaFiscal.DadosTransporte.Transportadora.Endereco.Numero }.Where(c => !string.IsNullOrEmpty(c))).SanitizeString().SubstringMaxLength(60);
+            //if (!string.IsNullOrEmpty(xEnder) && xEnder.Length > 60)
+            //{
+            //    xEnder = xEnder.Substring(0, 60);
+            //}
 
             var xMun = string.IsNullOrEmpty(NotaFiscal.DadosTransporte.Transportadora.Endereco.MunicipioNome) ? null : NotaFiscal.DadosTransporte.Transportadora.Endereco.MunicipioNome;
             var uf = NotaFiscal.DadosTransporte.Transportadora.Endereco.MunicipioEstadoSigla?.GetSiglaUfString(); //TODO
@@ -591,7 +592,7 @@ namespace NFe.BLL
 
             var cProd = item.Referencia;
             var cEAN = GetProdutoEAN(item.CodigoBarras);
-            var xProd = (item.Descricao.Length > 120 ? item.Descricao.Substring(0, 120) : item.Descricao).Trim();
+            var xProd = item.Descricao;
             var ncm = item.NCM;
             var cfop = item.CFOP;
             var uCom = item.UnidadeCompra;
@@ -1683,7 +1684,8 @@ namespace NFe.BLL
                     {
                         indPag = IndicadorPagamentoDetalhePagamento.ipDetPgVista,
                         tPag = pagamento.FormaPagamento,
-                        vPag = pagamento.Valor
+                        vPag = pagamento.Valor,
+                        card = GetDadosPagamentoCartao(pagamento.pagamentoIntegracaoCartao)
                     });
                 }
                 var totalPago = NotaFiscal.FormasPagamento.Sum(pag => pag.Valor);
@@ -1719,6 +1721,22 @@ namespace NFe.BLL
                     detPag = pagamentos,
                     vTroco = troco
                 }
+            };
+        }
+
+        private card GetDadosPagamentoCartao(PagamentoIntegracaoCartao pagamentoIntegracaoCartao)
+        {
+            if(pagamentoIntegracaoCartao == null)
+            {
+                return null;
+            }
+
+            return new card()
+            {
+                tpIntegra = pagamentoIntegracaoCartao.ETipoIntegracaoPagamento,
+                CNPJ = pagamentoIntegracaoCartao.CNPJCredenciadoraCartao,
+                tBand = pagamentoIntegracaoCartao.BandeiraCartao,
+                cAut = pagamentoIntegracaoCartao.CodigoAutorizacaoTransacao
             };
         }
 

@@ -15,6 +15,7 @@ namespace NFe.BLL.Validators.Produtos
             //RuleFor(produto => produto.CEST).Matches(@"^\d{7}$").WithMessage($"CEST do NCM é inválido!");
             RuleFor(produto => produto.CFOP).NotEmpty().WithMessage(produto => $"CFOP do produto {produto.Descricao} não informado!");
             RuleFor(produto => produto.UnidadeCompra).NotEmpty().WithMessage(produto => $"Unidade de Medida do produto {produto.Descricao}  não informada!");
+            RuleFor(produto => produto.UnidadeTributacao).MaximumLength(6).WithMessage(produto => $"Unidade de Tributação é inválida do produto {produto.Descricao} não informado!");
             RuleFor(produto => produto.Quantidade).GreaterThan(0).WithMessage(produto => $"Quantidade do produto {produto.Descricao} informada é inválida!");
             RuleFor(produto => produto.Impostos).NotNull().WithMessage(produto => $"produto => Imposto do produto {produto.Descricao} não informado!");
         }

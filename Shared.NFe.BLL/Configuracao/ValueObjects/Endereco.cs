@@ -21,7 +21,7 @@ namespace NFe.BLL.Configuracao.ValueObjects
             string paisNome = "BRASIL"
             )
         {
-            Logradouro = logradouro.SanitizeString();
+            Logradouro = logradouro.SanitizeString().SubstringMaxLength(60);
             Numero = numero.SanitizeString();
             Complemento = complemento.SanitizeString();
             Bairro = bairro.SanitizeString();
@@ -35,7 +35,7 @@ namespace NFe.BLL.Configuracao.ValueObjects
 
         public Endereco(enderEmit endereco)
         {
-            Logradouro = endereco.xLgr.SanitizeString();
+            Logradouro = endereco.xLgr.SanitizeString().SubstringMaxLength(60);
             Numero = endereco.nro.SanitizeString();
             Complemento = endereco.xCpl.SanitizeString();
             Bairro = endereco.xBairro.SanitizeString();
@@ -49,7 +49,7 @@ namespace NFe.BLL.Configuracao.ValueObjects
 
         public Endereco(enderDest endereco)
         {
-            Logradouro = endereco.xLgr.SanitizeString();
+            Logradouro = endereco.xLgr.SanitizeString().SubstringMaxLength(60);
             Numero = endereco.nro.SanitizeString();
             Complemento = endereco.xCpl.SanitizeString();
             Bairro = endereco.xBairro.SanitizeString();
@@ -69,7 +69,7 @@ namespace NFe.BLL.Configuracao.ValueObjects
 
             if (enderecoCompleto.IndexOf(",") != -1)
             {
-                Logradouro = enderecoCompleto.Substring(0, enderecoCompleto.IndexOf(","));
+                Logradouro = enderecoCompleto.Substring(0, enderecoCompleto.IndexOf(",")).SanitizeString().SubstringMaxLength(60);
 
                 if (enderecoCompleto.Substring(enderecoCompleto.IndexOf(",") + 1, enderecoCompleto.Length - enderecoCompleto.IndexOf(",") - 1).Length > 15)
                 {

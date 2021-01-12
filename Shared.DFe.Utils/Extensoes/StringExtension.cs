@@ -33,7 +33,7 @@ namespace DFe.Utils.Extensoes
             }
 
             Regex rgx = new Regex("[^a-zA-Z0-9 -]");
-            return rgx.Replace(text, "");
+            return rgx.Replace(text, "").Trim();
         }
 
         public static string SanitizeString(this string text)
@@ -62,6 +62,18 @@ namespace DFe.Utils.Extensoes
             }
 
             return buffer.ToString().Trim();
+        }
+
+        public static string SubstringMaxLength(this string text, int maxLength)
+        {
+            if(string.IsNullOrEmpty(text)
+                || maxLength == 0
+                || text.Length <= maxLength)
+            {
+                return text?.Trim();
+            }
+
+            return text.Substring(0, maxLength).Trim();
         }
 
         private static bool IsLegalXmlChar(int character)
