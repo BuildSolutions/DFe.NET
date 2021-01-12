@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ConfiguracaoNFe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\ConfiguracaoCsc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Pagamento.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\PagamentoIntegracaoCartao.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Protocolo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DadosNFe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enums\EDocumentoReferenciado.cs" />

@@ -33,7 +33,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos
         {
             Referencia = referencia.SanitizeString();
             CodigoBarras = codigoBarras.SanitizeString();
-            Descricao = descricao.SanitizeString();
+            Descricao = descricao.SanitizeString().SubstringMaxLength(120);
             NCM = ncm.SanitizeString();
             CEST = cest.SanitizeString();
             CFOP = cfop;

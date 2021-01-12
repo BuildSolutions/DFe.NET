@@ -30,7 +30,8 @@ namespace NFe.BLL.Configuracao.Entidades
             IReadOnlyList<Pagamento> formasPagamento = null,
             IReadOnlyList<DocumentoReferenciado> documentosReferenciados = null,
             string numeroPedidoCompraB2B = null,
-            bool isZonaFrancaManaus = false)
+            bool isZonaFrancaManaus = false,
+            Protocolo protocolo = null)
         {
             var emitenteUf = emitente?.Pessoa?.Endereco?.MunicipioEstadoSigla.GetValueOrDefault();
             var destinatarioUf = destinatario?.Pessoa?.Endereco?.MunicipioEstadoSigla.GetValueOrDefault();
@@ -59,6 +60,7 @@ namespace NFe.BLL.Configuracao.Entidades
             Produtos = produtos;
             FormasPagamento = formasPagamento;
             IsZonaFrancaManaus = isZonaFrancaManaus;
+            Protocolo = protocolo;
         }
 
         public NotaFiscal(Classes.nfeProc notafiscalProcessada)
@@ -180,6 +182,14 @@ namespace NFe.BLL.Configuracao.Entidades
             }
 
             Protocolo.AtualizarChaveAcesso(chaveAcesso);
+        }
+
+        public void AtualizarProtocolo(Classes.Protocolo.infProt protocolo)
+        {
+            if(protocolo != null)
+            {
+                Protocolo = new Protocolo(protocolo);
+            }
         }
     }
 }

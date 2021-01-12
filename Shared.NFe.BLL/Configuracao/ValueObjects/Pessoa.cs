@@ -20,7 +20,7 @@ namespace NFe.BLL.Configuracao.ValueObjects
             string email = "")
         {
             PessoaTipo = pessoaTipo;
-            NomeRazaoSocial = nomeRazaoSocial.SanitizeString() ?? "CONSUMIDOR";
+            NomeRazaoSocial = nomeRazaoSocial.SanitizeString().SubstringMaxLength(60);
             ApelidoFantasia = apelidoFantasia.SanitizeString();
             Endereco = endereco;
             Telefone = telefone == 0 ? null : telefone;
@@ -34,7 +34,7 @@ namespace NFe.BLL.Configuracao.ValueObjects
         public Pessoa(emit emitente)
         {
             PessoaTipo = ETipoPessoa.Juridica;
-            NomeRazaoSocial = emitente.xNome.SanitizeString() ?? "CONSUMIDOR";
+            NomeRazaoSocial = emitente.xNome.SanitizeString().SubstringMaxLength(60);
             ApelidoFantasia = emitente.xFant.SanitizeString();
             Endereco = new Endereco(emitente.enderEmit);
             Telefone = null;
@@ -48,7 +48,7 @@ namespace NFe.BLL.Configuracao.ValueObjects
         public Pessoa(dest destinatario)
         {
             PessoaTipo = ETipoPessoa.Juridica;
-            NomeRazaoSocial = destinatario.xNome.SanitizeString() ?? "CONSUMIDOR";
+            NomeRazaoSocial = destinatario.xNome.SanitizeString().SubstringMaxLength(60);
             ApelidoFantasia = null;
             Endereco = new Endereco(destinatario.enderDest);
             Telefone = null;
@@ -62,7 +62,7 @@ namespace NFe.BLL.Configuracao.ValueObjects
         public Pessoa(transporta transportadora)
         {
             PessoaTipo = ETipoPessoa.Juridica;
-            NomeRazaoSocial = transportadora.xNome.SanitizeString() ?? "CONSUMIDOR";
+            NomeRazaoSocial = transportadora.xNome.SanitizeString().SubstringMaxLength(60);
             ApelidoFantasia = null;
             Endereco = new Endereco(transportadora);
             Telefone = null;

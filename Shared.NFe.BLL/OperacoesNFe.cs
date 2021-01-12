@@ -99,7 +99,7 @@ namespace NFe.BLL
                 }
 
                 string contribuinteNaoHabilitado = string.Empty;
-                if (retornoConsulta.Retorno.infCons.infCad.cSit == 0)
+                if (retornoConsulta.Retorno.infCons.infCad?.cSit == 0)
                 {
                     contribuinteNaoHabilitado = "Contribuinte não habilitado";
 
