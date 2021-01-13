@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>4f7ac401-d1ca-4a7e-8dca-30c81551258b</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Shared.GNRE.Utils</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ConfiguracaoServico.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consulta\ConfiguracaoUF\ExtTConfigUf.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consulta\ConfiguracaoUF\ExtTConsultaConfigUf.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consulta\Lote\ExtTconsLote_GNRE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consulta\Lote\ExtTresultLote_GNRE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enderecos\Enderecador.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enderecos\EnderecoServico.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Excecoes\ValidacaoSchemaException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GNRESituacao.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GNRE\ExtTDadosGNRE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Recepcao\ExtTLote_GNRE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Recepcao\ExtTretLote_GNRE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validator\Validator.cs" />
+  </ItemGroup>
+</Project>
