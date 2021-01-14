@@ -186,6 +186,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GNRE.Utils", "GNRE.Utils\GN
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GNRE.Utils.Standard", "GNRE.Utils.Standard\GNRE.Utils.Standard.csproj", "{37680DE3-2E1E-4DF6-BC9F-50FC45317FB3}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared.GNRE.Wsdl", "Shared.GNRE.Wsdl\Shared.GNRE.Wsdl.shproj", "{919EBECF-B9A9-485D-900D-6F365BC591A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GNRE.Wsdl.Standard", "GNRE.Wsdl.Standard\GNRE.Wsdl.Standard.csproj", "{E0F91A5C-7E7B-443C-AB79-77FE5CAEE7B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GNRE.Wsdl", "GNRE.Wsdl\GNRE.Wsdl.csproj", "{34662C72-DC3E-468F-BA33-2AF2E512DDC8}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Shared.GNRE.Servicos\Shared.GNRE.Servicos.projitems*{0061efca-1834-4707-8d70-4d09fed581c9}*SharedItemsImports = 13
@@ -197,6 +203,7 @@ Global
 		Shared.NFe.Utils\Shared.NFe.Utils.projitems*{2cea538f-d827-4fa2-ba16-3e9e08d8e9a1}*SharedItemsImports = 5
 		Shared.DFe.Wsdl\Shared.DFe.Wsdl.projitems*{2ea17efc-7e97-47c3-90c7-3cad286d61ac}*SharedItemsImports = 5
 		Shared.DFe.Classes\Shared.DFe.Classes.projitems*{3108968d-d505-4365-966f-bbe3cbf63c35}*SharedItemsImports = 13
+		Shared.GNRE.Wsdl\Shared.GNRE.Wsdl.projitems*{34662c72-dc3e-468f-ba33-2af2e512ddc8}*SharedItemsImports = 4
 		Shared.GNRE.Utils\Shared.GNRE.Utils.projitems*{37680de3-2e1e-4df6-bc9f-50fc45317fb3}*SharedItemsImports = 5
 		Shared.CTe.Classes\Shared.CTe.Classes.projitems*{46314f7c-49d9-4165-b3cf-15741aa14cf1}*SharedItemsImports = 5
 		Shared.NFe.Classes\Shared.NFe.Classes.projitems*{4cc78350-9e01-465a-ac60-e31a53cefe24}*SharedItemsImports = 13
@@ -216,6 +223,7 @@ Global
 		Shared.GNRE.Utils\Shared.GNRE.Utils.projitems*{89e83526-4207-4a1d-98fe-3670a55257d0}*SharedItemsImports = 4
 		Shared.DFe.Wsdl\Shared.DFe.Wsdl.projitems*{8a90a3f4-d280-4b2b-b4ff-0dc110411bb6}*SharedItemsImports = 13
 		Shared.DFe.Utils\Shared.DFe.Utils.projitems*{8d5ca088-ef4b-42f5-86e3-52cb6083c9ef}*SharedItemsImports = 5
+		Shared.GNRE.Wsdl\Shared.GNRE.Wsdl.projitems*{919ebecf-b9a9-485d-900d-6f365bc591a1}*SharedItemsImports = 13
 		Shared.DFe.Classes\Shared.DFe.Classes.projitems*{9984ec15-18e1-4a87-b4db-18ac913dc4e8}*SharedItemsImports = 4
 		Shared.DFe.Classes\Shared.DFe.Classes.projitems*{9a3d6d38-3579-472f-b406-4723c9a72e08}*SharedItemsImports = 5
 		Shared.CTe.Wsdl\Shared.CTe.Wsdl.projitems*{9cc914f9-4c3e-43bb-a34b-a12ae4923548}*SharedItemsImports = 4
@@ -231,6 +239,7 @@ Global
 		Shared.CTe.Classes\Shared.CTe.Classes.projitems*{da95f515-5eed-4a7e-b711-f3b499629df5}*SharedItemsImports = 13
 		Shared.DFe.Wsdl\Shared.DFe.Wsdl.projitems*{dbee88e7-6003-436e-9810-9acc662f5851}*SharedItemsImports = 4
 		Shared.CTe.Utils\Shared.CTe.Utils.projitems*{e06b0d39-2ba8-4ac8-9b58-4c3f0e73128c}*SharedItemsImports = 5
+		Shared.GNRE.Wsdl\Shared.GNRE.Wsdl.projitems*{e0f91a5c-7e7b-443c-ab79-77fe5caee7b1}*SharedItemsImports = 5
 		Shared.DFe.Utils\Shared.DFe.Utils.projitems*{e1888e9e-0273-40cb-a569-2ad023907140}*SharedItemsImports = 13
 		Shared.NFe.Utils\Shared.NFe.Utils.projitems*{e35e7c4a-5690-4979-8b43-002975b48eaa}*SharedItemsImports = 4
 		Shared.NFe.Utils\Shared.NFe.Utils.projitems*{e7a4800f-b2ed-4495-b847-c4bf5654e24e}*SharedItemsImports = 13
@@ -710,6 +719,22 @@ Global
 		{37680DE3-2E1E-4DF6-BC9F-50FC45317FB3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{37680DE3-2E1E-4DF6-BC9F-50FC45317FB3}.Release|x86.ActiveCfg = Release|Any CPU
 		{37680DE3-2E1E-4DF6-BC9F-50FC45317FB3}.Release|x86.Build.0 = Release|Any CPU
+		{E0F91A5C-7E7B-443C-AB79-77FE5CAEE7B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0F91A5C-7E7B-443C-AB79-77FE5CAEE7B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0F91A5C-7E7B-443C-AB79-77FE5CAEE7B1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E0F91A5C-7E7B-443C-AB79-77FE5CAEE7B1}.Debug|x86.Build.0 = Debug|Any CPU
+		{E0F91A5C-7E7B-443C-AB79-77FE5CAEE7B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0F91A5C-7E7B-443C-AB79-77FE5CAEE7B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0F91A5C-7E7B-443C-AB79-77FE5CAEE7B1}.Release|x86.ActiveCfg = Release|Any CPU
+		{E0F91A5C-7E7B-443C-AB79-77FE5CAEE7B1}.Release|x86.Build.0 = Release|Any CPU
+		{34662C72-DC3E-468F-BA33-2AF2E512DDC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34662C72-DC3E-468F-BA33-2AF2E512DDC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34662C72-DC3E-468F-BA33-2AF2E512DDC8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{34662C72-DC3E-468F-BA33-2AF2E512DDC8}.Debug|x86.Build.0 = Debug|Any CPU
+		{34662C72-DC3E-468F-BA33-2AF2E512DDC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34662C72-DC3E-468F-BA33-2AF2E512DDC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34662C72-DC3E-468F-BA33-2AF2E512DDC8}.Release|x86.ActiveCfg = Release|Any CPU
+		{34662C72-DC3E-468F-BA33-2AF2E512DDC8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -786,6 +811,9 @@ Global
 		{4F7AC401-D1CA-4A7E-8DCA-30C81551258B} = {BC687199-E479-46CF-821F-874D2A0F3E6D}
 		{89E83526-4207-4A1D-98FE-3670A55257D0} = {B01159C6-5A84-45BB-A6BE-C68121B1C58E}
 		{37680DE3-2E1E-4DF6-BC9F-50FC45317FB3} = {B01159C6-5A84-45BB-A6BE-C68121B1C58E}
+		{919EBECF-B9A9-485D-900D-6F365BC591A1} = {BC687199-E479-46CF-821F-874D2A0F3E6D}
+		{E0F91A5C-7E7B-443C-AB79-77FE5CAEE7B1} = {B01159C6-5A84-45BB-A6BE-C68121B1C58E}
+		{34662C72-DC3E-468F-BA33-2AF2E512DDC8} = {B01159C6-5A84-45BB-A6BE-C68121B1C58E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C8C4D9F7-EF86-49A2-83AF-13FA5D4E8DBB}

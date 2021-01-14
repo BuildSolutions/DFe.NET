@@ -4,15 +4,14 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
-  <Import Project="..\Shared.GNRE.Servicos\Shared.GNRE.Servicos.projitems" Label="Shared" />
-
   <ItemGroup>
     <ProjectReference Include="..\DFe.Classes.Standard\DFe.Classes.Standard.csproj" />
     <ProjectReference Include="..\DFe.Utils.Standard\DFe.Utils.Standard.csproj" />
     <ProjectReference Include="..\DFe.Wsdl.Standard\DFe.Wsdl.Standard.csproj" />
     <ProjectReference Include="..\GNRE.Classes.Standard\GNRE.Classes.Standard.csproj" />
     <ProjectReference Include="..\GNRE.Utils.Standard\GNRE.Utils.Standard.csproj" />
-    <ProjectReference Include="..\GNRE.Wsdl.Standard\GNRE.Wsdl.Standard.csproj" />
   </ItemGroup>
+
+  <Import Project="..\Shared.GNRE.Wsdl\Shared.GNRE.Wsdl.projitems" Label="Shared" />
 
 </Project>

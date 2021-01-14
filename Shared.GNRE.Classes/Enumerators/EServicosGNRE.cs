@@ -10,7 +10,7 @@
         /// <summary>
         /// Serviço para consultar o resultado do processamento do lote.
         /// </summary>
-        GNREConsultaLote,
+        GNREResultadoLote,
 
         /// <summary>
         /// Serviço para consultar as regras para preenchimento da guia de uma determinada UF

@@ -62,7 +62,7 @@ namespace GNRE.Utils.Enderecos
                 case Estado.PE:
                 case Estado.RR:
                     endServico.Add(new EnderecoServico(EServicosGNRE.ConsultaConfiguracaoUF, VersaoServico.Versao200, configuracaoServico.tpAmb, configuracaoServico.cUF, "https://www.gnre.pe.gov.br/gnreWS/services/GnreConfigUF"));
-                    endServico.Add(new EnderecoServico(EServicosGNRE.GNREConsultaLote, VersaoServico.Versao200, configuracaoServico.tpAmb, configuracaoServico.cUF, "https://www.gnre.pe.gov.br/gnreWS/services/GnreResultadoLote"));
+                    endServico.Add(new EnderecoServico(EServicosGNRE.GNREResultadoLote, VersaoServico.Versao200, configuracaoServico.tpAmb, configuracaoServico.cUF, "https://www.gnre.pe.gov.br/gnreWS/services/GnreResultadoLote"));
                     endServico.Add(new EnderecoServico(EServicosGNRE.RecepcaoLote, VersaoServico.Versao200, configuracaoServico.tpAmb, configuracaoServico.cUF, "https://www.gnre.pe.gov.br/gnreWS/services/GnreLoteRecepcao"));
                     break;
                 default:
@@ -110,7 +110,7 @@ namespace GNRE.Utils.Enderecos
                 case Estado.PE:
                 case Estado.RR:
                     endServico.Add(new EnderecoServico(EServicosGNRE.ConsultaConfiguracaoUF, VersaoServico.Versao200, configuracaoServico.tpAmb, configuracaoServico.cUF, "https://www.testegnre.pe.gov.br/gnreWS/services/GnreConfigUF"));
-                    endServico.Add(new EnderecoServico(EServicosGNRE.GNREConsultaLote, VersaoServico.Versao200, configuracaoServico.tpAmb, configuracaoServico.cUF, "https://www.testegnre.pe.gov.br/gnreWS/services/GnreResultadoLote"));
+                    endServico.Add(new EnderecoServico(EServicosGNRE.GNREResultadoLote, VersaoServico.Versao200, configuracaoServico.tpAmb, configuracaoServico.cUF, "https://www.testegnre.pe.gov.br/gnreWS/services/GnreResultadoLote"));
                     endServico.Add(new EnderecoServico(EServicosGNRE.RecepcaoLote, VersaoServico.Versao200, configuracaoServico.tpAmb, configuracaoServico.cUF, "https://www.testegnre.pe.gov.br/gnreWS/services/GnreLoteRecepcao"));
                     break;
                 default:

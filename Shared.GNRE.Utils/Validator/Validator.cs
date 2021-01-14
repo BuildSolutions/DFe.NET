@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using DFe.Classes.Flags;
@@ -22,7 +20,7 @@ namespace GNRE.Utils.Validator
                     {
                         case EServicosGNRE.RecepcaoLote:
                             return "lote_gnre_v2.00.xsd";
-                        case EServicosGNRE.GNREConsultaLote:
+                        case EServicosGNRE.GNREResultadoLote:
                             return "lote_gnre_consulta_v1.00.xsd";
                         case EServicosGNRE.ConsultaConfiguracaoUF:
                             return "consulta_config_uf_v1.00.xsd";
@@ -39,7 +37,7 @@ namespace GNRE.Utils.Validator
             return null;
         }
 
-        public static void Valida(EServicosGNRE servicoGNRE, VersaoServico versaoServico, string stringXml, bool loteNfe = true, ConfiguracaoServico cfgServico = null)
+        public static void Valida(EServicosGNRE servicoGNRE, VersaoServico versaoServico, string stringXml, ConfiguracaoServico cfgServico = null)
         {
             var pathSchema = String.Empty;
 
@@ -53,9 +51,11 @@ namespace GNRE.Utils.Validator
         public static void Valida(EServicosGNRE servicoGNRE, VersaoServico versaoServico, string stringXml, string pathSchema = null)
         {
             if (!Directory.Exists(pathSchema))
+            {
                 throw new Exception("Diretório de Schemas não encontrado: \n" + pathSchema);
+            }
 
-            var arquivoSchema = Path.Combine(pathSchema, ObterArquivoSchema(servicoGNRE, versaoServico, stringXml, loteNfe));
+            var arquivoSchema = Path.Combine(pathSchema, ObterArquivoSchema(servicoGNRE, versaoServico));
 
             // Define o tipo de validação
             var cfg = new XmlReaderSettings { ValidationType = ValidationType.Schema };

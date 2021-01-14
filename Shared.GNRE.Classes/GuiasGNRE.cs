@@ -2,7 +2,7 @@
 
 namespace GNRE.Classes
 {
-    public class Guia
+    public class GuiasGNRE
     {
         public TDadosGNRE TDadosGNRE { get; set; }
     }

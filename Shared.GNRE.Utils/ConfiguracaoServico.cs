@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
 using DFe.Classes.Entidades;
@@ -83,6 +84,8 @@ namespace GNRE.Utils
                 AtualizaVersoes();
             }
         }
+
+        public SecurityProtocolType ProtocoloDeSeguranca { get; set; }
 
         /// <summary>
         ///     Diretório onde estão armazenados os schemas para validação

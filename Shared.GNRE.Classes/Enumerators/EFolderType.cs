@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Shared.GNRE.Classes.Enumerators
+﻿namespace GNRE.Classes.Enumerators
 {
-    class EFolderType
+    public enum EFolderType
     {
+        AUTORIZADA,
+        TEMP,
+        GERADOS,
+        LOTES
     }
 }

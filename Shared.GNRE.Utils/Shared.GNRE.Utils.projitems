@@ -16,9 +16,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Consulta\Lote\ExtTresultLote_GNRE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enderecos\Enderecador.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enderecos\EnderecoServico.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Excecoes\ComunicacaoException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Excecoes\FabricaComunicacaoException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Excecoes\ValidacaoSchemaException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GNRESituacao.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GNRE\ExtTDadosGNRE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PathHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Recepcao\ExtTLote_GNRE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Recepcao\ExtTretLote_GNRE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Validator\Validator.cs" />

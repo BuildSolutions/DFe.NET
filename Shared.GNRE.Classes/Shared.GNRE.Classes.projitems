@@ -17,7 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Informacoes\Destinatario\ContribuinteDestinatario.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Informacoes\Emitente\ContribuinteEmitente.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumerators\ECampoExtra.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)GuiaGNRE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GuiasGNRE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Informacoes\Itens\Extras\CamposExtras.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Informacoes\Emitente\PessoaIdentificacao.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumerators\EDetalhamentoReceita.cs" />

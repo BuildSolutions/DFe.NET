@@ -5,7 +5,7 @@ using DFe.Classes.Flags;
 
 namespace GNRE.Classes.Servicos.Consulta.ConfiguracaoUF.Retorno
 {
-    public class TConfigUf
+    public class TConfigUf : IRetornoServico
     {
         /// <summary>
         /// Identificação do Ambiente: 1=Produção/2=Homologação 
