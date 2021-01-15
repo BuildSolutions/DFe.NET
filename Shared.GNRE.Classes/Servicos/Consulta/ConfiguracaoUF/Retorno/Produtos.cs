@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace GNRE.Classes.Servicos.Consulta.ConfiguracaoUF.Retorno
 {
@@ -7,6 +8,7 @@ namespace GNRE.Classes.Servicos.Consulta.ConfiguracaoUF.Retorno
         /// <summary>
         /// Especifica cada produto
         /// </summary>
+        [XmlElement("produto")]
         public List<Produto> produto { get; set; }
     }
 

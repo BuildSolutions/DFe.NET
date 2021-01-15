@@ -17,20 +17,20 @@ namespace GNRE.Classes.Informacoes.Dados
             versao = "2.00";
         }
 
-        [XmlAttributeAttribute()]
+        [XmlAttribute]
         public string versao { get; set; }
 
         /// <summary>
         /// Contém a sigla da UF favorecida.Campo com 2 dígitos.
         /// </summary>
         [XmlIgnore]
-        public Estado _ufFavorecida { get; set; }
+        public Estado ufFavorecida { get; set; }
 
         [XmlElement(ElementName = "ufFavorecida")]
         public string ProxyUF
         {
-            get => Enum.GetName(typeof(Estado), _ufFavorecida);
-            set => _ufFavorecida = (Estado)Enum.Parse(typeof(Estado), value);
+            get => Enum.GetName(typeof(Estado), ufFavorecida);
+            set => ufFavorecida = (Estado)Enum.Parse(typeof(Estado), value);
         }
 
         /// <summary>

@@ -184,11 +184,11 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared.GNRE.Utils", "Shared
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GNRE.Utils", "GNRE.Utils\GNRE.Utils.csproj", "{89E83526-4207-4A1D-98FE-3670A55257D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GNRE.Utils.Standard", "GNRE.Utils.Standard\GNRE.Utils.Standard.csproj", "{37680DE3-2E1E-4DF6-BC9F-50FC45317FB3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GNRE.Utils.Standard", "GNRE.Utils.Standard\GNRE.Utils.Standard.csproj", "{37680DE3-2E1E-4DF6-BC9F-50FC45317FB3}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared.GNRE.Wsdl", "Shared.GNRE.Wsdl\Shared.GNRE.Wsdl.shproj", "{919EBECF-B9A9-485D-900D-6F365BC591A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GNRE.Wsdl.Standard", "GNRE.Wsdl.Standard\GNRE.Wsdl.Standard.csproj", "{E0F91A5C-7E7B-443C-AB79-77FE5CAEE7B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GNRE.Wsdl.Standard", "GNRE.Wsdl.Standard\GNRE.Wsdl.Standard.csproj", "{E0F91A5C-7E7B-443C-AB79-77FE5CAEE7B1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GNRE.Wsdl", "GNRE.Wsdl\GNRE.Wsdl.csproj", "{34662C72-DC3E-468F-BA33-2AF2E512DDC8}"
 EndProject
@@ -243,6 +243,7 @@ Global
 		Shared.DFe.Utils\Shared.DFe.Utils.projitems*{e1888e9e-0273-40cb-a569-2ad023907140}*SharedItemsImports = 13
 		Shared.NFe.Utils\Shared.NFe.Utils.projitems*{e35e7c4a-5690-4979-8b43-002975b48eaa}*SharedItemsImports = 4
 		Shared.NFe.Utils\Shared.NFe.Utils.projitems*{e7a4800f-b2ed-4495-b847-c4bf5654e24e}*SharedItemsImports = 13
+		Shared.GNRE.Servicos\Shared.GNRE.Servicos.projitems*{ec93c022-899e-4b39-80c0-3d688c0a7ff7}*SharedItemsImports = 4
 		Shared.CTe.Wsdl\Shared.CTe.Wsdl.projitems*{eda9f90e-7e03-4869-b341-e56071f70e06}*SharedItemsImports = 13
 		Shared.CTe.Wsdl\Shared.CTe.Wsdl.projitems*{f22f5c86-f71f-4e67-bbb7-7f0e837282dd}*SharedItemsImports = 5
 		Shared.NFe.BLL\Shared.NFe.BLL.projitems*{f839edf0-3bf9-4f09-80cb-22da68e8d0f2}*SharedItemsImports = 13

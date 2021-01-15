@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 namespace GNRE.Wsdl.Recepcao
 {
-    [WebServiceBindingAttribute(Name = "GnreLoteRecepcao2", Namespace = "http://www.gnre.pe.gov.br/webservice/GnreLoteRecepcao")]
+    [WebServiceBinding(Name = "GnreLoteRecepcaoService", Namespace = "http://www.gnre.pe.gov.br/webservice/GnreResultadoLote")]
     public class GnreLoteRecepcao2 : SoapHttpClientProtocol, INfeServico
     {
         public GnreLoteRecepcao2(string url, X509Certificate certificado, int timeOut)
@@ -18,8 +18,10 @@ namespace GNRE.Wsdl.Recepcao
             ClientCertificates.Add(certificado);
         }
 
+        //[XmlAttribute(Namespace = "http://www.gnre.pe.gov.br/webservice/GnreResultadoLote")]
         public gnreCabecMsg gnreCabecMsg { get; set; }
 
+        [SoapHeader("gnreCabecMsg")]
         [SoapDocumentMethod("http://www.gnre.pe.gov.br/webservice/GnreLoteRecepcao/processar", Use = SoapBindingUse.Literal, ParameterStyle = SoapParameterStyle.Bare)]
         [return: XmlElement("processarResponse", Namespace = "http://www.gnre.pe.gov.br/webservice/GnreLoteRecepcao")]
         [WebMethod(MessageName = "processar")]

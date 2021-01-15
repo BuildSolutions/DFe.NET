@@ -5,11 +5,12 @@ using DFe.Classes.Flags;
 
 namespace GNRE.Classes.Servicos.Consulta.ConfiguracaoUF
 {
+    [XmlRoot(Namespace = "http://www.gnre.pe.gov.br", IsNullable = false)]
     public class TConsultaConfigUf
     {
-        public TConsultaConfigUf(TipoAmbiente ambiente, Estado uf, int? receita = null)
+        public TConsultaConfigUf(TipoAmbiente ambiente, Estado uf, TConsultaConfigUfReceita receita = null)
         {
-            Ambiente = ambiente;
+            this.ambiente = ambiente;
             this.uf = uf;
             ProxyUF = uf.ToString();
             this.receita = receita;
@@ -21,9 +22,9 @@ namespace GNRE.Classes.Servicos.Consulta.ConfiguracaoUF
         }
 
         /// <summary>
-        /// Identificação do Ambiente: 1=Produção/2=Homologação 
+        /// Identificação do ambiente: 1=Produção/2=Homologação 
         /// </summary>
-        public TipoAmbiente Ambiente { get; set; }
+        public TipoAmbiente ambiente { get; set; }
 
         /// <summary>
         /// Contém a sigla da UF favorecida.Campo com 2 dígitos.
@@ -42,6 +43,6 @@ namespace GNRE.Classes.Servicos.Consulta.ConfiguracaoUF
         /// Código da receita a ser consultada.
         /// Obs: informar o parâmetro courier caso seja a receita 100056 e deseja a configuração especifica para Empresa de Courier
         /// </summary>
-        public int? receita { get; set; }
+        public TConsultaConfigUfReceita receita { get; set; }
     }
 }

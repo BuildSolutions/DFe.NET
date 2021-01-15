@@ -16,5 +16,10 @@
         /// Campo onde ocorreu o motivo da rejeição
         /// </summary>
         public string campo { get; set; }
+
+        public override string ToString()
+        {
+            return $"{codigo} - {descricao}";
+        }
     }
 }

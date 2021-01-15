@@ -1,17 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using GNRE.Classes.Enumerators;
 using GNRE.Utils;
 using GNRE.Utils.Enderecos;
 using GNRE.Wsdl;
+using GNRE.Wsdl.Consulta.ConfiguracaoUF;
+using GNRE.Wsdl.Consulta.Lote;
 using GNRE.Wsdl.Recepcao;
 
 namespace GNRE.Servicos
 {
-    public class ServicoGNREFactory
+    public static class ServicoGNREFactory
     {
         /// <summary>
         /// Cria o cliente <see cref="SoapHttpClientProtocol"/> para os serviços passados no parâmetro <paramref name="servico"/>
@@ -24,21 +23,19 @@ namespace GNRE.Servicos
         {
             var enderecos = Enderecador.ObterUrlServico(cfg);
 
-            string url = enderecos.FirstOrDefault(end => end.ServicoGNRE == servico)?.Url;
+            string url = enderecos.Find(end => end.ServicoGNRE == servico)?.Url;
 
             switch (servico)
             {
                 case EServicosGNRE.RecepcaoLote:
                     return new GnreLoteRecepcao2(url, certificado, cfg.TimeOut);
                 case EServicosGNRE.GNREResultadoLote:
-                    break;
+                    return new GnreConsultaResultadoLote2(url, certificado, cfg.TimeOut);
                 case EServicosGNRE.ConsultaConfiguracaoUF:
-                    break;
+                    return new GnreConfiguracaoUF2(url, certificado, cfg.TimeOut);
                 default:
-                    break;
+                    throw new ArgumentOutOfRangeException("servicoGnre", servico, null);
             }
-
-            return null;
         }
     }
 }

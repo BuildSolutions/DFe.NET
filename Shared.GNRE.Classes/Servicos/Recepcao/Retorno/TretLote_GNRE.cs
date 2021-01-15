@@ -1,14 +1,17 @@
-﻿using DFe.Classes.Flags;
+﻿using System.Xml.Serialization;
+using DFe.Classes.Flags;
 
 namespace GNRE.Classes.Servicos.Recepcao.Retorno
 {
-    public class TretLote_GNRE : IRetornoServico
+    [XmlRoot(Namespace = "http://www.gnre.pe.gov.br", IsNullable = false)]
+    public class TRetLote_GNRE : IRetornoServico
     {
         /// <summary>
-        /// Identificação do Ambiente: 1=Produção/2=Homologação 
+        /// Identificação do ambiente: 1=Produção/2=Homologação 
         /// </summary>
-        public TipoAmbiente Ambiente { get; set; }
+        public TipoAmbiente ambiente { get; set; }
 
+        [XmlElement(Namespace = "http://www.gnre.pe.gov.br", IsNullable = false)]
         public SituacaoRecepcao situacaoRecepcao { get; set; }
 
         public Recibo recibo { get; set; }

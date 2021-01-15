@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 using GNRE.Classes.Enumerators;
 
 namespace GNRE.Classes.Servicos.Consulta.ConfiguracaoUF.Retorno
@@ -10,6 +9,7 @@ namespace GNRE.Classes.Servicos.Consulta.ConfiguracaoUF.Retorno
         /// <summary>
         /// Especifica cada período de apuração.
         /// </summary>
+        [XmlElement("periodoApuracao")]
         public List<PeriodoApuracao> periodoApuracao { get; set; }
     }
 

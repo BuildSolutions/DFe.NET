@@ -132,7 +132,7 @@ namespace GNRE.Servicos
             }
 
             var retornoXmlString = retorno.OuterXml;
-            var retAutorizacaoLoteGNRE = new TretLote_GNRE().CarregarDeXmlString(retornoXmlString);
+            var retAutorizacaoLoteGNRE = new TRetLote_GNRE().CarregarDeXmlString(retornoXmlString);
 
             SalvarArquivoXml($"{DateTime.Now.ParaDataHoraString()}-rec.xml", retornoXmlString);
 
@@ -164,7 +164,7 @@ namespace GNRE.Servicos
 
             #region Cria o objeto TLote_GNRE
 
-            var pedConsulta = new TconsLote_GNRE(_cFgServico.tpAmb, numeroRecibo);
+            var pedConsulta = new TConsLote_GNRE(_cFgServico.tpAmb, numeroRecibo);
 
             #endregion
 
@@ -191,7 +191,7 @@ namespace GNRE.Servicos
             }
 
             var retornoXmlString = retorno.OuterXml;
-            var retResultadoLoteGNRE = new TresultLote_GNRE().CarregarDeXmlString(retornoXmlString);
+            var retResultadoLoteGNRE = new TResultLote_GNRE().CarregarDeXmlString(retornoXmlString);
 
             SalvarArquivoXml($"{DateTime.Now.ParaDataHoraString()}-pro-rec.xml", retornoXmlString);
 
@@ -205,8 +205,9 @@ namespace GNRE.Servicos
         /// Consulta as configurações da GNRE para a uf informada
         /// </summary>
         /// <param name="gnres"></param>
+        /// <param name="receita"></param>
         /// <returns>Retorna um objeto da classe RetornoConsultaConfiguracaoUF com o retorno do serviço GNREConsultaConfiguracaoUF</returns>
-        public RetornoConsultaConfiguracaoUF GNREConsultaConfiguracaoUF(Estado uf)
+        public RetornoConsultaConfiguracaoUF GNREConsultaConfiguracaoUF(Estado uf, TConsultaConfigUfReceita receita = null)
         {
             var versaoServico = _cFgServico.VersaoLayout.GetVersaoString();
 
@@ -216,14 +217,14 @@ namespace GNRE.Servicos
 
             ws.gnreCabecMsg = new gnreCabecMsg
             {
-                versaoDados = versaoServico
+                versaoDados = "1.00"
             };
 
             #endregion
 
             #region Cria o objeto TLote_GNRE
 
-            var pedConsulta = new TConsultaConfigUf(_cFgServico.tpAmb, uf);
+            var pedConsulta = new TConsultaConfigUf(_cFgServico.tpAmb, uf, receita);
 
             #endregion
 

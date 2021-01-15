@@ -8,6 +8,7 @@ using System.Text;
 using DFe.Classes.Entidades;
 using DFe.Classes.Flags;
 using DFe.Utils;
+using DFe.Utils.Extensoes;
 using GNRE.Utils.Enderecos;
 
 namespace GNRE.Utils
@@ -160,7 +161,8 @@ namespace GNRE.Utils
         /// </summary>
         private void AtualizaVersoes()
         {
-            if(VersaoLayout != VersaoServico.Versao200)
+            if(VersaoLayout.EValido() &&
+                VersaoLayout != VersaoServico.Versao200)
             {
                 throw new InvalidOperationException($"GNRE não configurada para a versão {VersaoLayout.XmlDescricao()}.");
             }

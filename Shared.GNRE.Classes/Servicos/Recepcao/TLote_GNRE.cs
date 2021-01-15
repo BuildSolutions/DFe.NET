@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 
 namespace GNRE.Classes.Servicos.Recepcao
 {
-    [XmlRootAttribute(Namespace = "http://www.gnre.pe.gov.br", IsNullable = false)]
+    [XmlRoot(Namespace = "http://www.gnre.pe.gov.br", IsNullable = false)]
     public class TLote_GNRE
     {
         public TLote_GNRE(List<GuiasGNRE> guias)
@@ -20,7 +20,7 @@ namespace GNRE.Classes.Servicos.Recepcao
         [XmlElement("guias")]
         public List<GuiasGNRE> guias { get; set; }
 
-        [XmlAttributeAttribute()]
+        [XmlAttribute]
         public string versao { get; set; }
     }
 }

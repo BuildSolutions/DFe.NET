@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Xml.Serialization;
+using GNRE.Classes.Enumerators;
 
 namespace GNRE.Classes.Servicos.Consulta.ConfiguracaoUF.Retorno
 {
@@ -9,11 +11,18 @@ namespace GNRE.Classes.Servicos.Consulta.ConfiguracaoUF.Retorno
         /// Obs: A receita 100056 pode vir duplicada, caso a mesma tenha uma especificidade para empresas de Courier.
         /// Será diferenciada com o uso do parâmetro courier = “S”. 
         /// </summary>
-        public List<Receita> receitas { get; set; }
+        [XmlElement("receita")]
+        public List<Receita> receita { get; set; }
     }
 
     public class Receita
     {
+        [XmlAttribute]
+        public string descricao { get; set; }
+
+        [XmlAttribute]
+        public int codigo { get; set; }
+
         /// <summary>
         /// Informa se o contribuinte emitente é obrigatório.
         /// </summary>
@@ -78,11 +87,13 @@ namespace GNRE.Classes.Servicos.Consulta.ConfiguracaoUF.Retorno
         /// <summary>
         /// Lista de tipos de documentos de origem associados à receita
         /// </summary>
-        public TiposDocumentosOrigem tiposDocumentosOrigem { get; set; }
+        [XmlElement("tiposDocumentosOrigem")]
+        public List<TiposDocumentosOrigem> tiposDocumentosOrigem { get; set; }
 
         /// <summary>
         /// Versões (do XML) que exibirão os Documentos de Origem da Receita.
         /// </summary>
+        [XmlElement("versoesXmlDocOrigem")]
         public List<string> versoesXmlDocOrigem { get; set; }
 
         /// <summary>

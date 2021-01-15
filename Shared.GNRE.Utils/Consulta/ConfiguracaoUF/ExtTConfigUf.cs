@@ -17,10 +17,10 @@ namespace GNRE.Utils.Consulta.ConfiguracaoUF
         }
 
         /// <summary>
-        ///     Converte o objeto TresultLote_GNRE para uma string no formato XML
+        ///     Converte o objeto TConfigUf para uma string no formato XML
         /// </summary>
         /// <param name="tConfigUf"></param>
-        /// <returns>Retorna uma string no formato XML com os dados do objeto TresultLote_GNRE</returns>
+        /// <returns>Retorna uma string no formato XML com os dados do objeto TConfigUf</returns>
         public static string ObterXmlString(this TConfigUf tConfigUf)
         {
             return FuncoesXml.ClasseParaXmlString(tConfigUf);

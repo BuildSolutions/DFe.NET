@@ -4,10 +4,10 @@ namespace GNRE.Classes.Informacoes.Itens
 {
     public class Valor
     {
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttribute]
         public ETipoValor tipo { get; set; }
 
-        [System.Xml.Serialization.XmlTextAttribute()]
+        [System.Xml.Serialization.XmlText]
         public string valor { get; set; }
     }
 }

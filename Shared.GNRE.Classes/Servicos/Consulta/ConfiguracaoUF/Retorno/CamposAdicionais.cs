@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 using GNRE.Classes.Enumerators;
 
 namespace GNRE.Classes.Servicos.Consulta.ConfiguracaoUF.Retorno
@@ -10,6 +9,7 @@ namespace GNRE.Classes.Servicos.Consulta.ConfiguracaoUF.Retorno
         /// <summary>
         /// Especifica cada campo adicional
         /// </summary>
+        [XmlElement("campoAdicional")]
         public List<CampoAdicional> campoAdicional { get; set; }
     }
 
@@ -23,7 +23,7 @@ namespace GNRE.Classes.Servicos.Consulta.ConfiguracaoUF.Retorno
         /// <summary>
         /// Código do campo adicional no ambiente informado
         /// </summary>
-        public ECampoExtra codigo { get; set; }
+        public int codigo { get; set; }
 
         /// <summary>
         /// Tipo do campo adicional:

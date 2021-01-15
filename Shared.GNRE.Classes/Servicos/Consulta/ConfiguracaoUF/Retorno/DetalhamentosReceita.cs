@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace GNRE.Classes.Servicos.Consulta.ConfiguracaoUF.Retorno
 {
@@ -9,6 +8,7 @@ namespace GNRE.Classes.Servicos.Consulta.ConfiguracaoUF.Retorno
         /// <summary>
         /// Especifica cada detalhamento da receita
         /// </summary>
+        [XmlElement("detalhamentoReceita")]
         public List<DetalhamentoReceita> detalhamentoReceita { get; set; }
     }
 

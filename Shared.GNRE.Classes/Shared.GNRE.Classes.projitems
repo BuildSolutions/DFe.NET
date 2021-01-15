@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Enumerators\EConsultaLoteStatus.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumerators\ECourier.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumerators\EFolderType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumerators\EPeriodoApuracao.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumerators\EServicosGNRE.cs" />
@@ -26,6 +27,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Enumerators\ETipoGNRE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumerators\ETipoValor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Servicos\Consulta\ConfiguracaoUF\Retorno\CamposAdicionais.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Servicos\Consulta\ConfiguracaoUF\TConsultaConfigUfReceita.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Servicos\Consulta\ConfiguracaoUF\Retorno\DetalhamentosReceita.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Servicos\Consulta\ConfiguracaoUF\Retorno\PeriodosApuracao.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Servicos\Consulta\ConfiguracaoUF\Retorno\Produtos.cs" />
@@ -34,7 +36,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Servicos\Consulta\ConfiguracaoUF\Retorno\TConfigUf.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Servicos\Consulta\ConfiguracaoUF\Retorno\TiposDocumentosOrigem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Servicos\Consulta\ConfiguracaoUF\TConsultaConfigUf.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Servicos\Consulta\Lote\Retorno\GuiaRetornoConsultaLote.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Servicos\Consulta\Lote\Retorno\Motivo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Servicos\Consulta\Lote\Retorno\MotivoRejeicao.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Servicos\Consulta\Lote\Retorno\Resultado.cs" />
@@ -44,7 +45,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Servicos\IRetornoServico.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Servicos\Recepcao\Retorno\Recibo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Servicos\Recepcao\Retorno\SituacaoRecepcao.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Servicos\Recepcao\Retorno\TretLote_GNRE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Servicos\Recepcao\Retorno\TRetLote_GNRE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Servicos\Recepcao\TLote_GNRE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ValueObjects\Pessoa.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Informacoes\Itens\DocumentoOrigem.cs" />
