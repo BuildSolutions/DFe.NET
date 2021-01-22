@@ -88,58 +88,76 @@ namespace GNRE.Servicos
         /// </summary>
         /// <param name="gnres"></param>
         /// <returns>Retorna um objeto da classe RetornoRecepcaoGNRE com o retorno do serviço GNREAutorizacao</returns>
-        public RetornoRecepcaoGNRE GNREAutorizacao(List<GuiasGNRE> gnres)
+        public RetornoRecepcaoGNRE GNREAutorizacao(GuiasGNRE gnres)
         {
-            var versaoServico = _cFgServico.VersaoLayout.GetVersaoString();
-
-            #region Cria o objeto wdsl para consulta
-
-            var ws = CriarServico(EServicosGNRE.RecepcaoLote);
-
-            ws.gnreCabecMsg = new gnreCabecMsg
-            {
-                versaoDados = versaoServico
-            };
-
-            #endregion
-
-            #region Cria o objeto TLote_GNRE
-
-            var pedEnvio = new TLote_GNRE(gnres);
-
-            #endregion
-
-            #region Valida, Envia os dados e obtém a resposta
-
-            var xmlPedidoAutorizacao = _cFgServico.RemoverAcentos
-                ? pedEnvio.ObterXmlString().RemoverAcentos()
-                : pedEnvio.ObterXmlString();
-
-            Validador.Valida(EServicosGNRE.RecepcaoLote, _cFgServico.VersaoLayout, xmlPedidoAutorizacao, cfgServico: _cFgServico);
-            var dadosGNRE = new XmlDocument();
-            dadosGNRE.LoadXml(xmlPedidoAutorizacao);
-
-            SalvarArquivoXml($"{DateTime.Now.ParaDataHoraString()}-env-lot.xml", xmlPedidoAutorizacao);
-
-            XmlNode retorno;
+            var ufOriginal = _cFgServico.cUF;
             try
             {
-                retorno = ws.Execute(dadosGNRE);
+
+                var versaoServico = _cFgServico.VersaoLayout.GetVersaoString();
+                #region Cria o objeto wdsl para consulta
+
+                gnres.TDadosGNRE.ForEach(guia =>
+                {
+                    if (!GNREUFDisponivel.Contains(guia.ufFavorecida))
+                    {
+                        throw new InvalidOperationException($"Não é possível emitir gnre para o estado de {guia.ufFavorecida} na versão { _cFgServico.VersaoLayout.XmlDescricao()}.");
+                    }
+                });
+
+                _cFgServico.cUF = gnres.TDadosGNRE[0].ufFavorecida;
+
+                var ws = CriarServico(EServicosGNRE.RecepcaoLote);
+
+                ws.gnreCabecMsg = new gnreCabecMsg
+                {
+                    versaoDados = versaoServico
+                };
+
+                #endregion
+
+                #region Cria o objeto TLote_GNRE
+
+                var pedEnvio = new TLote_GNRE(gnres);
+
+                #endregion
+
+                #region Valida, Envia os dados e obtém a resposta
+
+                var xmlPedidoAutorizacao = _cFgServico.RemoverAcentos
+                    ? pedEnvio.ObterXmlString().RemoverAcentos()
+                    : pedEnvio.ObterXmlString();
+
+                Validador.Valida(EServicosGNRE.RecepcaoLote, _cFgServico.VersaoLayout, xmlPedidoAutorizacao, cfgServico: _cFgServico);
+                var dadosGNRE = new XmlDocument();
+                dadosGNRE.LoadXml(xmlPedidoAutorizacao);
+
+                SalvarArquivoXml($"{DateTime.Now.ParaDataHoraString()}-env-lot.xml", xmlPedidoAutorizacao);
+
+                XmlNode retorno;
+                try
+                {
+                    retorno = ws.Execute(dadosGNRE);
+                }
+                catch (WebException ex)
+                {
+                    throw FabricaComunicacaoException.ObterException(EServicosGNRE.RecepcaoLote, ex);
+                }
+
+                var retornoXmlString = retorno.OuterXml;
+                var retAutorizacaoLoteGNRE = new TRetLote_GNRE().CarregarDeXmlString(retornoXmlString);
+
+                SalvarArquivoXml($"{DateTime.Now.ParaDataHoraString()}-rec.xml", retornoXmlString);
+
+                return new RetornoRecepcaoGNRE(xmlPedidoAutorizacao, retAutorizacaoLoteGNRE.ObterXmlString(),
+                    retornoXmlString, retAutorizacaoLoteGNRE);
+
+                #endregion
             }
-            catch (WebException ex)
+            finally
             {
-                throw FabricaComunicacaoException.ObterException(EServicosGNRE.RecepcaoLote, ex);
+                _cFgServico.cUF = ufOriginal;
             }
-
-            var retornoXmlString = retorno.OuterXml;
-            var retAutorizacaoLoteGNRE = new TRetLote_GNRE().CarregarDeXmlString(retornoXmlString);
-
-            SalvarArquivoXml($"{DateTime.Now.ParaDataHoraString()}-rec.xml", retornoXmlString);
-
-            return new RetornoRecepcaoGNRE(xmlPedidoAutorizacao, retAutorizacaoLoteGNRE.ObterXmlString(),
-                retornoXmlString, retAutorizacaoLoteGNRE);
-
-            #endregion
         }
 
         /// <summary>
@@ -147,58 +165,72 @@ namespace GNRE.Servicos
         /// </summary>
         /// <param name="numeroRecibo"></param>
         /// <returns>Retorna um objeto da classe RetornoProcessamentoLote com o retorno do serviço GNREConsultaResultadoLote</returns>
-        public RetornoProcessamentoLote GNREConsultaResultadoLote(int numeroRecibo)
+        public RetornoProcessamentoLote GNREConsultaResultadoLote(int numeroRecibo, Estado uf)
         {
-            var versaoServico = _cFgServico.VersaoLayout.GetVersaoString();
-
-            #region Cria o objeto wdsl para consulta
-
-            var ws = CriarServico(EServicosGNRE.GNREResultadoLote);
-
-            ws.gnreCabecMsg = new gnreCabecMsg
-            {
-                versaoDados = versaoServico
-            };
-
-            #endregion
-
-            #region Cria o objeto TLote_GNRE
-
-            var pedConsulta = new TConsLote_GNRE(_cFgServico.tpAmb, numeroRecibo);
-
-            #endregion
-
-            #region Valida, Envia os dados e obtém a resposta
-
-            var xmlConsulta = _cFgServico.RemoverAcentos
-                ? pedConsulta.ObterXmlString().RemoverAcentos()
-                : pedConsulta.ObterXmlString();
-
-            Validador.Valida(EServicosGNRE.GNREResultadoLote, _cFgServico.VersaoLayout, xmlConsulta, _cFgServico);
-            var dadosConsultaLote = new XmlDocument();
-            dadosConsultaLote.LoadXml(xmlConsulta);
-
-            SalvarArquivoXml($"{DateTime.Now.ParaDataHoraString()}-ped-rec.xml", xmlConsulta);
-
-            XmlNode retorno;
+            var ufOriginal = _cFgServico.cUF;
             try
             {
-                retorno = ws.Execute(dadosConsultaLote);
+                var versaoServico = _cFgServico.VersaoLayout.GetVersaoString();
+
+                #region Cria o objeto wdsl para consulta
+                _cFgServico.cUF = uf;
+
+                if (!GNREUFDisponivel.Contains(uf))
+                {
+                    throw new InvalidOperationException($"Não é possível emitir consultar a configuração para o estado de {uf} na versão { _cFgServico.VersaoLayout.XmlDescricao()}.");
+                }
+
+                var ws = CriarServico(EServicosGNRE.GNREResultadoLote);
+
+                ws.gnreCabecMsg = new gnreCabecMsg
+                {
+                    versaoDados = versaoServico
+                };
+
+                #endregion
+
+                #region Cria o objeto TLote_GNRE
+
+                var pedConsulta = new TConsLote_GNRE(_cFgServico.tpAmb, numeroRecibo);
+
+                #endregion
+
+                #region Valida, Envia os dados e obtém a resposta
+
+                var xmlConsulta = _cFgServico.RemoverAcentos
+                    ? pedConsulta.ObterXmlString().RemoverAcentos()
+                    : pedConsulta.ObterXmlString();
+
+                Validador.Valida(EServicosGNRE.GNREResultadoLote, _cFgServico.VersaoLayout, xmlConsulta, _cFgServico);
+                var dadosConsultaLote = new XmlDocument();
+                dadosConsultaLote.LoadXml(xmlConsulta);
+
+                SalvarArquivoXml($"{numeroRecibo}-ped-rec.xml", xmlConsulta);
+
+                XmlNode retorno;
+                try
+                {
+                    retorno = ws.Execute(dadosConsultaLote);
+                }
+                catch (WebException ex)
+                {
+                    throw FabricaComunicacaoException.ObterException(EServicosGNRE.RecepcaoLote, ex);
+                }
+
+                var retornoXmlString = retorno.OuterXml;
+                var retResultadoLoteGNRE = new TResultLote_GNRE().CarregarDeXmlString(retornoXmlString);
+
+                SalvarArquivoXml($"{numeroRecibo}-pro-rec.xml", retornoXmlString);
+
+                return new RetornoProcessamentoLote(xmlConsulta, retResultadoLoteGNRE.ObterXmlString(),
+                    retornoXmlString, retResultadoLoteGNRE);
+
+                #endregion
             }
-            catch (WebException ex)
+            finally
             {
-                throw FabricaComunicacaoException.ObterException(EServicosGNRE.RecepcaoLote, ex);
+                _cFgServico.cUF = ufOriginal;
             }
-
-            var retornoXmlString = retorno.OuterXml;
-            var retResultadoLoteGNRE = new TResultLote_GNRE().CarregarDeXmlString(retornoXmlString);
-
-            SalvarArquivoXml($"{DateTime.Now.ParaDataHoraString()}-pro-rec.xml", retornoXmlString);
-
-            return new RetornoProcessamentoLote(xmlConsulta, retResultadoLoteGNRE.ObterXmlString(),
-                retornoXmlString, retResultadoLoteGNRE);
-
-            #endregion
         }
 
         /// <summary>
@@ -209,57 +241,103 @@ namespace GNRE.Servicos
         /// <returns>Retorna um objeto da classe RetornoConsultaConfiguracaoUF com o retorno do serviço GNREConsultaConfiguracaoUF</returns>
         public RetornoConsultaConfiguracaoUF GNREConsultaConfiguracaoUF(Estado uf, TConsultaConfigUfReceita receita = null)
         {
-            var versaoServico = _cFgServico.VersaoLayout.GetVersaoString();
-
-            #region Cria o objeto wdsl para consulta
-
-            var ws = CriarServico(EServicosGNRE.ConsultaConfiguracaoUF);
-
-            ws.gnreCabecMsg = new gnreCabecMsg
-            {
-                versaoDados = "1.00"
-            };
-
-            #endregion
-
-            #region Cria o objeto TLote_GNRE
-
-            var pedConsulta = new TConsultaConfigUf(_cFgServico.tpAmb, uf, receita);
-
-            #endregion
-
-            #region Valida, Envia os dados e obtém a resposta
-
-            var xmlConsulta = _cFgServico.RemoverAcentos
-                ? pedConsulta.ObterXmlString().RemoverAcentos()
-                : pedConsulta.ObterXmlString();
-
-            Validador.Valida(EServicosGNRE.ConsultaConfiguracaoUF, _cFgServico.VersaoLayout, xmlConsulta, _cFgServico);
-            var dadosConsultaLote = new XmlDocument();
-            dadosConsultaLote.LoadXml(xmlConsulta);
-
-            SalvarArquivoXml($"{DateTime.Now.ParaDataHoraString()}-ped-uf.xml", xmlConsulta);
-
-            XmlNode retorno;
+            var ufOriginal = _cFgServico.cUF;
             try
             {
-                retorno = ws.Execute(dadosConsultaLote);
+                var versaoServico = _cFgServico.VersaoLayout.GetVersaoString();
+
+                #region Cria o objeto wdsl para consulta
+                _cFgServico.cUF = uf;
+
+                if (!GNREUFDisponivel.Contains(uf))
+                {
+                    throw new InvalidOperationException($"Não é possível emitir consultar a configuração para o estado de {uf} na versão { _cFgServico.VersaoLayout.XmlDescricao()}.");
+                }
+
+                var ws = CriarServico(EServicosGNRE.ConsultaConfiguracaoUF);
+
+                ws.gnreCabecMsg = new gnreCabecMsg
+                {
+                    versaoDados = "1.00"
+                };
+
+                #endregion
+
+                #region Cria o objeto TLote_GNRE
+
+                var pedConsulta = new TConsultaConfigUf(_cFgServico.tpAmb, uf, receita);
+
+                #endregion
+
+                #region Valida, Envia os dados e obtém a resposta
+
+                var xmlConsulta = _cFgServico.RemoverAcentos
+                    ? pedConsulta.ObterXmlString().RemoverAcentos()
+                    : pedConsulta.ObterXmlString();
+
+                Validador.Valida(EServicosGNRE.ConsultaConfiguracaoUF, _cFgServico.VersaoLayout, xmlConsulta, _cFgServico);
+                var dadosConsultaLote = new XmlDocument();
+                dadosConsultaLote.LoadXml(xmlConsulta);
+
+                SalvarArquivoXml($"{DateTime.Now.ParaDataHoraString()}-ped-uf.xml", xmlConsulta);
+
+                XmlNode retorno;
+                try
+                {
+                    retorno = ws.Execute(dadosConsultaLote);
+                }
+                catch (WebException ex)
+                {
+                    throw FabricaComunicacaoException.ObterException(EServicosGNRE.RecepcaoLote, ex);
+                }
+
+                var retornoXmlString = retorno.OuterXml;
+                var retConfiguracaoUF = new TConfigUf().CarregarDeXmlString(retornoXmlString);
+
+                SalvarArquivoXml($"{DateTime.Now.ParaDataHoraString()}-uf.xml", retornoXmlString);
+
+                return new RetornoConsultaConfiguracaoUF(xmlConsulta, retConfiguracaoUF.ObterXmlString(),
+                    retornoXmlString, retConfiguracaoUF);
+
+                #endregion
+
             }
-            catch (WebException ex)
+            finally
             {
-                throw FabricaComunicacaoException.ObterException(EServicosGNRE.RecepcaoLote, ex);
+                _cFgServico.cUF = ufOriginal;
             }
+}
 
-            var retornoXmlString = retorno.OuterXml;
-            var retConfiguracaoUF = new TConfigUf().CarregarDeXmlString(retornoXmlString);
-
-            SalvarArquivoXml($"{DateTime.Now.ParaDataHoraString()}-uf.xml", retornoXmlString);
-
-            return new RetornoConsultaConfiguracaoUF(xmlConsulta, retConfiguracaoUF.ObterXmlString(),
-                retornoXmlString, retConfiguracaoUF);
-
-            #endregion
-        }
+        /// <summary>
+        /// Devolve a lista de enums do tipo <see cref="CSTIPI"/> que são Tributados/>
+        /// </summary>
+        public static ISet<Estado> GNREUFDisponivel = new HashSet<Estado>()
+        {
+            Estado.AC,
+            Estado.AL,
+            Estado.AM,
+            Estado.AP,
+            Estado.BA,
+            Estado.CE,
+            Estado.DF,
+            Estado.GO,
+            Estado.MA,
+            Estado.MG,
+            Estado.MT,
+            Estado.PA,
+            Estado.PB,
+            Estado.PE,
+            Estado.PI,
+            Estado.PR,
+            Estado.RN,
+            Estado.RJ,
+            Estado.RO,
+            Estado.RR,
+            Estado.RS,
+            Estado.SC,
+            Estado.SE,
+            Estado.TO,
+        };
 
         #region Implementação do padrão Dispose
 

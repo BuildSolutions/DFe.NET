@@ -20,7 +20,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Excecoes\FabricaComunicacaoException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Excecoes\ValidacaoSchemaException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GNRESituacao.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)GNRE\ExtTDadosGNRE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GNRE\ExtGuiasGNRE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GNRE\ExtGuiasGNRERetorno.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PathHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Recepcao\ExtTLote_GNRE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Recepcao\ExtTretLote_GNRE.cs" />

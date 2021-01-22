@@ -2,6 +2,7 @@
 using System.Globalization;
 using DFe.Utils;
 using GNRE.Classes.Servicos.Recepcao;
+using GNRE.Utils.Validator;
 
 namespace GNRE.Utils.Recepcao
 {
@@ -49,6 +50,23 @@ namespace GNRE.Utils.Recepcao
         public static void SalvarArquivoXml(this TLote_GNRE gnre, string arquivoXml)
         {
             FuncoesXml.ClasseParaArquivoXml(gnre, arquivoXml);
+        }
+
+        /// <summary>
+        /// Faz alguns ajustes nos dados da classe TLote_GNRE antes de utilizá-la
+        /// </summary>
+        /// <param name="gnre"></param>
+        /// <param name="cfgServico1"></param>
+        /// <returns>Retorna um objeto NFe devidamente tradado</returns>
+        public static TLote_GNRE Valida(this TLote_GNRE gnre, ConfiguracaoServico cfgServico = null)
+        {
+            if (gnre == null) throw new ArgumentNullException("nfe");
+
+            var xmlNfe = gnre.ObterXmlString();
+            var config = cfgServico ?? ConfiguracaoServico.Instancia;
+            Validador.Valida(Classes.Enumerators.EServicosGNRE.RecepcaoLote, config.VersaoLayout, xmlNfe, config);
+
+            return gnre; //Para uso no formato fluent
         }
 
         /// <summary>

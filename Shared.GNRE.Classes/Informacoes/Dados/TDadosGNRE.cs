@@ -12,9 +12,26 @@ namespace GNRE.Classes.Informacoes.Dados
     //[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.gnre.pe.gov.br")]
     public class TDadosGNRE
     {
-        public TDadosGNRE()
+        internal TDadosGNRE()
         {
             versao = "2.00";
+        }
+
+        public TDadosGNRE(string versao,
+            Estado ufFavorecida,
+            ETipoGNRE tipoGnre,
+            ContribuinteEmitente contribuinteEmitente,
+            ItensGNRE itensGNRE,
+            decimal? valorGNRE,
+            DateTime? dataPagamento)
+        {
+            this.versao = versao;
+            this.ufFavorecida = ufFavorecida;
+            TipoGnre = tipoGnre;
+            this.contribuinteEmitente = contribuinteEmitente;
+            this.itensGNRE = itensGNRE;
+            _valorGNRE = valorGNRE;
+            this.dataPagamento = dataPagamento;
         }
 
         [XmlAttribute]
@@ -40,13 +57,13 @@ namespace GNRE.Classes.Informacoes.Dados
         ///2 - Guia com Múltiplas Receitas
         /// </summary>
         [XmlIgnore]
-        public ETipoGNRE _tipoGnre { get; set; }
+        public ETipoGNRE TipoGnre { get; set; }
 
         [XmlElement(ElementName = "tipoGnre")]
         public string ProxyTipoGNRE
         {
-            get => _tipoGnre.XmlDescricao();
-            set => _tipoGnre = (ETipoGNRE)Enum.Parse(typeof(ETipoGNRE), value);
+            get => TipoGnre.XmlDescricao();
+            set => TipoGnre = (ETipoGNRE)Enum.Parse(typeof(ETipoGNRE), value);
         }
 
         public ContribuinteEmitente contribuinteEmitente { get; set; }

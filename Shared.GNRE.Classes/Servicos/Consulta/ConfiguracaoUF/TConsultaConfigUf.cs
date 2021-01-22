@@ -12,7 +12,6 @@ namespace GNRE.Classes.Servicos.Consulta.ConfiguracaoUF
         {
             this.ambiente = ambiente;
             this.uf = uf;
-            ProxyUF = uf.ToString();
             this.receita = receita;
         }
 

@@ -18,6 +18,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)EnumExt.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensoes\DecimalExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensoes\EnumExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensoes\IntExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensoes\LongExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensoes\StringExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FuncoesXml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Reflexao.cs" />

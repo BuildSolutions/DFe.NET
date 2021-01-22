@@ -6,7 +6,7 @@ namespace GNRE.Classes.Servicos.Recepcao
     [XmlRoot(Namespace = "http://www.gnre.pe.gov.br", IsNullable = false)]
     public class TLote_GNRE
     {
-        public TLote_GNRE(List<GuiasGNRE> guias)
+        public TLote_GNRE(GuiasGNRE guias)
         {
             this.guias = guias;
             versao = "2.00";
@@ -14,11 +14,10 @@ namespace GNRE.Classes.Servicos.Recepcao
 
         internal TLote_GNRE()
         {
-
         }
 
-        [XmlElement("guias")]
-        public List<GuiasGNRE> guias { get; set; }
+        //[XmlElement("guias")]
+        public GuiasGNRE guias { get; set; }
 
         [XmlAttribute]
         public string versao { get; set; }

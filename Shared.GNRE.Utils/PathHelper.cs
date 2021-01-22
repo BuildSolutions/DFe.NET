@@ -32,7 +32,6 @@ namespace GNRE.Utils
             DateTime dataOperacao,
             string extensaoArquivo)
         {
-            nomeArquivo = nomeArquivo.RetornaNumeros();
             var ano = dataOperacao.ToString("yyyy");
             var mes = dataOperacao.ToString("MM_yyyy");
 

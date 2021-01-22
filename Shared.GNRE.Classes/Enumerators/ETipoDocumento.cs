@@ -5,35 +5,35 @@ namespace GNRE.Classes.Enumerators
 {
     public enum ETipoDocumento
     {
-        [Description("NOTA FISCAL AVULSA")]
+        [Description("Nota Fiscal Avulsa")]
         [XmlEnum("1")]
         NotaFiscalAvulsa = 1,
 
-        [Description("CONHECIMENTO DE TRANSPORTE RODOVIÁRIO")]
+        [Description("Conhecimento de Transporte Rodoviário")]
         [XmlEnum("7")]
         ConhecimentoTransporteRodoviario = 7,
 
-        [Description("CONHECIMENTO DE TRANSPORTE AÉREO")]
+        [Description("Conhecimento de Transporte Aéreo")]
         [XmlEnum("8")]
         ConhecimentoTransporteAereo = 8,
 
-        [Description("NOTA FISCAL")]
+        [Description("Nota Fiscal Eletrônica")]
         [XmlEnum("10")]
         NotaFiscal = 10,
 
-        [Description("AUTO DE LANÇAMENTO")]
+        [Description("Auto de Lançamento")]
         [XmlEnum("13")]
         AutoLancamento = 13,
 
-        [Description("CHAVE DA NFe")]
+        [Description("Chave de Acesso Da NFe")]
         [XmlEnum("22")]
         ChaveNFe = 22,
 
-        [Description("CHAVE DO DFe")]
+        [Description("Chave de Acesso do DFe")]
         [XmlEnum("24")]
         ChaveDFe = 24,
 
-        [Description("DUIMP - DOCUMENTO ÚNICO DE IMPORTAÇÃO")]
+        [Description("DUIMP - Documento Único de Importação")]
         [XmlEnum("25")]
         DUIMP = 25,
     }

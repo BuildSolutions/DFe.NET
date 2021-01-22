@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="8.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DFe.Classes.Standard\DFe.Classes.Standard.csproj" />
+    <ProjectReference Include="..\DFe.Utils.Standard\DFe.Utils.Standard.csproj" />
+    <ProjectReference Include="..\GNRE.Classes.Standard\GNRE.Classes.Standard.csproj" />
+    <ProjectReference Include="..\GNRE.Servicos.Standard\GNRE.Servicos.Standard.csproj" />
+    <ProjectReference Include="..\GNRE.Utils.Standard\GNRE.Utils.Standard.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\Shared.GNRE.BLL\Shared.GNRE.BLL.projitems" Label="Shared" />
+
+</Project>

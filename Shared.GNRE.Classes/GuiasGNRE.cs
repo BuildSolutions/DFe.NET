@@ -1,20 +1,22 @@
-﻿using GNRE.Classes.Enumerators;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 using GNRE.Classes.Informacoes.Dados;
-using GNRE.Classes.Servicos.Consulta.Lote.Retorno;
 
 namespace GNRE.Classes
 {
-    public class GuiasGNRE : TDadosGNRE
+    public class GuiasGNRE
     {
-        public EConsultaLoteStatus situacaoGuia { get; set; }
-
-        public long? codigoBarras;
-
-        public MotivoRejeicao motivosRejeicao { get; set; }
-
-        public bool ShouldSerializecodigoBarras()
+        public GuiasGNRE(List<TDadosGNRE> tDadosGNRE)
         {
-            return codigoBarras.HasValue;
+            TDadosGNRE = tDadosGNRE;
         }
+
+        internal GuiasGNRE()
+        {
+
+        }
+
+        [XmlElement("TDadosGNRE")]
+        public List<TDadosGNRE> TDadosGNRE { get; set; }
     }
 }
