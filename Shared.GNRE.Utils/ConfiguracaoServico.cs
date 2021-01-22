@@ -96,8 +96,8 @@ namespace GNRE.Utils
             get { return _diretorioSchemas; }
             set
             {
-                if (!string.IsNullOrEmpty(value) && !Directory.Exists(value))
-                    throw new Exception("Diretório " + value + " não encontrado!");
+                //if (!string.IsNullOrEmpty(value) && !Directory.Exists(value))
+                //    throw new Exception("Diretório " + value + " não encontrado!");
                 _diretorioSchemas = value;
             }
         }

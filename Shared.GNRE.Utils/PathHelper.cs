@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using DFe.Utils.Extensoes;
 using GNRE.Classes.Enumerators;
 
 namespace GNRE.Utils

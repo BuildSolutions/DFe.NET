@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Retorno\RetornoAdmCscNFCe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Retorno\RetornoBasico.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Retorno\RetornoConsulta.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Retorno\RetornoLoteSuframa.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Retorno\RetornoNFeAutorizacao.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Retorno\RetornoNfeConsultaCadastro.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Retorno\RetornoNfeDistDFeInt.cs" />

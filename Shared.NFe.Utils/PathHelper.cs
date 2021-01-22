@@ -56,6 +56,8 @@ namespace NFe.Utils
                     return Path.Combine(configuracaoServico.DiretorioSalvarXml, "Gerados");
                 case EFolderType.LOTES:
                     return Path.Combine(configuracaoServico.DiretorioSalvarXml, "Lotes");
+                case EFolderType.SUFRAMA:
+                    return Path.Combine(configuracaoServico.DiretorioSalvarXml, "LotesSUFRAMA");
                 default:
                     return string.Empty;
             }
@@ -67,7 +69,8 @@ namespace NFe.Utils
             DateTime dataOperacao,
             string extensaoArquivo)
         {
-            nomeArquivo = nomeArquivo.RetornaNumeros();
+            nomeArquivo = nomeArquivo.Replace($".{extensaoArquivo}", "");
+
             var ano = dataOperacao.ToString("yyyy");
             var mes = dataOperacao.ToString("MM_yyyy");
 
@@ -76,20 +79,23 @@ namespace NFe.Utils
             {
                 case EFolderType.AUTORIZADA:
                 case EFolderType.DENEGADA:
-                    nomeArquivoXML = $"{nomeArquivo}-proc";
+                    nomeArquivoXML = $"{nomeArquivo.RetornaNumeros()}-proc";
                     break;
                 case EFolderType.INUTILIZADA:
-                    nomeArquivoXML = $"{nomeArquivo}-proc-inu";
+                    nomeArquivoXML = $"{nomeArquivo.RetornaNumeros()}-proc-inu";
                     break;
                 case EFolderType.CANCELADA:
-                    nomeArquivoXML = $"{nomeArquivo}-procEventoNFe";
+                    nomeArquivoXML = $"{nomeArquivo.RetornaNumeros()}-procEventoNFe";
                     break;
                 case EFolderType.GERADOS:
                 case EFolderType.LOTES:
                     nomeArquivoXML = nomeArquivo;
                     break;
                 case EFolderType.CARTACORRECAO:
-                    nomeArquivoXML = $"{nomeArquivo}-procEventoNFe";
+                    nomeArquivoXML = $"{nomeArquivo.RetornaNumeros()}-procEventoNFe";
+                    break;
+                case EFolderType.SUFRAMA:
+                    nomeArquivoXML = $"nfe_{nomeArquivo.RetornaNumeros()}-suframa";
                     break;
                 case EFolderType.TEMP:
                 default:
@@ -130,6 +136,24 @@ namespace NFe.Utils
             nomeArquivo,
             dataOperacao,
             "xml");
+        }
+
+        public static string SalvarArquivo(ConfiguracaoServico configuracaoServico,
+            EFolderType eFolderType,
+            string nomeArquivo,
+            DateTime dataOperacao,
+            string xml,
+            string extensao)
+        {
+            var stw = new StreamWriter(ObterNomeArquivo(configuracaoServico,
+            eFolderType,
+            nomeArquivo,
+            dataOperacao,
+            extensao));
+            stw.WriteLine(xml);
+            stw.Close();
+
+            return nomeArquivo;
         }
 
         public static string SalvarArquivoXML(ConfiguracaoServico configuracaoServico,

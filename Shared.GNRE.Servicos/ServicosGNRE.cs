@@ -34,7 +34,7 @@ namespace GNRE.Servicos
         private readonly X509Certificate2 _certificado;
         private readonly bool _controlarCertificado;
         private readonly ConfiguracaoServico _cFgServico;
-        private readonly string _path;
+        //private readonly string _path;
 
         /// <summary>
         /// Cria uma instância da Classe responsável pelos serviços relacionados à GNRE
@@ -53,7 +53,7 @@ namespace GNRE.Servicos
                 _certificado = certificado;
             }
 
-            _path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+           // _path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             //Define a versão do protocolo de segurança
             ServicePointManager.SecurityProtocol = cFgServico.ProtocoloDeSeguranca;

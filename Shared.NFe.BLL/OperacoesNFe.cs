@@ -1,14 +1,17 @@
 ﻿using DFe.Utils;
+using NFe.BLL.Configuracao.Entidades;
 using NFe.Classes.Servicos.Consulta;
 using NFe.Classes.Servicos.ConsultaCadastro;
 using NFe.Classes.Servicos.DistribuicaoDFe;
 using NFe.Classes.Servicos.Inutilizacao;
 using NFe.Classes.Servicos.Recepcao;
 using NFe.Classes.Servicos.Recepcao.Retorno;
+using NFe.Classes.Servicos.Suframa;
 using NFe.Classes.Servicos.Tipos;
 using NFe.Servicos;
 using NFe.Servicos.Retorno;
 using NFe.Utils;
+using NFe.Utils.Suframa;
 using System;
 using System.Collections.Generic;
 
@@ -448,7 +451,6 @@ namespace NFe.BLL
         /// <returns>Retorna um objeto da classe RetornoNfeDistDFeInt com os documentos de interesse do CNPJ/CPF pesquisado</returns>
         public RetornoNfeDistDFeInt DistribuicaoDocumentosFiscais(string ufAutor, string documento, out string erro, string ultNSU = "0", string nSU = "0", string chNFE = "")
         {
-            erro = string.Empty;
             //var servicoNFe = new ServicosNFe(ConfiguracaoServico.Instancia);
 
             var retornoConsulta = _servicosNFeInstancia.NfeDistDFeInteresse(ufAutor, documento, ultNSU, nSU, chNFE);
@@ -474,6 +476,25 @@ namespace NFe.BLL
             }
 
             return true;
+        }
+
+        public RetornoLoteSuframa GerarArquivoLoteSuframa(Suframa suframa, out string erro)
+        {
+            var notasFiscais = new List<loteNotaFiscal>();
+            suframa.ChavesAcessoNFes.ForEach(nfe => notasFiscais.Add(new loteNotaFiscal() { chaveAcesso = nfe, txZero = false }));
+
+            erro = string.Empty;
+
+            return _servicosNFeInstancia.NFeGerarArquivoLoteSuframa(
+                dataEmissao: suframa.DataEmissao,
+                destinatarioCNPJ: suframa.DestinatarioCNPJ,
+                transportadoraCNPJ: suframa.TransportadoraCNPJ,
+                destinatarioInscricaoSuframa: suframa.DestinatarioInscricaoSuframa,
+                chavesAcessoNFes: notasFiscais,
+                numeroLoteSuframa: suframa.NumeroLoteSuframa,
+                ufDestino: suframa.UfDestino.ToString(),
+                ufOrigem: suframa.UfOrigem.ToString()
+                );
         }
 
         public void Dispose()

@@ -13,6 +13,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)ConfiguracaoNFCe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConfiguracaoNFe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\ConfiguracaoCsc.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\DistribuicaoDocumentoFiscalEletronico.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Suframa.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Pagamento.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\PagamentoIntegracaoCartao.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Protocolo.cs" />
@@ -56,6 +58,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Produtos\Produto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Totalizador.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enums\EPessoa.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enums\ESituacaoNFe.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enums\ETipoDocumentoFiscalDFe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enums\ETipoPessoa.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\NotaFiscal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Transporte.cs" />
@@ -86,6 +90,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Validators\Produtos\Impostos\IPIValidator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Validators\Produtos\Impostos\PISValidator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Validators\Produtos\ProdutoValidator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\SuframaValidator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Validators\TotalizadorValidator.cs" />
   </ItemGroup>
   <ItemGroup>

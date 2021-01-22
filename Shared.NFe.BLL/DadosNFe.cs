@@ -90,7 +90,7 @@ namespace NFe.BLL
             erro = string.Empty;
             try
             {
-                return NFeXML.Valida();
+                return NFeXML.Valida(_cfgApp.CfgServico);
             }
             catch (Exception ex)
             {
@@ -142,7 +142,21 @@ namespace NFe.BLL
             return true;
         }
 
+        public bool ValidarDadosSuframa(Suframa suframa, out string errors)
+        {
+            errors = string.Empty;
+            string erroValidacao = string.Empty;
+            var validator = new SuframaValidator();
+            var resultado = validator.Validate(suframa);
 
+            if (!resultado.IsValid)
+            {
+                errors = string.Join("\r\n", resultado.Errors.Select(err => err.ErrorMessage));
+                return false;
+            }
+
+            return true;
+        }
 
         private infNFe GetNFe()
         {

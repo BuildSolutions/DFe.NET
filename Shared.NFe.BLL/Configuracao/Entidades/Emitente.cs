@@ -14,16 +14,16 @@ namespace NFe.BLL.Configuracao.Entidades
             CRT crt,
             bool habilitarDetalhamentoImposto,
             ConfiguracaoCertificado certificado,
-            DirectoryInfo diretorioSalvarXML,
-            DirectoryInfo diretorioSchemas)
+            string diretorioSalvarXML,
+            string diretorioSchemas)
         {
             Pessoa = pessoa;
             InscricaoEstadualSubstituicaoTributaria = inscricaoEstadualSubstituicaoTributaria.RetornaNumeros();
             ECRT = crt;
             HabilitarDetalhamentoImposto = habilitarDetalhamentoImposto;
             Certificado = certificado;
-            DiretorioSalvarXML = diretorioSalvarXML?.FullName;
-            DiretorioSchemas = diretorioSchemas?.FullName;
+            DiretorioSalvarXML = diretorioSalvarXML;
+            DiretorioSchemas = diretorioSchemas;
         }
 
         public Emitente(

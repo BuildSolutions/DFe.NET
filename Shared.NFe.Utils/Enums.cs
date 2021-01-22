@@ -62,6 +62,7 @@ namespace NFe.Utils
         TEMP,
         GERADOS,
         CARTACORRECAO,
-        LOTES
+        LOTES,
+        SUFRAMA
     }
 }

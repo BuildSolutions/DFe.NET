@@ -9,13 +9,13 @@ namespace GNRE.BLL.Configuracao.Entidades
         public Emitente(
             Pessoa pessoa,
             ConfiguracaoCertificado certificado,
-            DirectoryInfo diretorioSalvarXML,
-            DirectoryInfo diretorioSchemas)
+            string diretorioSalvarXML,
+            string diretorioSchemas)
         {
             Pessoa = pessoa;
             Certificado = certificado;
-            DiretorioSalvarXML = diretorioSalvarXML?.FullName;
-            DiretorioSchemas = diretorioSchemas?.FullName;
+            DiretorioSalvarXML = diretorioSalvarXML;
+            DiretorioSchemas = diretorioSchemas;
         }
 
         public Pessoa Pessoa { get; }

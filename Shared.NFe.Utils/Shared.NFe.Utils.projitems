@@ -51,6 +51,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Recepcao\ExtretEnviNFe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Status\ExtconsStatServ.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Status\ExtretConsStatServ.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Suframa\Extlote.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tributacao\Estadual\ICMSGeral.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tributacao\Federal\COFINSGeral.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tributacao\Federal\IPIGeral.cs" />

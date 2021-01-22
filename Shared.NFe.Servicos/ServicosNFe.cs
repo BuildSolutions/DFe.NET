@@ -75,6 +75,8 @@ using System.Xml;
 using NFe.Classes;
 using Shared.DFe.Utils;
 using FuncoesXml = DFe.Utils.FuncoesXml;
+using NFe.Classes.Servicos.Suframa;
+using NFe.Utils.Suframa;
 
 namespace NFe.Servicos
 {
@@ -379,6 +381,11 @@ namespace NFe.Servicos
 
             var retornoXmlString = retorno.OuterXml;
             var retInutNFe = new retInutNFe().CarregarDeXmlString(retornoXmlString);
+
+            if(string.IsNullOrEmpty(retInutNFe?.infInut?.Id))
+            {
+                retInutNFe.infInut.Id = numId;
+            }
 
             SalvarArquivoXml(numId + "-inu.xml", retornoXmlString);
 
@@ -1368,6 +1375,31 @@ namespace NFe.Servicos
 
             #endregion
         }
+
+        #region Suframa
+        public RetornoLoteSuframa NFeGerarArquivoLoteSuframa(long numeroLoteSuframa,
+            DateTime dataEmissao,
+            string destinatarioCNPJ,
+            string transportadoraCNPJ,
+            string destinatarioInscricaoSuframa,
+            string ufOrigem,
+            string ufDestino,
+            List<loteNotaFiscal> chavesAcessoNFes)
+        {
+            var lote = new lote(
+                cnpjDestinatario: destinatarioCNPJ,
+                cnpjTransp: transportadoraCNPJ,
+                dtEmissao: dataEmissao,
+                inscSufDestinatario: destinatarioInscricaoSuframa,
+                notasFiscais: chavesAcessoNFes,
+                nro: numeroLoteSuframa,
+                qtdeNF: chavesAcessoNFes?.Count ?? 0,
+                ufDestino: ufDestino,
+                ufOrigem: ufOrigem);
+
+            return new RetornoLoteSuframa(string.Empty, lote.ObterXmlString(), lote.ObterXmlString(), lote);
+        }
+        #endregion Suframa
 
         #region Adm CSC
 

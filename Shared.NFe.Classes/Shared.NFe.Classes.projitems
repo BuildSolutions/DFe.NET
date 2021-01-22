@@ -188,6 +188,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Servicos\Recepcao\Retorno\retConsReciNFe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Servicos\Status\consStatServ.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Servicos\Status\retConsStatServ.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Servicos\Suframa\lote.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Servicos\Suframa\loteNotaFiscal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Servicos\Tipos\NFeServicosTipos.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Valor.cs" />
   </ItemGroup>
