@@ -10,7 +10,7 @@ namespace GNRE.BLL.Validators.UF.Amazonas
             {
                 RuleFor(uf => uf).SetValidator(new Amazonas100099Validator());
             });
-            When(uf => uf.Receita == Classes.Enumerators.EReceita.ICMSSubstituicaoTributariaOperacao, () =>
+            When(uf => uf.Receita == Classes.Enumerators.EReceita.ICMSConsumidorFinalNaoContribuinteOutraUFOperacao, () =>
             {
                 RuleFor(uf => uf).SetValidator(new Amazonas100102Validator());
             });

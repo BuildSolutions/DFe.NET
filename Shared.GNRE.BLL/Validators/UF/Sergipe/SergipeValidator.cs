@@ -10,7 +10,7 @@ namespace GNRE.BLL.Validators.UF.Sergipe
             {
                 RuleFor(uf => uf).SetValidator(new Sergipe100099Validator());
             });
-            When(uf => uf.Receita == Classes.Enumerators.EReceita.ICMSSubstituicaoTributariaOperacao, () =>
+            When(uf => uf.Receita == Classes.Enumerators.EReceita.ICMSConsumidorFinalNaoContribuinteOutraUFOperacao, () =>
             {
                 RuleFor(uf => uf).SetValidator(new Sergipe100102Validator());
             });

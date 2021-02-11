@@ -30,10 +30,14 @@ namespace NFe.BLL.Configuracao.Entidades
             }
 
             ModalidadeFrete = dadosTransporte.modFrete.GetValueOrDefault();
-            QuantidadeVolumes = dadosTransporte.vol[0].qVol;
-            EspecieVolumeDescricao = dadosTransporte.vol[0].esp;
-            PesoLiquido = dadosTransporte.vol[0].pesoL;
-            PesoBruto = dadosTransporte.vol[0].pesoB;
+
+            if (dadosTransporte.vol?.Count > 0)
+            {
+                QuantidadeVolumes = dadosTransporte.vol[0].qVol;
+                EspecieVolumeDescricao = dadosTransporte.vol[0].esp;
+                PesoLiquido = dadosTransporte.vol[0].pesoL;
+                PesoBruto = dadosTransporte.vol[0].pesoB;
+            }
         }
 
         public ModalidadeFrete ModalidadeFrete { get; }

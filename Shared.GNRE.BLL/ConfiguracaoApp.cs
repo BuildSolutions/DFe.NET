@@ -23,7 +23,7 @@ namespace GNRE.BLL
             Emitente = empresa;
 
             _cfgServico = ConfiguracaoServico.Instancia;
-            _cfgServico.TimeOut = 30000;
+            _cfgServico.TimeOut = 900000;
             _cfgServico.cUF = Emitente.Pessoa.Endereco.MunicipioEstadoSigla;
 
             _cfgServico.tpAmb = DFe.Classes.Flags.TipoAmbiente.Producao;

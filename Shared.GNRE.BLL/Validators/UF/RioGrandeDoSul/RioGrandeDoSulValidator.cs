@@ -10,7 +10,7 @@ namespace GNRE.BLL.Validators.UF.RioGrandeDoSul
             {
                 RuleFor(uf => uf).SetValidator(new RioGrandeDoSul100099Validator());
             });
-            When(uf => uf.Receita == Classes.Enumerators.EReceita.ICMSSubstituicaoTributariaOperacao, () =>
+            When(uf => uf.Receita == Classes.Enumerators.EReceita.ICMSConsumidorFinalNaoContribuinteOutraUFOperacao, () =>
             {
                 RuleFor(uf => uf).SetValidator(new RioGrandeDoSul100102Validator());
             });
