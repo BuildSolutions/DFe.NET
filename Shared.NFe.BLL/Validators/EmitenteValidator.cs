@@ -2,6 +2,7 @@
 using DFe.Utils.Extensoes;
 using FluentValidation;
 using NFe.BLL.Configuracao.Entidades;
+using DFe.Utils.Extensoes;
 
 namespace NFe.BLL.Validators
 {

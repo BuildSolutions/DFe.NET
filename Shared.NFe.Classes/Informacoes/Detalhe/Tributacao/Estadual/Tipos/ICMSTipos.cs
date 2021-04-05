@@ -187,8 +187,7 @@ namespace NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.Tipos
         /// 41 - Não tributada
         /// </summary>
         [Description("Não tributada")]
-        [XmlEnum("41")]
-        CstRep41,
+        [XmlEnum("41")] CstRep41,
 
         /// <summary>
         /// 50 - Suspensão

@@ -451,6 +451,7 @@ namespace NFe.BLL
         /// <returns>Retorna um objeto da classe RetornoNfeDistDFeInt com os documentos de interesse do CNPJ/CPF pesquisado</returns>
         public RetornoNfeDistDFeInt DistribuicaoDocumentosFiscais(string ufAutor, string documento, out string erro, string ultNSU = "0", string nSU = "0", string chNFE = "")
         {
+            erro = string.Empty;
             //var servicoNFe = new ServicosNFe(ConfiguracaoServico.Instancia);
 
             var retornoConsulta = _servicosNFeInstancia.NfeDistDFeInteresse(ufAutor, documento, ultNSU, nSU, chNFE);
