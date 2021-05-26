@@ -31,7 +31,7 @@
 /* Rua Comendador Francisco josé da Cunha, 111 - Itabaiana - SE - 49500-000     */
 /********************************************************************************/
 
-using System.IO;
+using System;
 using DFe.Utils;
 using MDFe.Classes.Retorno.MDFeConsultaNaoEncerrado;
 using MDFe.Utils.Configuracoes;
@@ -42,13 +42,25 @@ namespace MDFe.Classes.Extencoes
     {
         public static void SalvarXmlEmDisco(this MDFeRetConsMDFeNao retConsMdFeNao, string cnpj)
         {
-            if (MDFeConfiguracao.NaoSalvarXml()) return;
+            if (MDFeConfiguracao.NaoSalvarXml())
+            {
+                return;
+            }
 
             var caminhoXml = MDFeConfiguracao.CaminhoSalvarXml;
 
-            var arquivoSalvar = Path.Combine(caminhoXml, cnpj + "-sit.xml");
+            //var arquivoSalvar = Path.Combine(caminhoXml, cnpj + "-sit.xml");
 
-            FuncoesXml.ClasseParaArquivoXml(retConsMdFeNao, arquivoSalvar);
+            var data = DateTime.Now;
+            var strFolderYear = data.ToString("yyyy");
+            var strFolderMonth = data.ToString("MM_yyyy");
+
+            var arquivoSalvar = System.IO.Path.Combine(caminhoXml,
+                "Consultas",
+                strFolderYear,
+                strFolderMonth) + @"\" + cnpj + "-sit.xml";
+
+            FuncoesXml.ClasseParaArquivoXml(retConsMdFeNao, arquivoSalvar, true);
         }
     }
 }

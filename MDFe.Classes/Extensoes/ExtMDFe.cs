@@ -52,7 +52,10 @@ namespace MDFe.Classes.Extencoes
     {
         public static MDFEletronico Valida(this MDFEletronico mdfe)
         {
-            if (mdfe == null) throw new ArgumentException("Erro de assinatura, MDFe esta null");
+            if (mdfe == null)
+            {
+                throw new ArgumentException("Erro de assinatura, MDFe esta null");
+            }
 
             var xmlMdfe = FuncoesXml.ClasseParaXmlString(mdfe);
 
@@ -127,7 +130,10 @@ namespace MDFe.Classes.Extencoes
 
         public static MDFEletronico Assina(this MDFEletronico mdfe, EventHandler<string> eventHandlerChaveMdfe = null, object quemInvocouEventoChaveMDFe = null)
         {
-            if(mdfe == null) throw new ArgumentException("Erro de assinatura, MDFe esta null");
+            if(mdfe == null)
+            {
+                throw new ArgumentException("Erro de assinatura, MDFe esta null");
+            }
 
             var modeloDocumentoFiscal = mdfe.InfMDFe.Ide.Mod;
             var tipoEmissao = (int) mdfe.InfMDFe.Ide.TpEmis;
@@ -149,7 +155,9 @@ namespace MDFe.Classes.Extencoes
             mdfe.InfMDFe.Id = "MDFe" + dadosChave.Chave;
 
             if (eventHandlerChaveMdfe != null)
+            {
                 eventHandlerChaveMdfe.Invoke(quemInvocouEventoChaveMDFe, dadosChave.Chave);
+            }
 
             mdfe.InfMDFe.Versao = MDFeConfiguracao.VersaoWebService.VersaoLayout;
             mdfe.InfMDFe.Ide.CDV = dadosChave.DigitoVerificador;
@@ -168,12 +176,27 @@ namespace MDFe.Classes.Extencoes
 
         public static void SalvarXmlEmDisco(this MDFEletronico mdfe, string nomeArquivo = null)
         {
-            if (MDFeConfiguracao.NaoSalvarXml()) return;
+            if (MDFeConfiguracao.NaoSalvarXml())
+            {
+                return;
+            }
+
+            //if (string.IsNullOrEmpty(nomeArquivo))
+            //    nomeArquivo = Path.Combine(MDFeConfiguracao.CaminhoSalvarXml, mdfe.Chave() + "-mdfe.xml");
 
             if (string.IsNullOrEmpty(nomeArquivo))
-                nomeArquivo = Path.Combine(MDFeConfiguracao.CaminhoSalvarXml, mdfe.Chave() + "-mdfe.xml");
+            {
+                var data = mdfe.InfMDFe.Ide.DhEmi;
+                var strFolderYear = data.ToString("yyyy");
+                var strFolderMonth = data.ToString("MM_yyyy");
 
-            FuncoesXml.ClasseParaArquivoXml(mdfe, nomeArquivo);
+                nomeArquivo = Path.Combine(MDFeConfiguracao.CaminhoSalvarXml,
+                    "Gerados",
+                    strFolderYear,
+                    strFolderMonth) + @"\" + mdfe.Chave() + "-mdfe.xml";
+            }
+
+            FuncoesXml.ClasseParaArquivoXml(mdfe, nomeArquivo, true);
         }
 
         public static string Chave(this MDFEletronico mdfe)
@@ -207,7 +230,10 @@ namespace MDFe.Classes.Extencoes
         {
             var cnpj = CNPJEmitente(mdfe);
 
-            if (cnpj != null) return cnpj;
+            if (cnpj != null)
+            {
+                return cnpj;
+            }
 
             return CPFEmitente(mdfe).PadLeft(14, '0');
         }
@@ -229,8 +255,10 @@ namespace MDFe.Classes.Extencoes
         public static infMDFeSupl QrCode(this MDFEletronico mdfe, X509Certificate2 certificadoDigital,
             Encoding encoding = null)
         {
-            if (encoding == null) 
+            if (encoding == null)
+            {
                 encoding = Encoding.UTF8;
+            }
 
             var qrCode = new StringBuilder(@"https://dfe-portal.svrs.rs.gov.br/mdfe/qrCode");
             qrCode.Append("?");

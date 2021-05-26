@@ -44,5 +44,13 @@ namespace MDFe.Classes.Informacoes
         /// </summary>
         [XmlElement(ElementName = "disp")]
         public List<MDFeDisp> Disp { get; set; }
+
+        [XmlElement(ElementName = "categCombVeic")]
+        public string CategCombVeic { get; set; }
+
+        public bool ShouldSerializeCategCombVeic()
+        {
+            return !string.IsNullOrEmpty(CategCombVeic);
+        }
     }
 }

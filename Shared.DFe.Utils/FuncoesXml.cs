@@ -121,12 +121,19 @@ namespace DFe.Utils
         /// <typeparam name="T">Classe</typeparam>
         /// <param name="objeto">Objeto da Classe</param>
         /// <param name="arquivo">Arquivo XML</param>
-        public static void ClasseParaArquivoXml<T>(T objeto, string arquivo)
+        public static void ClasseParaArquivoXml<T>(T objeto, string arquivo, bool mustCreateDirectory = false)
         {
             var dir = Path.GetDirectoryName(arquivo);
             if (dir != null && !Directory.Exists(dir))
             {
-                throw new DirectoryNotFoundException("Diretório " + dir + " não encontrado!");
+                if (mustCreateDirectory)
+                {
+                    Directory.CreateDirectory(dir);
+                }
+                else
+                {
+                    throw new DirectoryNotFoundException("Diretório " + dir + " não encontrado!");
+                }
             }
 
             var xml = ClasseParaXmlString(objeto);

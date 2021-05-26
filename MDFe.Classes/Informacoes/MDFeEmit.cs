@@ -76,6 +76,11 @@ namespace MDFe.Classes.Informacoes
         /// </summary>
         [XmlElement(ElementName = "enderEmit")]
         public MDFeEnderEmit EnderEmit { get; set; }
+
+        public bool ShouldSerializeXFant()
+        {
+            return !string.IsNullOrEmpty(XFant);
+        }
     }
 
     [Serializable]
@@ -163,14 +168,12 @@ namespace MDFe.Classes.Informacoes
 
         public bool ShouldSerializeEmail()
         {
-            if (!string.IsNullOrEmpty(Email))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return !string.IsNullOrEmpty(Email);
+        }
+
+        public bool ShouldSerializeXCpl()
+        {
+            return !string.IsNullOrEmpty(XCpl);
         }
     }
 }

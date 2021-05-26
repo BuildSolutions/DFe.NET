@@ -66,5 +66,18 @@ namespace MDFe.Classes.Informacoes
             get { return _vValePed.Arredondar(2); }
             set { _vValePed = value.Arredondar(2); }
         }
+
+        [XmlElement(ElementName = "tpValePed")]
+        public string TpValePed { get; set; }
+
+        public bool ShouldSerializeTpValePed()
+        {
+            return !string.IsNullOrEmpty(TpValePed);
+        }
+
+        public bool ShouldSerializeNCompra()
+        {
+            return !string.IsNullOrEmpty(NCompra);
+        }
     }
 }

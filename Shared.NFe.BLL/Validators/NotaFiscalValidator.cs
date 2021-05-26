@@ -17,7 +17,7 @@ namespace NFe.BLL.Validators
             RuleFor(nfe => nfe.EFinalidadeNFe).Must(finalidade => finalidade.EValido()).WithMessage("Finalidade da NFe é inválido!");
             RuleFor(nfe => nfe.EPresencaComprador).Must(indPres => indPres.EValido()).WithMessage("Indicador de Presença do Comprador da NFe é inválido!");
             RuleFor(nfe => nfe.DataEmissao.Date).LessThanOrEqualTo(DateTime.Now.Date).WithMessage(_ => $"Data de Emissão é maior do que a Data Atual do Servidor: {DateTime.Now:dd/MM/yyyy}");
-            RuleFor(nfe => nfe.DataSaida.GetValueOrDefault().Date).LessThanOrEqualTo(DateTime.Now.Date).When(nfe => nfe.DataSaida != null || modeloDocumento == DFe.Classes.Flags.ModeloDocumento.NFe).WithMessage(_ => $"Data de Saída é maior do que a Data Atual do Servidor: {DateTime.Now:dd/MM/yyyy}");
+            //RuleFor(nfe => nfe.DataSaida.GetValueOrDefault().Date).LessThanOrEqualTo(DateTime.Now.Date).When(nfe => nfe.DataSaida != null || modeloDocumento == DFe.Classes.Flags.ModeloDocumento.NFe).WithMessage(_ => $"Data de Saída é maior do que a Data Atual do Servidor: {DateTime.Now:dd/MM/yyyy}");
             RuleFor(nfe => nfe.Emitente).NotNull().WithMessage("Emitente não informado!").DependentRules(() => RuleFor(nfe => nfe.Emitente).SetValidator(new EmitenteValidator()));
             RuleFor(nfe => nfe.Destinatario).NotNull().When(_ => modeloDocumento != DFe.Classes.Flags.ModeloDocumento.NFCe).WithMessage("Destinatário não informado!").DependentRules(() => RuleFor(nfe => nfe.Destinatario).SetValidator(new DestinatarioValidator()));
             RuleFor(nfe => nfe.DadosTransporte).SetValidator(new DadosTransporteValidator()).When(nfe => nfe.DadosTransporte != null).WithMessage("Dados de Transporte inválidos!");

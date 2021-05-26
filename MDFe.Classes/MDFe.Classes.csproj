@@ -51,6 +51,7 @@
     <Compile Include="Extensoes\ExtMDFeEventoMDFe.cs" />
     <Compile Include="Extensoes\ExtMDFeEvIncDFeMDFe.cs" />
     <Compile Include="Extensoes\ExtMDFeEvIncCondutorMDFe.cs" />
+    <Compile Include="Extensoes\ExtMDFeProcMDFe.cs" />
     <Compile Include="Extensoes\ExtMDFeRetConsMDFeNao.cs" />
     <Compile Include="Extensoes\ExtMDFeRetConsReciMDFe.cs" />
     <Compile Include="Extensoes\ExtMDFeRetConsSitMDFe.cs" />

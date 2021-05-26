@@ -49,5 +49,15 @@ namespace MDFe.Classes.Informacoes
         /// </summary>
         [XmlElement(ElementName = "infCpl")]
         public string InfCpl { get; set; }
+
+        public bool ShouldSerializeInfAdFisco()
+        {
+            return !string.IsNullOrEmpty(InfAdFisco);
+        }
+
+        public bool ShouldSerializeInfCpl()
+        {
+            return !string.IsNullOrEmpty(InfCpl);
+        }
     }
 }

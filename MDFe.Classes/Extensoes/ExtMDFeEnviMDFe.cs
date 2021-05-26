@@ -32,7 +32,6 @@
 /********************************************************************************/
 
 using System;
-using System.IO;
 using System.Xml;
 using DFe.Utils;
 using MDFe.Classes.Servicos.Autorizacao;
@@ -46,7 +45,10 @@ namespace MDFe.Classes.Extencoes
     {
         public static void Valida(this MDFeEnviMDFe enviMDFe)
         {
-            if (enviMDFe == null) throw new ArgumentException("Erro de assinatura, EnviMDFe esta null");
+            if (enviMDFe == null)
+            {
+                throw new ArgumentException("Erro de assinatura, EnviMDFe esta null");
+            }
 
             var xmlMdfe = FuncoesXml.ClasseParaXmlString(enviMDFe);
 
@@ -80,13 +82,25 @@ namespace MDFe.Classes.Extencoes
 
         public static void SalvarXmlEmDisco(this MDFeEnviMDFe enviMDFe)
         {
-            if (MDFeConfiguracao.NaoSalvarXml()) return;
+            if (MDFeConfiguracao.NaoSalvarXml())
+            {
+                return;
+            }
 
             var caminhoXml = MDFeConfiguracao.CaminhoSalvarXml;
 
-            var arquivoSalvar = Path.Combine(caminhoXml, enviMDFe.MDFe.Chave() + "-completo-mdfe.xml");
+            //var arquivoSalvar = Path.Combine(caminhoXml, enviMDFe.MDFe.Chave() + "-completo-mdfe.xml");
 
-            FuncoesXml.ClasseParaArquivoXml(enviMDFe, arquivoSalvar);
+            var data = enviMDFe.MDFe.InfMDFe.Ide.DhEmi;
+            var strFolderYear = data.ToString("yyyy");
+            var strFolderMonth = data.ToString("MM_yyyy");
+
+            var arquivoSalvar = System.IO.Path.Combine(caminhoXml,
+                "Lotes",
+                strFolderYear,
+                strFolderMonth) + @"\" + enviMDFe.MDFe.Chave() + "-lote-mdfe.xml";
+
+            FuncoesXml.ClasseParaArquivoXml(enviMDFe, arquivoSalvar, true);
 
             enviMDFe.MDFe.SalvarXmlEmDisco();
         }

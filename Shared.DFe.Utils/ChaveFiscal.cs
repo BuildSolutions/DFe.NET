@@ -76,6 +76,38 @@ namespace DFe.Utils
         }
 
         /// <summary>
+        /// Obtém a chave do documento fiscal
+        /// </summary>
+        /// <param name="ufEmitente">UF do emitente do DF-e</param>
+        /// <param name="dataEmissao">Data de emissão do DF-e</param>
+        /// <param name="cnpjEmitente">CNPJ do emitente do DF-e</param>
+        /// <param name="modelo">Modelo do DF-e</param>
+        /// <param name="serie">Série do DF-e</param>
+        /// <param name="numero">Numero do DF-e</param>
+        /// <param name="tipoEmissao">Tipo de emissão do DF-e. Informar inteiro conforme consta no manual de orientação do contribuinte para o DF-e</param>
+        /// <param name="cNf">Código numérico que compõe a Chave de Acesso. Número gerado pelo emitente para cada DF-e</param>
+        /// <returns>Retorna um objeto <see cref="DadosChaveFiscal"/> com os dados da chave de acesso</returns>
+        public static DadosChaveFiscal ObterChave(Estado ufEmitente, DateTime dataEmissao, string cnpjEmitente, ModeloDocumento modelo, int serie, long numero, int tipoEmissao, int cNf)
+        {
+            var chave = new StringBuilder();
+
+            chave.Append(((int)ufEmitente).ToString("D2"))
+                .Append(dataEmissao.ToString("yyMM"))
+                .Append(cnpjEmitente)
+                .Append(((int)modelo).ToString("D2"))
+                .Append(serie.ToString("D3"))
+                .Append(numero.ToString("D9"))
+                .Append(tipoEmissao.ToString())
+                .Append(cNf.ToString("D8"));
+
+            var digitoVerificador = ObterDigitoVerificador(chave.ToString());
+
+            chave.Append(digitoVerificador);
+
+            return new DadosChaveFiscal(chave.ToString(), byte.Parse(digitoVerificador));
+        }
+
+        /// <summary>
         /// Calcula e devolve o dígito verificador da chave do DF-e
         /// </summary>
         /// <param name="chave"></param>
