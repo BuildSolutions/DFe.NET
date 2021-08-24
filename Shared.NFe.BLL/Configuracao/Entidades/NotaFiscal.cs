@@ -75,15 +75,9 @@ namespace NFe.BLL.Configuracao.Entidades
                 transportadora = new Transporte(nfe.infNFe.transp);
             }
 
-            foreach (var item in nfe.infNFe.cobr?.dup)
-            {
-                duplicatas.Add(new Duplicata(item.nDup, item.dVenc.GetValueOrDefault(), item.vDup));
-            }
+            nfe.infNFe.cobr?.dup.ForEach(item => duplicatas.Add(new Duplicata(item.nDup, item.dVenc.GetValueOrDefault(), item.vDup)));
 
-            foreach (var item in nfe.infNFe.det)
-            {
-                produtos.Add(new Produto(item));
-            }
+            nfe.infNFe.det.ForEach(item => produtos.Add(new Produto(item)));
 
             Id = 0;
             Serie = nfe.infNFe.ide.serie;
