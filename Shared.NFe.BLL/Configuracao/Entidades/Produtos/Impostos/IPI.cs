@@ -45,7 +45,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos
         /// </summary>
         public static ISet<CSTIPI> IpiCstTributada = new HashSet<CSTIPI>()
         {
-            CSTIPI.ipi00, CSTIPI.ipi49, CSTIPI.ipi50, CSTIPI.ipi99
+            CSTIPI.ipi00, CSTIPI.ipi50
         };
 
         public static IPI ObterIpi(NFe.Classes.Informacoes.Detalhe.Tributacao.Federal.IPI ipi)

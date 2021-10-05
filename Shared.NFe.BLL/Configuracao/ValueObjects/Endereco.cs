@@ -35,6 +35,11 @@ namespace NFe.BLL.Configuracao.ValueObjects
 
         public Endereco(enderEmit endereco)
         {
+            if (endereco == null)
+            {
+                return;
+            }
+
             Logradouro = endereco.xLgr.SanitizeString().SubstringMaxLength(60);
             Numero = endereco.nro.SanitizeString();
             Complemento = endereco.xCpl.SanitizeString();
@@ -49,6 +54,11 @@ namespace NFe.BLL.Configuracao.ValueObjects
 
         public Endereco(enderDest endereco)
         {
+            if (endereco == null)
+            {
+                return;
+            }
+
             Logradouro = endereco.xLgr.SanitizeString().SubstringMaxLength(60);
             Numero = endereco.nro.SanitizeString();
             Complemento = endereco.xCpl.SanitizeString();
@@ -63,11 +73,16 @@ namespace NFe.BLL.Configuracao.ValueObjects
 
         public Endereco(transporta endereco)
         {
+            if(endereco == null)
+            {
+                return;
+            }
+
             System.Enum.TryParse(endereco.UF, out Estado estado);
             var enderecoCompleto = endereco.xEnder.SanitizeString();
             Logradouro = enderecoCompleto;
 
-            if (enderecoCompleto.IndexOf(",") != -1)
+            if (enderecoCompleto?.IndexOf(",") > -1)
             {
                 Logradouro = enderecoCompleto.Substring(0, enderecoCompleto.IndexOf(",")).SanitizeString().SubstringMaxLength(60);
 

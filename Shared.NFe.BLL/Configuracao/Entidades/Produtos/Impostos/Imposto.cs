@@ -1,5 +1,4 @@
-﻿using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS;
-using NFe.Classes.Informacoes.Detalhe.Tributacao;
+﻿using NFe.Classes.Informacoes.Detalhe.Tributacao;
 
 namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos
 {

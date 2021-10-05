@@ -1,6 +1,9 @@
 ﻿using DFe.Classes.Extensoes;
 using DFe.Classes.Flags;
+using DFe.Utils;
 using DFe.Utils.Extensoes;
+using FluentValidation;
+using FluentValidation.Internal;
 using NFe.BLL.Configuracao.Entidades;
 using NFe.BLL.Configuracao.Entidades.Produtos;
 using NFe.BLL.Configuracao.Entidades.Produtos.Impostos;
@@ -176,6 +179,7 @@ namespace NFe.BLL
             infNFe.pag = GetPagamento();
             infNFe.infAdic = GetInfAdic();
             infNFe.exporta = GetExporta();
+            infNFe.autXML = GetAutorizadosXML();
 
             if (_cfgApp.Emitente.Pessoa.Endereco.MunicipioEstadoSigla == DFe.Classes.Entidades.Estado.SC)
             {
@@ -186,6 +190,36 @@ namespace NFe.BLL
             NFeXML.infNFeSupl = GetNFCeQrCode();
 
             return infNFe;
+        }
+
+        private List<autXML> GetAutorizadosXML()
+        {
+            if(NotaFiscal.Emitente.AutorizadosXmlDocumentos == null
+                || NotaFiscal.Emitente.AutorizadosXmlDocumentos.Count == 0)
+            {
+                return null;
+            }
+
+            var autorizadosXml = new List<autXML>();
+            foreach (var documento in NotaFiscal.Emitente.AutorizadosXmlDocumentos)
+            {
+                if (documento.CpfCnpj.Length == 14)
+                {
+                    autorizadosXml.Add(new autXML()
+                    {
+                        CNPJ = documento.CpfCnpj
+                    });
+                }
+                else
+                {
+                    autorizadosXml.Add(new autXML()
+                    {
+                        CPF = documento.CpfCnpj
+                    });
+                }
+            }
+
+            return autorizadosXml;
         }
 
         private ide GetIdentificacao()
@@ -362,7 +396,7 @@ namespace NFe.BLL
                 indIEDest = indIEDest,
                 IE = ie,
                 ISUF = GetISUF(),
-                email = email
+                email = email,
             };
         }
 
@@ -735,7 +769,7 @@ namespace NFe.BLL
 
         private ICMSBasico InformarCSOSN(Configuracao.Entidades.Produtos.Impostos.ICMS.ICMS item)
         {
-            var CSOSN = item.CSOSN;
+            var CSOSN = item.CSOSN.GetValueOrDefault();
             var origemMercadoria = item.Origem;
 
             var pCredSN = item.RepasseCreditoAliquota;
@@ -754,6 +788,8 @@ namespace NFe.BLL
             var vBCFCPST = item.BaseCaluloFCP;
             var pFCPST = item.AliquotaFCP;
             var vFCPST = item.ValorTotalFCP;
+
+            var pRedBCST = item.AliquotaReducaoBaseCalculoST;
 
             switch (CSOSN)
             {
@@ -783,7 +819,7 @@ namespace NFe.BLL
                         CSOSN = Csosnicms.Csosn201,
                         modBCST = modBCST.GetValueOrDefault(),
                         pMVAST = pMVAST,
-                        pRedBCST = null, // TODO:
+                        pRedBCST = pRedBCST,
                         vBCST = vBCST,
                         pICMSST = pICMSST,
                         vICMSST = vICMSST,
@@ -802,7 +838,7 @@ namespace NFe.BLL
                         CSOSN = Csosnicms.Csosn202,
                         modBCST = modBCST.GetValueOrDefault(),
                         pMVAST = pMVAST,
-                        pRedBCST = null, // TODO:
+                        pRedBCST = pRedBCST,
                         vBCST = vBCST,
                         pICMSST = pICMSST,
                         vICMSST = vICMSST,
@@ -853,7 +889,7 @@ namespace NFe.BLL
 
         private ICMSBasico InformarICMS(Configuracao.Entidades.Produtos.Impostos.ICMS.ICMS item)
         {
-            Csticms CST = item.CST;
+            Csticms CST = item.CST.GetValueOrDefault();
             OrigemMercadoria origemMercadoria = item.Origem;
 
             var modBC = item.ModalidadeCalculo.GetValueOrDefault();
@@ -868,11 +904,12 @@ namespace NFe.BLL
             var vICMSST = item.ValorTotalST;
             var pMVAST = item.AliquotaMVAST;
 
-            var vBCFCP = item.BaseCaluloFCP;
-            var pFCP = item.AliquotaFCP;
-            var vFCP = item.ValorTotalFCP;
+            var vBCFCPST = item.BaseCaluloFCP;
+            var pFCPST = item.AliquotaFCP;
+            var vFCPST = item.ValorTotalFCP;
 
             var pRedBC = item.AliquotaReducaoBaseCalculo;
+            var pRedBCST = item.AliquotaReducaoBaseCalculoST;
 
             var vICMSDeson = item.ValorICMSDesonerado;
             var motDesICMS = item.MotivoDesoneracao;
@@ -901,12 +938,16 @@ namespace NFe.BLL
                         vBC = vBC,
                         pICMS = pICMS,
                         vICMS = vICMS,
-
+                        
                         modBCST = (DeterminacaoBaseIcmsSt)modBCST,
                         vBCST = vBCST,
                         pICMSST = pICMSST,
                         vICMSST = vICMSST,
-                        pMVAST = pMVAST == 0 ? null : pMVAST
+                        pMVAST = pMVAST,
+
+                        vBCFCPST = vBCFCPST,
+                        pFCPST = pFCPST,
+                        vFCPST = vFCPST
                     };
 
                 case Csticms.Cst20: // Tributação com redução de base de cálculo
@@ -921,7 +962,7 @@ namespace NFe.BLL
                         vICMS = vICMS,
                         pRedBC = pRedBC.GetValueOrDefault(),
                         vICMSDeson = null,
-                        motDesICMS = null
+                        motDesICMS = null,
                     };
 
                 case Csticms.Cst30: // Tributação Isenta ou não tributada e com cobrança do ICMS por substituição tributária 
@@ -993,10 +1034,14 @@ namespace NFe.BLL
                         vICMS = vICMS,
                         modBCST = modBCST.GetValueOrDefault(),
                         pMVAST = pMVAST,
-                        pRedBCST = null,
+                        pRedBCST = pRedBCST,
                         vBCST = vBCST,
                         pICMSST = pICMSST,
                         vICMSST = vICMSST,
+
+                        vBCFCPST = vBCFCPST,
+                        pFCPST = pFCPST,
+                        vFCPST = vFCPST
                     };
 
                 case Csticms.Cst90: // Tributação ICMS: Outros 
@@ -1355,7 +1400,7 @@ namespace NFe.BLL
             return new ICMSUFDest
             {
                 vBCUFDest = item.BaseCalculoICMSDestino,
-                vBCFCPUFDest = item.BaseCalculoFCP, // TODO: Valor da Base de Cálculo do FCP na UF de destino
+                vBCFCPUFDest = item.BaseCalculoFCP == 0 && item.ValorFCP > 0 ? item.BaseCalculoICMSDestino : item.BaseCalculoFCP, // TODO: Valor da Base de Cálculo do FCP na UF de destino
                 pFCPUFDest = item.AliquotaFCP,
                 pICMSUFDest = item.AliquotaInternaUFDestino,
                 pICMSInter = item.AliquotaInterestadual,
@@ -1372,6 +1417,7 @@ namespace NFe.BLL
             StringBuilder sbInfAdProd = new StringBuilder();
 
             if (NotaFiscal.Emitente.HabilitarDetalhamentoImposto
+                && item.Impostos.TributosIBPT?.ValorNacional > 0
                 && (_cfgApp.CfgServico.ModeloDocumento == ModeloDocumento.NFCe
                 || NotaFiscal.Destinatario?.EConsumidorFinal == ConsumidorFinal.cfConsumidorFinal))
             {
@@ -1388,7 +1434,8 @@ namespace NFe.BLL
                 sbInfAdProd.Append("R$ 0,00 (0%) Municipal. Fonte:IBPT; ");
             }
 
-            if (NotaFiscal.IsZonaFrancaManaus)
+            if (NotaFiscal.IsZonaFrancaManaus
+                && item.Impostos.ICMS.ValorICMSDesonerado > 0)
             {
                 sbInfAdProd.AppendFormat("Valor do ICMS abatido: {0:##,##0.00} ",
                     item.Impostos.ICMS.ValorICMSDesonerado);
@@ -1404,7 +1451,8 @@ namespace NFe.BLL
                 }
             }
 
-            if (item.Impostos.ICMS.BaseCalculoST > 0)
+            if (item.Impostos.ICMS.BaseCalculoST > 0
+                && item.Impostos.ICMS.AliquotaFCP.GetValueOrDefault() > 0)
             {
                 sbInfAdProd.AppendFormat("Base FCP ST = {0:##,##0.00} / Percentual FCP ST = {1:##,##0.00} / Valor FCP ST = {2:##,##0.00##}; ",
                     item.Impostos.ICMS.BaseCalculoST,
@@ -1468,19 +1516,10 @@ namespace NFe.BLL
 
         private static string GetProdutoEAN(string codigoBarras)
         {
-            string literalSemGetin = "SEM GTIN";
-
-            if (string.IsNullOrEmpty(codigoBarras))
+            if(!CodigoBarras.IsGtinValido(codigoBarras))
             {
-                return literalSemGetin;
+                return "SEM GTIN";
             }
-
-            if (codigoBarras.Length <= 12)
-            {
-                return literalSemGetin;
-            }
-            //else if (!strCodigoBarras.Substring(12, 1).Equals(clsEan13.Ean13_DV(strCodigoBarras)))
-            //    return literalSemGetin;
 
             return codigoBarras;
         }
@@ -1579,7 +1618,7 @@ namespace NFe.BLL
             };
         }
 
-        private ProdutoEspecifico GetProdutoCombustivel(Produto item)
+        private List<ProdutoEspecifico> GetProdutoCombustivel(Produto item)
         {
             // Combustível
             if (item.DadosCombustivel == null
@@ -1588,15 +1627,18 @@ namespace NFe.BLL
                 return null;
             }
 
-            return new comb
+            return new List<ProdutoEspecifico>()
             {
-                cProdANP = item.DadosCombustivel.CodigoANP,
-                descANP = item.DadosCombustivel.DescricaoANP,
-                pGLP = item.DadosCombustivel.PercentualGLPDerivadoPetroleo == 0 ? null : item.DadosCombustivel.PercentualGLPDerivadoPetroleo,
-                pGNn = item.DadosCombustivel.PercentualGasNaturalNacional == 0 ? null : item.DadosCombustivel.PercentualGasNaturalNacional,
-                pGNi = item.DadosCombustivel.PercentualGasNaturalImportado == 0 ? null : item.DadosCombustivel.PercentualGasNaturalImportado,
-                vPart = item.DadosCombustivel.ValorPartida == 0 ? null : item.DadosCombustivel.ValorPartida,
-                UFCons = NotaFiscal.Destinatario.Pessoa.Endereco.MunicipioEstadoSigla?.GetSiglaUfString()
+                new comb
+                {
+                    cProdANP = item.DadosCombustivel.CodigoANP,
+                    descANP = item.DadosCombustivel.DescricaoANP,
+                    pGLP = item.DadosCombustivel.PercentualGLPDerivadoPetroleo == 0 ? null : item.DadosCombustivel.PercentualGLPDerivadoPetroleo,
+                    pGNn = item.DadosCombustivel.PercentualGasNaturalNacional == 0 ? null : item.DadosCombustivel.PercentualGasNaturalNacional,
+                    pGNi = item.DadosCombustivel.PercentualGasNaturalImportado == 0 ? null : item.DadosCombustivel.PercentualGasNaturalImportado,
+                    vPart = item.DadosCombustivel.ValorPartida == 0 ? null : item.DadosCombustivel.ValorPartida,
+                    UFCons = NotaFiscal.Destinatario.Pessoa.Endereco.MunicipioEstadoSigla?.GetSiglaUfString()
+                }
             };
         }
 
@@ -1699,7 +1741,8 @@ namespace NFe.BLL
                         indPag = IndicadorPagamentoDetalhePagamento.ipDetPgVista,
                         tPag = pagamento.FormaPagamento,
                         vPag = pagamento.Valor,
-                        card = GetDadosPagamentoCartao(pagamento.pagamentoIntegracaoCartao)
+                        card = GetDadosPagamentoCartao(pagamento.pagamentoIntegracaoCartao),
+                        xPag = pagamento.FormaPagamento == FormaPagamento.fpOutro ? "DIRETO COM O CLIENTE" : null
                     });
                 }
                 var totalPago = NotaFiscal.FormasPagamento.Sum(pag => pag.Valor);
@@ -1715,7 +1758,8 @@ namespace NFe.BLL
                 {
                     indPag = IndicadorPagamentoDetalhePagamento.ipDetPgVista,
                     tPag = FormaPagamento.fpOutro,
-                    vPag = NotaFiscal.Total.NFeValorTotal
+                    vPag = NotaFiscal.Total.NFeValorTotal,
+                    xPag = "COMBINADO COM O CLIENTE"
                 });
             }
             else

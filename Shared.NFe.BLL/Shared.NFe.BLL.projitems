@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ConfiguracaoApp.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConfiguracaoNFCe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConfiguracaoNFe.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\AutorizadosXml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\ConfiguracaoCsc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\DistribuicaoDocumentoFiscalEletronico.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Suframa.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Enums\EPessoa.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enums\ESituacaoNFe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enums\ETipoDocumentoFiscalDFe.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enums\ETipoEvento.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enums\ETipoPessoa.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\NotaFiscal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Transporte.cs" />

@@ -35,6 +35,9 @@ namespace NFe.BLL.Configuracao.Entidades
         {
             var emitenteUf = emitente?.Pessoa?.Endereco?.MunicipioEstadoSigla.GetValueOrDefault();
             var destinatarioUf = destinatario?.Pessoa?.Endereco?.MunicipioEstadoSigla.GetValueOrDefault();
+            var isOperacaoInterna = ePresencaComprador == PresencaComprador.pcPresencial
+                && destinatario?.EConsumidorFinal == ConsumidorFinal.cfConsumidorFinal
+                && dadosTransporte?.ModalidadeFrete == Classes.Informacoes.Transporte.ModalidadeFrete.mfSemFrete;
 
             Id = id;
             Serie = serie;
@@ -47,7 +50,7 @@ namespace NFe.BLL.Configuracao.Entidades
             Destinatario = destinatario;
             EPresencaComprador = ePresencaComprador;
             EFinalidadeNFe = eFinalidadeNFe;
-            EDestinoOperacao = _obterDestinoOperacao(emitenteUf.GetValueOrDefault(), destinatarioUf);
+            EDestinoOperacao = _obterDestinoOperacao(emitenteUf.GetValueOrDefault(), destinatarioUf, isOperacaoInterna);
             IsImportacao = destinatario != null && destinatarioUf.GetValueOrDefault() == Estado.EX && ETipoNFe == TipoNFe.tnEntrada;
             IsExportacao = destinatario != null && (destinatarioUf.GetValueOrDefault() == Estado.EX && ETipoNFe == TipoNFe.tnSaida);
             DadosTransporte = dadosTransporte;
@@ -68,6 +71,7 @@ namespace NFe.BLL.Configuracao.Entidades
             var nfe = notafiscalProcessada.NFe;
             var duplicatas = new List<Duplicata>();
             var produtos = new List<Produto>();
+            var pagamentos = new List<Pagamento>();
             Transporte transportadora = null;
 
             if (nfe.infNFe.transp != null)
@@ -79,24 +83,31 @@ namespace NFe.BLL.Configuracao.Entidades
 
             nfe.infNFe.det.ForEach(item => produtos.Add(new Produto(item)));
 
+            nfe.infNFe.pag?.ForEach(item => item.detPag?.ForEach(pagamento => pagamentos.Add(new Pagamento(pagamento.tPag, pagamento.vPag))));
+
             Id = 0;
             Serie = nfe.infNFe.ide.serie;
             Numero = nfe.infNFe.ide.nNF;
-            ETipoNFe = nfe.infNFe.ide.tpNF;
+            Emitente = new Emitente(nfe.infNFe.emit);
             NaturezaOperacaoDescricao = nfe.infNFe.ide.natOp;
             DataEmissao = nfe.infNFe.ide.dhEmi.DateTime;
             DataSaida = nfe.infNFe.ide.dhSaiEnt?.DateTime ?? nfe.infNFe.ide.dhEmi.DateTime;
-            EFinalidadeNFe = nfe.infNFe.ide.finNFe;
-            Emitente = new Emitente(nfe.infNFe.emit);
+            ETipoNFe = nfe.infNFe.ide.tpNF;
             Destinatario = new Destinatario(nfe.infNFe.dest);
-            DadosTransporte = transportadora;
-            Total = new Totalizador(nfe.infNFe.total.ICMSTot);
-            Produtos = produtos;
-            Duplicatas = duplicatas;
-            DadosAdicionaisFisco = nfe.infNFe.infAdic.infAdFisco;
-            DadosAdicionaisContribuinte = nfe.infNFe.infAdic.infCpl;
             EPresencaComprador = nfe.infNFe.ide.indPres.GetValueOrDefault();
+            EFinalidadeNFe = nfe.infNFe.ide.finNFe;
+            EDestinoOperacao = nfe.infNFe.ide.idDest.GetValueOrDefault();
+            IsImportacao = Destinatario?.Pessoa?.Endereco?.MunicipioEstadoSigla == Estado.EX && ETipoNFe == TipoNFe.tnEntrada;
+            IsExportacao = Destinatario?.Pessoa?.Endereco?.MunicipioEstadoSigla == Estado.EX && ETipoNFe == TipoNFe.tnSaida;
+            DadosTransporte = transportadora;
+            NumeroPedidoCompraB2B = nfe.infNFe.compra?.xPed;
+            Total = new Totalizador(nfe.infNFe.total.ICMSTot);
+            Duplicatas = duplicatas;
+            DadosAdicionaisFisco = nfe.infNFe.infAdic?.infAdFisco;
+            DadosAdicionaisContribuinte = nfe.infNFe.infAdic?.infCpl;
+            Produtos = produtos;
             Protocolo = new Protocolo(notafiscalProcessada.protNFe.infProt);
+            FormasPagamento = pagamentos;
         }
 
         public int Id { get; private set; }
@@ -151,10 +162,11 @@ namespace NFe.BLL.Configuracao.Entidades
 
         public Protocolo Protocolo { get; private set; }
 
-        private DestinoOperacao _obterDestinoOperacao(Estado estadoEmitente, Estado? estadoDestinatario)
+        private DestinoOperacao _obterDestinoOperacao(Estado estadoEmitente, Estado? estadoDestinatario, bool isOperacaoPresencial)
         {
             if(estadoDestinatario == null
-                || estadoEmitente == estadoDestinatario)
+                || estadoEmitente == estadoDestinatario
+                || isOperacaoPresencial)
             {
                 return DestinoOperacao.doInterna;
             }

@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Assinatura\AssinaturaDigital.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Assinatura\CertificadoDigital.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ChaveFiscal.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CodigoBarras.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConfiguracaoCertificado.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataHora.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataHoraOffSet.cs" />

@@ -22,8 +22,8 @@ namespace NFe.BLL.Validators
             RuleFor(nfe => nfe.Destinatario).NotNull().When(_ => modeloDocumento != DFe.Classes.Flags.ModeloDocumento.NFCe).WithMessage("Destinatário não informado!").DependentRules(() => RuleFor(nfe => nfe.Destinatario).SetValidator(new DestinatarioValidator()));
             RuleFor(nfe => nfe.DadosTransporte).SetValidator(new DadosTransporteValidator()).When(nfe => nfe.DadosTransporte != null).WithMessage("Dados de Transporte inválidos!");
             RuleFor(nfe => nfe.Total).NotNull().WithMessage("Totalizador da NFe não informado!").DependentRules(() => RuleFor(nfe => nfe.Total).SetValidator(new TotalizadorValidator()));
-            RuleForEach(nfe => nfe.Duplicatas).SetValidator(_ => new DuplicataValidator()).When(nfe => nfe.Duplicatas != null).WithMessage((_, duplicata) => $"Dados inválidos do Parcela: {duplicata.Codigo}");
-            RuleFor(nfe => nfe.Total.NFeValorTotal).Equal(parc => parc.Duplicatas.Sum(dup => dup.Valor)).When(nfe => nfe.Duplicatas != null).WithMessage("Valor Total da NF-e não corresponde com o Somatório Total das duplicatas.");
+            RuleForEach(nfe => nfe.Duplicatas).SetValidator(_ => new DuplicataValidator()).When(nfe => nfe.Duplicatas?.Count > 0).WithMessage((_, duplicata) => $"Dados inválidos do Parcela: {duplicata.Codigo}");
+            RuleFor(nfe => nfe.Total.NFeValorTotal).Equal(parc => parc.Duplicatas.Sum(dup => dup.Valor)).When(nfe => nfe.Duplicatas?.Count > 0).WithMessage("Valor Total da NF-e não corresponde com o Somatório Total das duplicatas.");
             RuleFor(nfe => nfe.Produtos).NotNull().WithMessage("Produtos da NFe não informado!").DependentRules(() =>
             {
                 RuleForEach(nfe => nfe.Produtos).SetValidator(new ProdutoValidator()).WithMessage((_, produto) => $"Dados inválidos do Produto: ({produto.Referencia}) {produto.Descricao}");
@@ -31,7 +31,7 @@ namespace NFe.BLL.Validators
             //RuleForEach(nfe => nfe.Produtos).SetValidator(new ProdutoValidator()).WithMessage((_, produto) => $"Dados inválidos do Produto: ({produto.Referencia}) {produto.Descricao}");
             RuleFor(nfe => nfe.FormasPagamento).NotNull().When(_ => modeloDocumento == DFe.Classes.Flags.ModeloDocumento.NFCe).WithMessage("Forma de Pagamento da NFCe não informado!").DependentRules(() =>
             {
-                RuleForEach(nfe => nfe.FormasPagamento).SetValidator(new PagamentoValidator()).WithMessage((_, pagamento) => $"Dados inválidos do Pagamento: {pagamento.FormaPagamento.ToString()}");
+                RuleForEach(nfe => nfe.FormasPagamento).SetValidator(new PagamentoValidator()).WithMessage((_, pagamento) => $"Dados inválidos do Pagamento: {pagamento.FormaPagamento}");
             });
         }
     }

@@ -8,10 +8,10 @@ namespace NFe.BLL.Validators.Produtos.Impostos
     {
         public COFINSValidator()
         {
-            RuleFor(cofins => cofins.CST).Must(cst => cst.EValido()).WithMessage($"CST do COFINS é inválido!");
-            RuleFor(cofins => cofins.BaseCalculo).GreaterThan(0).When(cofins => COFINS.CofinsCstTributadaPorAliquota.Contains(cofins.CST)).WithMessage($"Base de Cálculo do COFINS é inválido!");
-            RuleFor(cofins => cofins.ValorTotal).GreaterThan(0).When(cofins => COFINS.CofinsCstTributadaPorAliquota.Contains(cofins.CST)).WithMessage($"Valor do COFINS é inválido!");
-            RuleFor(cofins => cofins.Aliquota).GreaterThan(0).When(cofins => COFINS.CofinsCstTributadaPorAliquota.Contains(cofins.CST)).WithMessage($"Alíquota do COFINS é inválida!");
+            RuleFor(cofins => cofins.CST).Must(cst => cst.EValido()).WithMessage("CST do COFINS é inválido!");
+            RuleFor(cofins => cofins.BaseCalculo).GreaterThan(0).When(cofins => COFINS.CofinsCstTributadaPorAliquota.Contains(cofins.CST)).WithMessage("Base de Cálculo do COFINS é inválido!");
+            RuleFor(cofins => cofins.ValorTotal).GreaterThan(0).When(cofins => COFINS.CofinsCstTributadaPorAliquota.Contains(cofins.CST)).WithMessage("Valor do COFINS é inválido!");
+            RuleFor(cofins => cofins.Aliquota).GreaterThan(0).When(cofins => COFINS.CofinsCstTributadaPorAliquota.Contains(cofins.CST)).WithMessage("Alíquota do COFINS é inválida!");
         }
     }
 }

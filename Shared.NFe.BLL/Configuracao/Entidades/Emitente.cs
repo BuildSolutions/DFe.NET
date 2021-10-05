@@ -2,6 +2,7 @@
 using DFe.Utils.Extensoes;
 using NFe.BLL.Configuracao.ValueObjects;
 using NFe.Classes.Informacoes.Emitente;
+using System.Collections.Generic;
 using System.IO;
 
 namespace NFe.BLL.Configuracao.Entidades
@@ -15,7 +16,8 @@ namespace NFe.BLL.Configuracao.Entidades
             bool habilitarDetalhamentoImposto,
             ConfiguracaoCertificado certificado,
             string diretorioSalvarXML,
-            string diretorioSchemas)
+            string diretorioSchemas,
+            IReadOnlyList<AutorizadosXml> autorizadosXmlDocumentos = null)
         {
             Pessoa = pessoa;
             InscricaoEstadualSubstituicaoTributaria = inscricaoEstadualSubstituicaoTributaria.RetornaNumeros();
@@ -24,6 +26,7 @@ namespace NFe.BLL.Configuracao.Entidades
             Certificado = certificado;
             DiretorioSalvarXML = diretorioSalvarXML;
             DiretorioSchemas = diretorioSchemas;
+            AutorizadosXmlDocumentos = autorizadosXmlDocumentos;
         }
 
         public Emitente(
@@ -51,5 +54,7 @@ namespace NFe.BLL.Configuracao.Entidades
         public string DiretorioSalvarXML { get; }
 
         public string DiretorioSchemas { get; }
+
+        public IReadOnlyList<AutorizadosXml> AutorizadosXmlDocumentos { get; private set; }
     }
 }

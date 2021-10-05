@@ -4,9 +4,9 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
 {
     public abstract class ICMS
     {
-        public Csticms CST { get; protected set; }
+        public Csticms? CST { get; protected set; }
 
-        public Csosnicms CSOSN { get; protected set; }
+        public Csosnicms? CSOSN { get; protected set; }
 
         public OrigemMercadoria Origem { get; protected set; }
 

@@ -14,7 +14,10 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
             decimal baseCalculoST,
             decimal aliquotaST,
             decimal valorTotalST,
-            decimal aliquotaMVAST)
+            decimal aliquotaMVAST,
+            decimal baseCaluloFCP,
+            decimal aliquotaFCP,
+            decimal valorTotalFCP)
         {
             CST = Csticms.Cst10;
             Origem = origem;
@@ -28,6 +31,10 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
             ValorTotalST = valorTotalST;
             AliquotaST = aliquotaST;
             AliquotaMVAST = aliquotaMVAST.NuloSeZero();
+
+            BaseCaluloFCP = baseCaluloFCP.NuloSeZero();
+            AliquotaFCP = aliquotaFCP.NuloSeZero();
+            ValorTotalFCP = valorTotalFCP.NuloSeZero();
         }
 
         public ICMS10(NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMS10 icms)
@@ -44,6 +51,10 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
             ValorTotalST = icms.vICMSST;
             AliquotaST = icms.pICMSST;
             AliquotaMVAST = icms.pMVAST.NuloSeZero();
+
+            BaseCaluloFCP = icms.vBCFCPST;
+            AliquotaFCP = icms.pFCPST;
+            ValorTotalFCP = icms.vFCPST;
         }
 
         //public ICMS10(OrigemMercadoria origem,

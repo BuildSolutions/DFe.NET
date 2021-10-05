@@ -34,6 +34,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Evento\ExtenvEvento.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Evento\Extevento.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Evento\ExtretEnvEvento.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Evento\ExtretEvento.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Excecoes\ComunicacaoException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Excecoes\FabricaComunicacaoException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Excecoes\ValidacaoSchemaException.cs" />

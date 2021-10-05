@@ -76,6 +76,7 @@ using NFe.Utils;
 using NFe.Utils.Excecoes;
 using NFe.Utils.Tributacao.Federal;
 using Image = System.Drawing.Image;
+using NFe.BLL.Validators;
 
 namespace NFe.AppTeste
 {

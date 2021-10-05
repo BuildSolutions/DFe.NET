@@ -7,10 +7,10 @@ namespace NFe.BLL.Validators.Produtos.Impostos.ICMS
     {
         public ICMS30Validator()
         {
-            RuleFor(icms => icms.CST).Must(cst => cst.EValido()).WithMessage($"CST do ICMS é inválido!");
-            RuleFor(icms => icms.BaseCalculoST).GreaterThan(0).WithMessage($"Base de Cálculo do ICMS-ST é inválida!");
-            RuleFor(icms => icms.AliquotaST).GreaterThan(0).WithMessage($"Alíquota do ICMS-ST é inválida!");
-            RuleFor(icms => icms.ValorTotalST).GreaterThan(0).WithMessage($"Valor Total do ICMS-ST é inválido!");
+            //RuleFor(icms => icms.CST).Must(cst => cst.EValido()).WithMessage("CST do ICMS é inválido!");
+            RuleFor(icms => icms.BaseCalculoST).GreaterThan(0).WithMessage("Base de Cálculo do ICMS-ST é inválida!");
+            RuleFor(icms => icms.AliquotaST).GreaterThan(0).WithMessage("Alíquota do ICMS-ST é inválida!");
+            RuleFor(icms => icms.ValorTotalST).GreaterThan(0).WithMessage("Valor Total do ICMS-ST é inválido!");
         }
     }
 }

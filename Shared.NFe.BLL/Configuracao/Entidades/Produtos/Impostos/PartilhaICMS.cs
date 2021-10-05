@@ -12,7 +12,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos
             AliquotaInterestadual = aliquotaInterestadual;
             AliquotaICMSPartilha = aliquotaICMSPartilha;
             ValorICMSUFOrigem = valorICMSUFOrigem;
-            BaseCalculoFCP = 0;
+            BaseCalculoFCP = valorFCP > 0 ? baseCalculoICMSDestino : 0M;
             ValorFCP = valorFCP;
             AliquotaFCP = aliquotaFCP;
         }

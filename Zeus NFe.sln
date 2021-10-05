@@ -1,11 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-<<<<<<< HEAD
-VisualStudioVersion = 16.0.30804.86
-=======
 VisualStudioVersion = 16.0.30320.27
->>>>>>> beaa6b69... Enhancement: Manifesto do Destinatario
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFe.Classes", "NFe.Classes\NFe.Classes.csproj", "{29CA1DA2-440D-484B-951A-CF1B2EB27984}"
 EndProject
@@ -227,13 +223,17 @@ Global
 		Shared.NFe.Danfe.Base\Shared.NFe.Danfe.Base.projitems*{7bc87af1-49fc-4822-addf-6b9b461b0adc}*SharedItemsImports = 13
 		Shared.GNRE.BLL\Shared.GNRE.BLL.projitems*{7ef7bf9c-e49d-4a54-9db6-bb592667ac2a}*SharedItemsImports = 5
 		Shared.NFe.Danfe.Base\Shared.NFe.Danfe.Base.projitems*{80c6093c-47d5-41a1-9fa0-e218e82fa666}*SharedItemsImports = 4
+		Shared.MDFe.Wsdl\Shared.MDFe.Wsdl.projitems*{81b3bc65-a499-4e19-8ab4-09c6d874c540}*SharedItemsImports = 4
 		Shared.GNRE.Classes\Shared.GNRE.Classes.projitems*{84c0d297-e8a0-464b-bb0d-0fadad7d6558}*SharedItemsImports = 4
 		Shared.GNRE.Utils\Shared.GNRE.Utils.projitems*{89e83526-4207-4a1d-98fe-3670a55257d0}*SharedItemsImports = 4
 		Shared.DFe.Wsdl\Shared.DFe.Wsdl.projitems*{8a90a3f4-d280-4b2b-b4ff-0dc110411bb6}*SharedItemsImports = 13
 		Shared.DFe.Utils\Shared.DFe.Utils.projitems*{8d5ca088-ef4b-42f5-86e3-52cb6083c9ef}*SharedItemsImports = 5
 		Shared.GNRE.Wsdl\Shared.GNRE.Wsdl.projitems*{919ebecf-b9a9-485d-900d-6f365bc591a1}*SharedItemsImports = 13
+		Shared.MDFe.Servicos\Shared.MDFe.Servicos.projitems*{9587937a-a826-4785-9d1e-3a9f4a622b7c}*SharedItemsImports = 4
+		Shared.MDFe.Classes\Shared.MDFe.Classes.projitems*{9794cb98-4691-4218-a127-c573c2e7ff83}*SharedItemsImports = 4
 		Shared.DFe.Classes\Shared.DFe.Classes.projitems*{9984ec15-18e1-4a87-b4db-18ac913dc4e8}*SharedItemsImports = 4
 		Shared.DFe.Classes\Shared.DFe.Classes.projitems*{9a3d6d38-3579-472f-b406-4723c9a72e08}*SharedItemsImports = 5
+		Shared.MDFe.Utils\Shared.MDFe.Utils.projitems*{9c0678eb-78f2-49c6-91bf-38148fc37fbb}*SharedItemsImports = 4
 		Shared.CTe.Wsdl\Shared.CTe.Wsdl.projitems*{9cc914f9-4c3e-43bb-a34b-a12ae4923548}*SharedItemsImports = 4
 		Shared.NFe.Servicos\Shared.NFe.Servicos.projitems*{9dc6c14c-fb0e-4b49-9d85-5d41991884ff}*SharedItemsImports = 5
 		Shared.CTe.Servicos\Shared.CTe.Servicos.projitems*{ab5f2a04-a1cf-4d42-8b26-38ebebc8319b}*SharedItemsImports = 13

@@ -830,6 +830,10 @@
       <Project>{B4E1A7A6-5D66-4326-8A8D-39338E6FC84C}</Project>
       <Name>DFe.Utils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NFe.BLL\NFe.BLL.csproj">
+      <Project>{55f27e3f-5cbc-483a-8406-eb311f411d30}</Project>
+      <Name>NFe.BLL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NFe.Classes\NFe.Classes.csproj">
       <Project>{29ca1da2-440d-484b-951a-cf1b2eb27984}</Project>
       <Name>NFe.Classes</Name>

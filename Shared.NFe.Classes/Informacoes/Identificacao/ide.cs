@@ -207,9 +207,9 @@ namespace NFe.Classes.Informacoes.Identificacao
         /// </summary>
         public IndicadorIntermediador? indIntermed { get; set; }
 
-        public bool ShouldSerializeindIntermed()
+        public bool indIntermedSpecified
         {
-            return indIntermed.HasValue;
+            get { return indIntermed.HasValue; }
         }
 
         /// <summary>

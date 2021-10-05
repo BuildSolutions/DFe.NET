@@ -41,5 +41,15 @@ namespace DFe.Utils.Extensoes
         {
             return Enum.IsDefined(typeof(T), valor);
         }
+
+        public static bool EValido<T>(this T? valor) where T : struct, IConvertible
+        {
+            if(valor == null)
+            {
+                return false;
+            }
+
+            return Enum.IsDefined(typeof(T), valor);
+        }
     }
 }
