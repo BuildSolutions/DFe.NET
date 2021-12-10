@@ -27,7 +27,7 @@ namespace NFe.BLL
             Emitente = empresa;
 
             _cfgServico = ConfiguracaoServico.Instancia;
-            _cfgServico.TimeOut = 30000;
+            _cfgServico.TimeOut = 45000;
             _cfgServico.cUF = Emitente.Pessoa.Endereco.MunicipioEstadoSigla.GetValueOrDefault();
 
 //#if DEBUG

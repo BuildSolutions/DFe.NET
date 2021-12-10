@@ -12,8 +12,8 @@ namespace NFe.BLL.Validators.Produtos.Impostos.ICMS
             RuleFor(icms => icms.AliquotaST).GreaterThan(0).WithMessage("Alíquota do ICMS-ST é inválida!");
             RuleFor(icms => icms.ValorTotalST).GreaterThan(0).WithMessage("Valor Total do ICMS-ST é inválido!");
 
-            RuleFor(icms => icms.RepasseCreditoAliquota).GreaterThan(0).WithMessage("Alíquota de Repasse do ICMS é inválida!");
-            RuleFor(icms => icms.RepasseCreditoValor).GreaterThan(0).WithMessage("Valor de Repasse do ICMS é inválido!");
+            //RuleFor(icms => icms.RepasseCreditoAliquota).GreaterThan(0).WithMessage("Alíquota de Repasse do ICMS é inválida!");
+            //RuleFor(icms => icms.RepasseCreditoValor).GreaterThan(0).WithMessage("Valor de Repasse do ICMS é inválido!");
         }
     }
 }

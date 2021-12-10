@@ -10,7 +10,6 @@ namespace NFe.BLL.Configuracao.Entidades
     public class NotaFiscal
     {
         public NotaFiscal(
-            int id,
             int serie,
             long numero,
             TipoNFe eTipoNFe,
@@ -39,7 +38,7 @@ namespace NFe.BLL.Configuracao.Entidades
                 && destinatario?.EConsumidorFinal == ConsumidorFinal.cfConsumidorFinal
                 && dadosTransporte?.ModalidadeFrete == Classes.Informacoes.Transporte.ModalidadeFrete.mfSemFrete;
 
-            Id = id;
+            Id = new Random().Next(1, 99999999);
             Serie = serie;
             Numero = numero;
             Emitente = emitente;

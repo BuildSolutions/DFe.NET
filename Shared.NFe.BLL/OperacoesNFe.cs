@@ -1,4 +1,6 @@
-﻿using DFe.Utils;
+﻿using System;
+using System.Collections.Generic;
+using DFe.Utils;
 using NFe.BLL.Configuracao.Entidades;
 using NFe.Classes.Servicos.Consulta;
 using NFe.Classes.Servicos.ConsultaCadastro;
@@ -11,9 +13,6 @@ using NFe.Classes.Servicos.Tipos;
 using NFe.Servicos;
 using NFe.Servicos.Retorno;
 using NFe.Utils;
-using NFe.Utils.Suframa;
-using System;
-using System.Collections.Generic;
 
 namespace NFe.BLL
 {
@@ -202,9 +201,10 @@ namespace NFe.BLL
                 && retornoEvento.Retorno.cStat != 138 // Recebido pelo Sistema de Registro de Eventos – vinculação do evento à respectiva NF-e prejudicada 
                 && retornoEvento.Retorno.cStat != 155) // Cancelamento homologado fora de prazo
             {
-                erro = string.Format("Falha ao registrar o evento da NFe.\r\n({0}) {1}",
+                erro = string.Format("Falha ao registrar o evento da {2}.\r\n({0}) {1}",
                     retornoEvento.Retorno.cStat,
-                    retornoEvento.Retorno.xMotivo);
+                    retornoEvento.Retorno.xMotivo,
+                    _cfgServico.ModeloDocumento);
                 return false;
             }
 
@@ -233,12 +233,13 @@ namespace NFe.BLL
                     xMotivo += "\r\n\r\nCancele a CT-e ou a MDF-e vinculada à esta NF-e e repita a operação.\r\nSe a CT-e ou a MDF-e já foi cancelada recentemente aguardar 15 minutos e tentar novamente.";
                 }
 
-                erro = string.Format("Não foi possível registrar o evento ({4}) para a NF-e {0}{1}{1}Status: {1}{2}{1}{1}Motivo: {1}{3}",
+                erro = string.Format("Não foi possível registrar o evento ({4}) para a {5} {0}{1}{1}Status: {1}{2}{1}{1}Motivo: {1}{3}",
                     nroNFe,
                     Environment.NewLine,
                     strCStat,
                     xMotivo,
-                    tpEvento.Descricao());
+                    tpEvento.Descricao(),
+                    _cfgServico.ModeloDocumento);
                 return false;
             }
 

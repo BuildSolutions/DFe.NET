@@ -22,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensoes\ExtMDFeEventoMDFe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensoes\ExtMDFeEvIncCondutorMDFe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensoes\ExtMDFeEvIncDFeMDFe.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensoes\ExtMDFeProcMDFe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensoes\ExtMDFeRetConsMDFeNao.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensoes\ExtMDFeRetConsReciMDFe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensoes\ExtMDFeRetConsSitMDFe.cs" />
