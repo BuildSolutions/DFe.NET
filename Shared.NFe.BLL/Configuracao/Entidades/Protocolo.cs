@@ -33,5 +33,16 @@ namespace NFe.BLL.Configuracao.Entidades
         {
             ChaveAcesso = chaveAcesso;
         }
+
+        public string ObterCNf()
+        {
+            if(string.IsNullOrEmpty(ChaveAcesso)
+                || ChaveAcesso.Length < 44)
+            {
+                return null;
+            }
+
+            return ChaveAcesso.Substring(35, 8);
+        }
     }
 }

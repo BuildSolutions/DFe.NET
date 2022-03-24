@@ -11,7 +11,7 @@ namespace GNRE.Classes.Servicos.Consulta.Lote.Retorno
         /// </summary>
         public TipoAmbiente ambiente { get; set; }
 
-        public int numeroRecibo { get; set; }
+        public long numeroRecibo { get; set; }
 
         public SituacaoProcessamento situacaoProcess { get; set; }
 

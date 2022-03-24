@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace DFe.Utils
+﻿namespace DFe.Utils
 {
     public static class CodigoBarras
     {
@@ -23,73 +20,36 @@ namespace DFe.Utils
 
         public static string ObterDigitoVerificador(string vGTIN)
         {
-            if (string.IsNullOrEmpty(vGTIN))
+            if (string.IsNullOrEmpty(vGTIN)
+                || vGTIN.Length != 12)
             {
                 return string.Empty;
             }
 
-            //Tamanhos permitidos no GTIN = 8 / 12 / 13 / 14
-            int[] GTINlength = { 8, 12, 13, 14 };
-            int soma, resultado, base10;
-
-            if (!GTINlength.Contains(vGTIN.Length))
+            int[] array = new int[]
             {
-                return string.Empty;
-            }
+                int.Parse(vGTIN[0].ToString()),
+                int.Parse(vGTIN[1].ToString()) * 3,
+                int.Parse(vGTIN[2].ToString()),
+                int.Parse(vGTIN[3].ToString()) * 3,
+                int.Parse(vGTIN[4].ToString()),
+                int.Parse(vGTIN[5].ToString()) * 3,
+                int.Parse(vGTIN[6].ToString()),
+                int.Parse(vGTIN[7].ToString()) * 3,
+                int.Parse(vGTIN[8].ToString()),
+                int.Parse(vGTIN[9].ToString())* 3,
+                int.Parse(vGTIN[10].ToString()),
+                int.Parse(vGTIN[11].ToString()) * 3
+            };
 
-            //Checa se todos os caracteres do GTIN são números
-            for (int i = 0; i <= vGTIN.Length - 1; i++)
+            int sum = (array[0] + array[1] + array[2] + array[3] + array[4] + array[5] + array[6] + array[7] + array[8] + array[9] + array[10] + array[11]);
+
+            int resultado = (((sum / 10) + 1) * 10) - sum;
+
+            if (resultado % 10 == 0)
             {
-                if (!int.TryParse(vGTIN.ElementAt(i).ToString(), out int n))
-                {
-                    return string.Empty;
-                }
+                resultado = 0;
             }
-
-            soma = 0;
-
-            //Se for GTIN-13 multiplica todas as posições pares menos a última por 1 e as ímpares por 3. Nos outros tamanhos, faz o inverso
-            if (vGTIN.Length == 13)
-            {
-                for (int i = 0; i <= vGTIN.Length - 2; i++)
-                {
-                    if (i % 2 == 0)
-                    {
-                        soma += (Convert.ToInt32(vGTIN.ElementAt(i).ToString()) * 1);
-                    }
-                    else
-                    {
-                        soma += (Convert.ToInt32(vGTIN.ElementAt(i).ToString()) * 3);
-                    }
-                }
-            }
-            else
-            {
-                for (int i = 0; i <= vGTIN.Length - 2; i++)
-                {
-                    if (i % 2 == 0)
-                    {
-                        soma += Convert.ToInt32(vGTIN.ElementAt(i).ToString()) * 3;
-                    }
-                    else
-                    {
-                        soma += (Convert.ToInt32(vGTIN.ElementAt(i).ToString()) * 1);
-                    }
-                }
-            }
-
-            //Procura pelo número de base 10 mais próximo do total somado (arredondando sempre para cima, se necessário)
-            base10 = soma;
-            if (base10 % 10 != 0)
-            {
-                while (base10 % 10 != 0)
-                {
-                    base10++;
-                }
-            }
-
-            //Diminui o total do número de base 10. O resultado deve ser o último digito do código de barras
-            resultado = base10 - soma;
 
             return resultado.ToString();
         }

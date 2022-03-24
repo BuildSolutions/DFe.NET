@@ -226,7 +226,7 @@ namespace NFe.BLL
         {
             var nNF = NotaFiscal.Numero;
             var cUF = _cfgApp.Emitente.Pessoa.Endereco.MunicipioEstadoSigla.GetValueOrDefault();
-            var cNF = NotaFiscal.Id.ToString("00000000");
+            var cNF = NotaFiscal.CNf;
             var natOp = NotaFiscal.NaturezaOperacaoDescricao;
             var serie = NotaFiscal.Serie;
             DateTime dhEmi = NotaFiscal.DataEmissao;
@@ -761,7 +761,7 @@ namespace NFe.BLL
             return new ICMS
             {
                 TipoICMS =
-                    NotaFiscal.Emitente.ECRT == CRT.SimplesNacional
+                    NotaFiscal.Emitente.ECRT == CRT.SimplesNacional 
                         ? InformarCSOSN(item)
                         : InformarICMS(item)
             };

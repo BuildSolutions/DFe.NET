@@ -69,10 +69,10 @@ namespace GNRE.Classes.Informacoes.Emitente
                 {
                     _ie = Regex.Match(value, @"\d+").Value;
                 }
-                else
-                {
-                    throw new ArgumentException(ErroCpfCnpjIEPreenchidos);
-                }
+                //else
+                //{
+                //    throw new ArgumentException(ErroCpfCnpjIEPreenchidos);
+                //}
             }
         }
     }

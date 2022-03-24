@@ -38,7 +38,6 @@ namespace NFe.BLL.Configuracao.Entidades
                 && destinatario?.EConsumidorFinal == ConsumidorFinal.cfConsumidorFinal
                 && dadosTransporte?.ModalidadeFrete == Classes.Informacoes.Transporte.ModalidadeFrete.mfSemFrete;
 
-            Id = new Random().Next(1, 99999999);
             Serie = serie;
             Numero = numero;
             Emitente = emitente;
@@ -63,6 +62,7 @@ namespace NFe.BLL.Configuracao.Entidades
             FormasPagamento = formasPagamento;
             IsZonaFrancaManaus = isZonaFrancaManaus;
             Protocolo = protocolo;
+            CNf = Protocolo?.ObterCNf() ?? new Random().Next(1, 99999999).ToString("00000000");
         }
 
         public NotaFiscal(Classes.nfeProc notafiscalProcessada)
@@ -84,7 +84,6 @@ namespace NFe.BLL.Configuracao.Entidades
 
             nfe.infNFe.pag?.ForEach(item => item.detPag?.ForEach(pagamento => pagamentos.Add(new Pagamento(pagamento.tPag, pagamento.vPag))));
 
-            Id = 0;
             Serie = nfe.infNFe.ide.serie;
             Numero = nfe.infNFe.ide.nNF;
             Emitente = new Emitente(nfe.infNFe.emit);
@@ -107,9 +106,10 @@ namespace NFe.BLL.Configuracao.Entidades
             Produtos = produtos;
             Protocolo = new Protocolo(notafiscalProcessada.protNFe.infProt);
             FormasPagamento = pagamentos;
+            CNf = Protocolo?.ObterCNf() ?? new Random().Next(1, 99999999).ToString("00000000");
         }
 
-        public int Id { get; private set; }
+        public string CNf { get; private set; }
 
         //public string ChaveAcesso { get; private set; }
 
@@ -181,7 +181,8 @@ namespace NFe.BLL.Configuracao.Entidades
 
         public void AtualizarChaveAcesso(string chaveAcesso)
         {
-            if(Protocolo == null)
+            if(Protocolo == null
+                || string.IsNullOrEmpty(Protocolo?.ChaveAcesso))
             {
                 Protocolo = new Protocolo(null, null, null, null);
             }

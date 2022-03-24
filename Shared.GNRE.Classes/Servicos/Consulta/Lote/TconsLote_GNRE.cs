@@ -6,7 +6,7 @@ namespace GNRE.Classes.Servicos.Consulta.Lote
     [XmlRoot(Namespace = "http://www.gnre.pe.gov.br", IsNullable = false)]
     public class TConsLote_GNRE
     {
-        public TConsLote_GNRE(TipoAmbiente ambiente, int numeroRecibo)
+        public TConsLote_GNRE(TipoAmbiente ambiente, long numeroRecibo)
         {
             this.ambiente = ambiente;
             this.numeroRecibo = numeroRecibo;
@@ -25,6 +25,6 @@ namespace GNRE.Classes.Servicos.Consulta.Lote
         /// <summary>
         /// Número do recibo de gerado pelo portal GNRE
         /// </summary>
-        public int numeroRecibo { get; set; }
+        public long numeroRecibo { get; set; }
     }
 }

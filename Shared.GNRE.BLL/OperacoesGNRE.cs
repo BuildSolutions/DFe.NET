@@ -85,7 +85,7 @@ namespace GNRE.BLL
         /// <param name="recibo"></param>
         /// <param name="uf"></param>
         /// <returns>Retorna um objeto da classe GNREConsultaLote com com os dados do processamento do lote</returns>
-        public RetornoProcessamentoLote GNREConsultaLote(int recibo, Estado uf, out string erro)
+        public RetornoProcessamentoLote GNREConsultaLote(long recibo, Estado uf, out string erro)
         {
             var consultarRecibo = _ServicosGNREInstancia.GNREConsultaResultadoLote(recibo, uf);
 

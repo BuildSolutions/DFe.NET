@@ -9,7 +9,7 @@ namespace GNRE.Classes.Servicos.Recepcao.Retorno
         /// <summary>
         /// Número do recibo gerado pelo portal GNRE
         /// </summary>
-        public int numero { get; set; }
+        public long numero { get; set; }
 
         [XmlIgnore]
         public DateTime? dataHoraRecibo { get; set; }
