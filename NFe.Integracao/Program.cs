@@ -88,10 +88,10 @@ namespace NFe.Integracao
             Pessoa dup = new Pessoa( BLL.Enums.ETipoPessoa.Fisica,
                 "TESTE", "AAAAA", null, "41833177894", "125");
             var destinatario = new Destinatario(dup, true, false, null, Classes.Informacoes.Identificacao.Tipos.ConsumidorFinal.cfConsumidorFinal);
-            var nfe = new NotaFiscal(0, 0, 0, Classes.Informacoes.Identificacao.Tipos.TipoNFe.tnEntrada,
-                null, DateTime.Now, DateTime.Now, Classes.Informacoes.Identificacao.Tipos.FinalidadeNFe.fnNormal,
-                null, destinatario, null, null, null, null, null, null, Classes.Informacoes.Identificacao.Tipos.PresencaComprador.pcNao,
-                null);
+            //var nfe = new NotaFiscal(0, 0, 0, Classes.Informacoes.Identificacao.Tipos.TipoNFe.tnEntrada,
+            //    null, DateTime.Now, DateTime.Now, Classes.Informacoes.Identificacao.Tipos.FinalidadeNFe.fnNormal,
+            //    null, destinatario, null, null, null, null, null, null, Classes.Informacoes.Identificacao.Tipos.PresencaComprador.pcNao,
+            //    null);
             var validator = new DestinatarioValidator();
 
             var teste4 = validator.Validate(destinatario);

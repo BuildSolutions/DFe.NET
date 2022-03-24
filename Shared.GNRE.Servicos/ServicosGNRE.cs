@@ -165,7 +165,7 @@ namespace GNRE.Servicos
         /// </summary>
         /// <param name="numeroRecibo"></param>
         /// <returns>Retorna um objeto da classe RetornoProcessamentoLote com o retorno do serviço GNREConsultaResultadoLote</returns>
-        public RetornoProcessamentoLote GNREConsultaResultadoLote(int numeroRecibo, Estado uf)
+        public RetornoProcessamentoLote GNREConsultaResultadoLote(long numeroRecibo, Estado uf)
         {
             var ufOriginal = _cFgServico.cUF;
             try
@@ -218,9 +218,8 @@ namespace GNRE.Servicos
                 }
 
                 var retornoXmlString = retorno.OuterXml;
-                var retResultadoLoteGNRE = new TResultLote_GNRE().CarregarDeXmlString(retornoXmlString);
-
                 SalvarArquivoXml($"{numeroRecibo}-pro-rec.xml", retornoXmlString);
+                var retResultadoLoteGNRE = new TResultLote_GNRE().CarregarDeXmlString(retornoXmlString);
 
                 return new RetornoProcessamentoLote(xmlConsulta, retResultadoLoteGNRE.ObterXmlString(),
                     retornoXmlString, retResultadoLoteGNRE);
