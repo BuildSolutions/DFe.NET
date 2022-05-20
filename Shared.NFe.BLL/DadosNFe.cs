@@ -31,6 +31,7 @@ using NFe.Utils;
 using NFe.Utils.InformacoesSuplementares;
 using NFe.Utils.NFe;
 using Shared.NFe.Classes.Informacoes.InfRespTec;
+using Shared.NFe.Classes.Informacoes.Intermediador;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -180,6 +181,7 @@ namespace NFe.BLL
             infNFe.infAdic = GetInfAdic();
             infNFe.exporta = GetExporta();
             infNFe.autXML = GetAutorizadosXML();
+            infNFe.infIntermed = GetInformacaoIntermediador();
 
             if (_cfgApp.Emitente.Pessoa.Endereco.MunicipioEstadoSigla == DFe.Classes.Entidades.Estado.SC)
             {
@@ -222,6 +224,22 @@ namespace NFe.BLL
             return autorizadosXml;
         }
 
+        private infIntermed GetInformacaoIntermediador()
+        {
+            if(!NotaFiscal.EIndicadorIntermediador.EValido()
+                || NotaFiscal.EIndicadorIntermediador == IndicadorIntermediador.iiSemIntermediador
+                || NotaFiscal.DadosIntermediador == null)
+            {
+                return null;
+            }
+
+            return new infIntermed()
+            {
+                CNPJ = NotaFiscal.DadosIntermediador.CNPJ,
+                idCadIntTran = NotaFiscal.DadosIntermediador.NomeUsuarioPlataforma
+            };
+        }
+
         private ide GetIdentificacao()
         {
             var nNF = NotaFiscal.Numero;
@@ -240,6 +258,7 @@ namespace NFe.BLL
             FinalidadeNFe finNFe = NotaFiscal.EFinalidadeNFe;
             ConsumidorFinal indFinal = NotaFiscal.Destinatario?.EConsumidorFinal ?? ConsumidorFinal.cfConsumidorFinal;
             PresencaComprador indPres = NotaFiscal.EFinalidadeNFe == FinalidadeNFe.fnAjuste || NotaFiscal.EFinalidadeNFe == FinalidadeNFe.fnComplementar ? PresencaComprador.pcNao : NotaFiscal.EPresencaComprador;
+            IndicadorIntermediador? indIntermed = NotaFiscal.EIndicadorIntermediador;
             var verProc = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(); //Versão da DLL: PWNFe.BLL
             ModeloDocumento modeloDocumento = _cfgApp.CfgServico.ModeloDocumento;
 
@@ -267,6 +286,11 @@ namespace NFe.BLL
                 NFref = GetNFRef()
             };
 
+            if(indIntermed.EValido())
+            {
+                ide.indIntermed = indIntermed;
+            }
+
             if (ide.tpEmis != TipoEmissao.teNormal)
             {
                 ide.dhCont = DateTime.Now; ;
@@ -275,6 +299,21 @@ namespace NFe.BLL
 
             return ide;
         }
+
+        //private IndicadorIntermediador? GetIndicadorIntermediador()
+        //{
+        //    IndicadorIntermediador? indicadorIntermediador = null;
+        //    if (NotaFiscal.EIndicadorIntermediador.EValido())
+        //    {
+        //        indicadorIntermediador = NotaFiscal.EIndicadorIntermediador;
+        //    }
+        //    else if (NotaFiscal.IntermediadorObrigadorio.Contains(NotaFiscal.EPresencaComprador))
+        //    {
+        //        indicadorIntermediador = IndicadorIntermediador.iiSemIntermediador;
+        //    }
+
+        //    return indicadorIntermediador;
+        //}
 
         private emit GetEmitente()
         {

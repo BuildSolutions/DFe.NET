@@ -26,11 +26,13 @@ namespace NFe.BLL.Configuracao.Entidades
             string dadosAdicionaisFisco,
             string dadosAdicionaisContribuinte,
             PresencaComprador ePresencaComprador,
+            IndicadorIntermediador? eIndicadorIntermediador,
             IReadOnlyList<Pagamento> formasPagamento = null,
             IReadOnlyList<DocumentoReferenciado> documentosReferenciados = null,
             string numeroPedidoCompraB2B = null,
             bool isZonaFrancaManaus = false,
-            Protocolo protocolo = null)
+            Protocolo protocolo = null,
+            Intermediador intermediador = null)
         {
             var emitenteUf = emitente?.Pessoa?.Endereco?.MunicipioEstadoSigla.GetValueOrDefault();
             var destinatarioUf = destinatario?.Pessoa?.Endereco?.MunicipioEstadoSigla.GetValueOrDefault();
@@ -47,6 +49,7 @@ namespace NFe.BLL.Configuracao.Entidades
             ETipoNFe = eTipoNFe;
             Destinatario = destinatario;
             EPresencaComprador = ePresencaComprador;
+            EIndicadorIntermediador = eIndicadorIntermediador;
             EFinalidadeNFe = eFinalidadeNFe;
             EDestinoOperacao = _obterDestinoOperacao(emitenteUf.GetValueOrDefault(), destinatarioUf, isOperacaoInterna);
             IsImportacao = destinatario != null && destinatarioUf.GetValueOrDefault() == Estado.EX && ETipoNFe == TipoNFe.tnEntrada;
@@ -62,6 +65,7 @@ namespace NFe.BLL.Configuracao.Entidades
             FormasPagamento = formasPagamento;
             IsZonaFrancaManaus = isZonaFrancaManaus;
             Protocolo = protocolo;
+            DadosIntermediador = intermediador;
             CNf = Protocolo?.ObterCNf() ?? new Random().Next(1, 99999999).ToString("00000000");
         }
 
@@ -93,6 +97,7 @@ namespace NFe.BLL.Configuracao.Entidades
             ETipoNFe = nfe.infNFe.ide.tpNF;
             Destinatario = new Destinatario(nfe.infNFe.dest);
             EPresencaComprador = nfe.infNFe.ide.indPres.GetValueOrDefault();
+            EIndicadorIntermediador = nfe.infNFe.ide.indIntermed;
             EFinalidadeNFe = nfe.infNFe.ide.finNFe;
             EDestinoOperacao = nfe.infNFe.ide.idDest.GetValueOrDefault();
             IsImportacao = Destinatario?.Pessoa?.Endereco?.MunicipioEstadoSigla == Estado.EX && ETipoNFe == TipoNFe.tnEntrada;
@@ -106,6 +111,7 @@ namespace NFe.BLL.Configuracao.Entidades
             Produtos = produtos;
             Protocolo = new Protocolo(notafiscalProcessada.protNFe.infProt);
             FormasPagamento = pagamentos;
+            DadosIntermediador = new Intermediador(notafiscalProcessada.NFe.infNFe.infIntermed);
             CNf = Protocolo?.ObterCNf() ?? new Random().Next(1, 99999999).ToString("00000000");
         }
 
@@ -130,6 +136,8 @@ namespace NFe.BLL.Configuracao.Entidades
         public Destinatario Destinatario { get; private set; }
 
         public PresencaComprador EPresencaComprador { get; private set; }
+
+        public IndicadorIntermediador? EIndicadorIntermediador { get; private set; }
 
         public FinalidadeNFe EFinalidadeNFe { get; private set; }
 
@@ -160,6 +168,8 @@ namespace NFe.BLL.Configuracao.Entidades
         public bool IsZonaFrancaManaus { get; private set; }
 
         public Protocolo Protocolo { get; private set; }
+
+        public Intermediador DadosIntermediador { get; private set; }
 
         private DestinoOperacao _obterDestinoOperacao(Estado estadoEmitente, Estado? estadoDestinatario, bool isOperacaoPresencial)
         {
@@ -197,5 +207,10 @@ namespace NFe.BLL.Configuracao.Entidades
                 Protocolo = new Protocolo(protocolo);
             }
         }
+
+        public static ISet<PresencaComprador> IntermediadorObrigadorio = new HashSet<PresencaComprador>()
+        {
+             PresencaComprador.pcInternet, PresencaComprador.pcTeleatendimento, PresencaComprador.pcEntregaDomicilio, PresencaComprador.pcOutros
+        };
     }
 }

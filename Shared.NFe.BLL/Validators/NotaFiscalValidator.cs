@@ -16,6 +16,9 @@ namespace NFe.BLL.Validators
             RuleFor(nfe => nfe.ETipoNFe).Must(tipo => tipo.EValido()).WithMessage("Tipo da NFe é inválido!");
             RuleFor(nfe => nfe.EFinalidadeNFe).Must(finalidade => finalidade.EValido()).WithMessage("Finalidade da NFe é inválido!");
             RuleFor(nfe => nfe.EPresencaComprador).Must(indPres => indPres.EValido()).WithMessage("Indicador de Presença do Comprador da NFe é inválido!");
+            //RuleFor(nfe => nfe.EIndicadorIntermediador).Null().When(indPres => !NotaFiscal.IntermediadorObrigadorio.Contains(indPres.EPresencaComprador)).WithMessage("Indicador de Intermediador Obrigatório para os tipos de intermediário (2, 3, 4, 9)!");
+            //RuleFor(nfe => nfe.EIndicadorIntermediador).NotNull().When(indPres => NotaFiscal.IntermediadorObrigadorio.Contains(indPres.EPresencaComprador)).WithMessage("Indicador de Intermediador Obrigatório para os tipos de intermediário (2, 3, 4, 9)!");
+            RuleFor(nfe => nfe.DadosIntermediador).NotNull().When(nfe => nfe.EIndicadorIntermediador.EValido() && nfe.EIndicadorIntermediador == Classes.Informacoes.Identificacao.Tipos.IndicadorIntermediador.iiSitePlataformaTerceiros).WithMessage("Dados do intermediador não informados!");
             RuleFor(nfe => nfe.DataEmissao.Date).LessThanOrEqualTo(DateTime.Now.Date).WithMessage(_ => $"Data de Emissão é maior do que a Data Atual do Servidor: {DateTime.Now:dd/MM/yyyy}");
             //RuleFor(nfe => nfe.DataSaida.GetValueOrDefault().Date).LessThanOrEqualTo(DateTime.Now.Date).When(nfe => nfe.DataSaida != null || modeloDocumento == DFe.Classes.Flags.ModeloDocumento.NFe).WithMessage(_ => $"Data de Saída é maior do que a Data Atual do Servidor: {DateTime.Now:dd/MM/yyyy}");
             RuleFor(nfe => nfe.Emitente).NotNull().WithMessage("Emitente não informado!").DependentRules(() => RuleFor(nfe => nfe.Emitente).SetValidator(new EmitenteValidator()));
@@ -34,5 +37,7 @@ namespace NFe.BLL.Validators
                 RuleForEach(nfe => nfe.FormasPagamento).SetValidator(new PagamentoValidator()).WithMessage((_, pagamento) => $"Dados inválidos do Pagamento: {pagamento.FormaPagamento}");
             });
         }
+
+
     }
 }

@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\AutorizadosXml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\ConfiguracaoCsc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\DistribuicaoDocumentoFiscalEletronico.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Intermediador.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Suframa.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\Pagamento.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\Entidades\PagamentoIntegracaoCartao.cs" />
