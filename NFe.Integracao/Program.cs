@@ -39,9 +39,6 @@
 
 using System;
 using System.IO;
-using NFe.BLL.Configuracao.Entidades;
-using NFe.BLL.Configuracao.ValueObjects;
-using NFe.BLL.Validators;
 // using NFe.BLL.Configuracao.Entidades;
 using NFe.Classes.Servicos.ConsultaCadastro;
 using NFe.Integracao.Enums;
@@ -84,26 +81,26 @@ namespace NFe.Integracao
             //var teste = validator.Validate(dup);
             var certificado = new DFe.Utils.ConfiguracaoCertificado();
             //certificado.Serial = "sdsdsd";
-            var endereco = new Endereco("13920000", "Rua ", null, null, "bairro", 1234567, "sssdsds", DFe.Classes.Entidades.Estado.SP);
-            Pessoa dup = new Pessoa( BLL.Enums.ETipoPessoa.Fisica,
-                "TESTE", "AAAAA", null, "41833177894", "125");
-            var destinatario = new Destinatario(dup, true, false, null, Classes.Informacoes.Identificacao.Tipos.ConsumidorFinal.cfConsumidorFinal);
-            //var nfe = new NotaFiscal(0, 0, 0, Classes.Informacoes.Identificacao.Tipos.TipoNFe.tnEntrada,
-            //    null, DateTime.Now, DateTime.Now, Classes.Informacoes.Identificacao.Tipos.FinalidadeNFe.fnNormal,
-            //    null, destinatario, null, null, null, null, null, null, Classes.Informacoes.Identificacao.Tipos.PresencaComprador.pcNao,
-            //    null);
-            var validator = new DestinatarioValidator();
+            //var endereco = new Endereco("13920000", "Rua ", null, null, "bairro", 1234567, "sssdsds", DFe.Classes.Entidades.Estado.SP);
+            //Pessoa dup = new Pessoa( BLL.Enums.ETipoPessoa.Fisica,
+            //    "TESTE", "AAAAA", null, "41833177894", "125");
+            //var destinatario = new Destinatario(dup, true, false, null, Classes.Informacoes.Identificacao.Tipos.ConsumidorFinal.cfConsumidorFinal);
+            ////var nfe = new NotaFiscal(0, 0, 0, Classes.Informacoes.Identificacao.Tipos.TipoNFe.tnEntrada,
+            ////    null, DateTime.Now, DateTime.Now, Classes.Informacoes.Identificacao.Tipos.FinalidadeNFe.fnNormal,
+            ////    null, destinatario, null, null, null, null, null, null, Classes.Informacoes.Identificacao.Tipos.PresencaComprador.pcNao,
+            ////    null);
+            //var validator = new DestinatarioValidator();
 
-            var teste4 = validator.Validate(destinatario);
+            //var teste4 = validator.Validate(destinatario);
 
-            if (teste4.IsValid)
-            {
+            //if (teste4.IsValid)
+            //{
 
-            }
-            else
-            {
+            //}
+            //else
+            //{
 
-            }
+            //}
 
             //Uncomment for debug
             //args = new[] { "consultarCadastro","BA","00000000000" };

@@ -76,7 +76,6 @@ using NFe.Utils;
 using NFe.Utils.Excecoes;
 using NFe.Utils.Tributacao.Federal;
 using Image = System.Drawing.Image;
-using NFe.BLL.Validators;
 
 namespace NFe.AppTeste
 {
@@ -1723,10 +1722,11 @@ namespace NFe.AppTeste
 
 
                 DanfeNativoNfce impr = new DanfeNativoNfce(arquivo,
-                    _configuracoes.ConfiguracaoDanfeNfce,
+                    _configuracoes.ConfiguracaoDanfeNfce.VersaoQrCode,
+                    _configuracoes.ConfiguracaoDanfeNfce.Logomarca,
                     _configuracoes.ConfiguracaoCsc.CIdToken,
                     _configuracoes.ConfiguracaoCsc.Csc,
-                    30, 50, viaEstabelecimento: true /*troco*//*, "Arial Black"*/);
+                    0 /*troco*//*, "Arial Black"*/);
 
                 SaveFileDialog fileDialog = new SaveFileDialog();
 
