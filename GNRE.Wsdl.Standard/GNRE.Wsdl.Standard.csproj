@@ -1,17 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DFe.Classes.Standard\DFe.Classes.Standard.csproj" />
-    <ProjectReference Include="..\DFe.Utils.Standard\DFe.Utils.Standard.csproj" />
-    <ProjectReference Include="..\DFe.Wsdl.Standard\DFe.Wsdl.Standard.csproj" />
-    <ProjectReference Include="..\GNRE.Classes.Standard\GNRE.Classes.Standard.csproj" />
-    <ProjectReference Include="..\GNRE.Utils.Standard\GNRE.Utils.Standard.csproj" />
-  </ItemGroup>
+	</PropertyGroup>
 
-  <Import Project="..\Shared.GNRE.Wsdl\Shared.GNRE.Wsdl.projitems" Label="Shared" />
+	<ItemGroup>
+		<ProjectReference Include="..\DFe.Classes\DFe.Classes.csproj" />
+		<ProjectReference Include="..\DFe.Utils\DFe.Utils.csproj" />
+		<ProjectReference Include="..\DFe.Wsdl\DFe.Wsdl.csproj" />
+		<ProjectReference Include="..\GNRE.Classes\GNRE.Classes.csproj" />
+		<ProjectReference Include="..\GNRE.Utils\GNRE.Utils.csproj" />
+	</ItemGroup>
+
+	<Import Project="..\Shared.GNRE.Wsdl\Shared.GNRE.Wsdl.projitems" Label="Shared" />
 
 </Project>
