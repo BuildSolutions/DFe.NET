@@ -3,7 +3,7 @@ using System.Xml;
 using CTe.CTeOSDocumento.Wsdl.Corpo;
 using DFe.Wsdl;
 
-namespace CTe.CTeOSDocumento.Wsdl
+namespace DFe.Wsdl
 {
     public class DFeSoapConfig
     {

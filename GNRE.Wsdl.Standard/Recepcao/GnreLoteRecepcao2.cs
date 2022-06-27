@@ -28,8 +28,12 @@ namespace GNRE.Wsdl.Recepcao
 
         public XmlNode Execute(XmlNode gnreDadosMsg)
         {
-            soapEnvelope = new SoapEnvelope()
+            soapEnvelope = new SoapEnvelope
             {
+                head = new ResponseHead<gnreCabecMsg>
+                {
+                    nfeCabecMsg = gnreCabecMsg
+                }
             };
 
             soapEnvelope.body = new ResponseBody<XmlNode>
@@ -49,8 +53,20 @@ namespace GNRE.Wsdl.Recepcao
         [XmlRoot(ElementName = "Envelope", Namespace = "http://www.w3.org/2003/05/soap-envelope")]
         public class SoapEnvelope : CommonSoapEnvelope
         {
+            [XmlElement(ElementName = "Header", Namespace = "http://www.w3.org/2003/05/soap-envelope")]
+            public ResponseHead<gnreCabecMsg> head { get; set; }
+
             [XmlElement(ElementName = "Body", Namespace = "http://www.w3.org/2003/05/soap-envelope")]
             public ResponseBody<XmlNode> body { get; set; }
+        }
+
+        /// <summary>
+        /// Classe para o cabeçalho do Envelope SOAP
+        /// </summary>
+        public class ResponseHead<T> : CommonResponseHead
+        {
+            [XmlElement(Namespace = "http://www.gnre.pe.gov.br/webservice/GnreLoteRecepcao")]
+            public T nfeCabecMsg { get; set; }
         }
 
         /// <summary>

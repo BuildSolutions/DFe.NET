@@ -5,17 +5,19 @@
 
 	</PropertyGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\DFe.Classes\DFe.Classes.csproj" />
-		<ProjectReference Include="..\DFe.Utils\DFe.Utils.csproj" />
-		<ProjectReference Include="..\DFe.Wsdl\DFe.Wsdl.csproj" />
-		<ProjectReference Include="..\GNRE.Classes\GNRE.Classes.csproj" />
-		<ProjectReference Include="..\GNRE.Utils\GNRE.Utils.csproj" />
+	<ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+		<Reference Include="System.Web.Services" />
 		<ProjectReference Include="..\GNRE.Wsdl\GNRE.Wsdl.csproj" />
 	</ItemGroup>
 
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'net6.0'">
+		<ProjectReference Include="..\GNRE.Wsdl.Standard\GNRE.Wsdl.Standard.csproj" />
+	</ItemGroup>
+
 	<ItemGroup>
-	  <Reference Include="System.Web.Services" />
+		<ProjectReference Include="..\DFe.Classes\DFe.Classes.csproj" />
+		<ProjectReference Include="..\GNRE.Classes\GNRE.Classes.csproj" />
+		<ProjectReference Include="..\GNRE.Utils\GNRE.Utils.csproj" />
 	</ItemGroup>
 
 </Project>

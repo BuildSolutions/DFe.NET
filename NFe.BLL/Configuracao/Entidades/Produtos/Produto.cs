@@ -64,7 +64,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos
         public Produto(det produto)
         {
             Referencia = produto.prod.cProd.SanitizeString();
-            CodigoBarras = produto.prod.cEAN.SanitizeString();
+            CodigoBarras = string.IsNullOrEmpty(produto.prod.cEAN) || string.IsNullOrEmpty(produto.prod.cEANTrib) || produto.prod.cEAN.Equals(produto.prod.cEANTrib) ? produto.prod.cEAN.SanitizeString() : produto.prod.cEANTrib.SanitizeString();
             Descricao = produto.prod.xProd.SanitizeString();
             NCM = produto.prod.NCM.SanitizeString();
             CEST = produto.prod.CEST.SanitizeString();

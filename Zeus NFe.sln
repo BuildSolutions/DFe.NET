@@ -101,8 +101,6 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared.NFe.BLL", "Shared.NF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NFe.BLL.Standard", "NFe.BLL.Standard\NFe.BLL.Standard.csproj", "{AE3DC013-357D-4803-9482-DC956DBC6ECE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFe.BLL.Testes", "NFe.BLL.Testes\NFe.BLL.Testes.csproj", "{A98E6AB9-FED7-4468-8A32-B05999AC95CA}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GNRE", "GNRE", "{B01159C6-5A84-45BB-A6BE-C68121B1C58E}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared.GNRE.Classes", "Shared.GNRE.Classes\Shared.GNRE.Classes.shproj", "{FF8FBDD5-F45E-404C-8652-BBDA58F05DE9}"
@@ -117,11 +115,11 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared.GNRE.Servicos", "Sha
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GNRE.Servicos.Standard", "GNRE.Servicos.Standard\GNRE.Servicos.Standard.csproj", "{22E71431-C135-4721-BB38-2DBDC6BE636B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GNRE.Servicos", "GNRE.Servicos\GNRE.Servicos.csproj", "{EC93C022-899E-4B39-80C0-3D688C0A7FF7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GNRE.Servicos", "GNRE.Servicos\GNRE.Servicos.csproj", "{EC93C022-899E-4B39-80C0-3D688C0A7FF7}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared.GNRE.Utils", "Shared.GNRE.Utils\Shared.GNRE.Utils.shproj", "{4F7AC401-D1CA-4A7E-8DCA-30C81551258B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GNRE.Utils", "GNRE.Utils\GNRE.Utils.csproj", "{89E83526-4207-4A1D-98FE-3670A55257D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GNRE.Utils", "GNRE.Utils\GNRE.Utils.csproj", "{89E83526-4207-4A1D-98FE-3670A55257D0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GNRE.Utils.Standard", "GNRE.Utils.Standard\GNRE.Utils.Standard.csproj", "{37680DE3-2E1E-4DF6-BC9F-50FC45317FB3}"
 EndProject
@@ -129,9 +127,9 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared.GNRE.Wsdl", "Shared.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GNRE.Wsdl.Standard", "GNRE.Wsdl.Standard\GNRE.Wsdl.Standard.csproj", "{E0F91A5C-7E7B-443C-AB79-77FE5CAEE7B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GNRE.Wsdl", "GNRE.Wsdl\GNRE.Wsdl.csproj", "{34662C72-DC3E-468F-BA33-2AF2E512DDC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GNRE.Wsdl", "GNRE.Wsdl\GNRE.Wsdl.csproj", "{34662C72-DC3E-468F-BA33-2AF2E512DDC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GNRE.BLL", "GNRE.BLL\GNRE.BLL.csproj", "{0407842B-5060-4E80-B0FD-7AF5A872D643}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GNRE.BLL", "GNRE.BLL\GNRE.BLL.csproj", "{0407842B-5060-4E80-B0FD-7AF5A872D643}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GNRE.BLL.Standard", "GNRE.BLL.Standard\GNRE.BLL.Standard.csproj", "{7EF7BF9C-E49D-4A54-9DB6-BB592667AC2A}"
 EndProject
@@ -453,14 +451,6 @@ Global
 		{AE3DC013-357D-4803-9482-DC956DBC6ECE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AE3DC013-357D-4803-9482-DC956DBC6ECE}.Release|x86.ActiveCfg = Release|Any CPU
 		{AE3DC013-357D-4803-9482-DC956DBC6ECE}.Release|x86.Build.0 = Release|Any CPU
-		{A98E6AB9-FED7-4468-8A32-B05999AC95CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A98E6AB9-FED7-4468-8A32-B05999AC95CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A98E6AB9-FED7-4468-8A32-B05999AC95CA}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A98E6AB9-FED7-4468-8A32-B05999AC95CA}.Debug|x86.Build.0 = Debug|Any CPU
-		{A98E6AB9-FED7-4468-8A32-B05999AC95CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A98E6AB9-FED7-4468-8A32-B05999AC95CA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A98E6AB9-FED7-4468-8A32-B05999AC95CA}.Release|x86.ActiveCfg = Release|Any CPU
-		{A98E6AB9-FED7-4468-8A32-B05999AC95CA}.Release|x86.Build.0 = Release|Any CPU
 		{84C0D297-E8A0-464B-BB0D-0FADAD7D6558}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{84C0D297-E8A0-464B-BB0D-0FADAD7D6558}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84C0D297-E8A0-464B-BB0D-0FADAD7D6558}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -634,7 +624,6 @@ Global
 		{AFB3AAC0-E3CE-4DF9-8D52-D958FFADF126} = {08D2F8D6-1E89-4414-80F5-3607D3174879}
 		{F841431C-E84B-4B4A-9CAA-515BCAAB4648} = {FE769B0F-5C0F-4A54-81F6-CF878ACCAB3D}
 		{AE3DC013-357D-4803-9482-DC956DBC6ECE} = {F981A8AC-E660-492B-8BF3-CBF70B66E392}
-		{A98E6AB9-FED7-4468-8A32-B05999AC95CA} = {164EF13E-7F27-4BC8-92A4-A82B1696B279}
 		{FF8FBDD5-F45E-404C-8652-BBDA58F05DE9} = {BC687199-E479-46CF-821F-874D2A0F3E6D}
 		{BC687199-E479-46CF-821F-874D2A0F3E6D} = {B01159C6-5A84-45BB-A6BE-C68121B1C58E}
 		{84C0D297-E8A0-464B-BB0D-0FADAD7D6558} = {B01159C6-5A84-45BB-A6BE-C68121B1C58E}
@@ -670,29 +659,18 @@ Global
 		SolutionGuid = {C8C4D9F7-EF86-49A2-83AF-13FA5D4E8DBB}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Shared.GNRE.Servicos\Shared.GNRE.Servicos.projitems*{0061efca-1834-4707-8d70-4d09fed581c9}*SharedItemsImports = 13
-		Shared.GNRE.BLL\Shared.GNRE.BLL.projitems*{0407842b-5060-4e80-b0fd-7af5a872d643}*SharedItemsImports = 4
 		Shared.NFe.Wsdl\Shared.NFe.Wsdl.projitems*{148e0e11-3fe5-4bf7-a64f-b919a0a8d9ba}*SharedItemsImports = 13
-		Shared.GNRE.Servicos\Shared.GNRE.Servicos.projitems*{22e71431-c135-4721-bb38-2dbdc6be636b}*SharedItemsImports = 5
 		Shared.NFe.Wsdl\Shared.NFe.Wsdl.projitems*{23ba5fa7-8bd6-4ae1-9895-54f119dd15fa}*SharedItemsImports = 5
 		Shared.MDFe.Servicos\Shared.MDFe.Servicos.projitems*{23f4144e-1225-45f3-be1b-2bc0e27b33d7}*SharedItemsImports = 13
 		Shared.GNRE.Wsdl\Shared.GNRE.Wsdl.projitems*{34662c72-dc3e-468f-ba33-2af2e512ddc8}*SharedItemsImports = 5
-		Shared.GNRE.Utils\Shared.GNRE.Utils.projitems*{37680de3-2e1e-4df6-bc9f-50fc45317fb3}*SharedItemsImports = 5
-		Shared.GNRE.Classes\Shared.GNRE.Classes.projitems*{4e0a7037-f2c3-422f-9428-9cbcb396b46a}*SharedItemsImports = 5
-		Shared.GNRE.Utils\Shared.GNRE.Utils.projitems*{4f7ac401-d1ca-4a7e-8dca-30c81551258b}*SharedItemsImports = 13
 		Shared.MDFe.Classes\Shared.MDFe.Classes.projitems*{549c1432-c0da-47df-a663-6843b9ba69fa}*SharedItemsImports = 13
 		Shared.NFe.Danfe\Shared.NFe.Danfe.projitems*{5794ab8a-ff29-4f55-abc2-9aafe333bd27}*SharedItemsImports = 13
-		Shared.GNRE.BLL\Shared.GNRE.BLL.projitems*{7ef7bf9c-e49d-4a54-9db6-bb592667ac2a}*SharedItemsImports = 5
 		Shared.GNRE.Wsdl\Shared.GNRE.Wsdl.projitems*{919ebecf-b9a9-485d-900d-6f365bc591a1}*SharedItemsImports = 13
 		Shared.MDFe.Utils\Shared.MDFe.Utils.projitems*{9c3275ec-d063-40b4-a38d-a02ccb9d7991}*SharedItemsImports = 13
-		Shared.NFe.BLL\Shared.NFe.BLL.projitems*{ae3dc013-357d-4803-9482-dc956dbc6ece}*SharedItemsImports = 5
 		Shared.NFe.Danfe\Shared.NFe.Danfe.projitems*{b2462a15-b00d-4e4f-98e6-f1f7470507e5}*SharedItemsImports = 5
-		Shared.GNRE.BLL\Shared.GNRE.BLL.projitems*{c420869e-0f50-4d65-ad58-bae5465873eb}*SharedItemsImports = 13
 		Shared.MDFe.Wsdl\Shared.MDFe.Wsdl.projitems*{cb6a1782-1a20-4bb4-aa6e-1c6a4824ef0f}*SharedItemsImports = 13
 		Shared.NFe.Danfe\Shared.NFe.Danfe.projitems*{d256de50-def8-4076-997d-cb599f9161d3}*SharedItemsImports = 5
 		Shared.NFe.Wsdl\Shared.NFe.Wsdl.projitems*{d60fc037-849e-454f-8bed-8b3b349b13d8}*SharedItemsImports = 5
 		Shared.GNRE.Wsdl\Shared.GNRE.Wsdl.projitems*{e0f91a5c-7e7b-443c-ab79-77fe5caee7b1}*SharedItemsImports = 5
-		Shared.NFe.BLL\Shared.NFe.BLL.projitems*{f839edf0-3bf9-4f09-80cb-22da68e8d0f2}*SharedItemsImports = 13
-		Shared.GNRE.Classes\Shared.GNRE.Classes.projitems*{ff8fbdd5-f45e-404c-8652-bbda58f05de9}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal
