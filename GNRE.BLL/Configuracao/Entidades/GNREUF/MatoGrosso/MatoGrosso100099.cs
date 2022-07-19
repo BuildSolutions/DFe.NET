@@ -33,8 +33,8 @@ namespace GNRE.BLL.Configuracao.Entidades.GNREUF.MatoGrosso
             DataPagamento = dataPagamento;
             DataVencimento = dataVencimento;
 
-            TipoDocumento = Classes.Enumerators.ETipoDocumento.NotaFiscal;
-            DocumentoNumero = notaFiscalNumero.ToString();
+            TipoDocumento = Classes.Enumerators.ETipoDocumento.ChaveNFe;
+            DocumentoNumero = chaveAcessoNFe.ToString();
 
             DetalhamentoReceita = detalhamentoReceita;
             PeriodoReferencia = periodoReferencia;

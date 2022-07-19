@@ -34,7 +34,7 @@ namespace GNRE.BLL.Configuracao.Entidades.GNREUF.MatoGrosso
             TipoDocumento = Classes.Enumerators.ETipoDocumento.NotaFiscal;
             DocumentoNumero = notaFiscalNumero.ToString();
 
-            DetalhamentoReceita = 55; //detalhamentoReceita;
+            DetalhamentoReceita = detalhamentoReceita;
             PeriodoReferencia = periodoReferencia;
             camposExtras = new List<CampoExtra>() { new CampoExtra((int)ETipoCampoExtraMT.ChaveAcessoNFeCTe, ETipoCampoExtraMT.ChaveAcessoNFeCTe.ToString(), chaveAcessoNFe) };
             Convenio = convenio.SanitizeString();
