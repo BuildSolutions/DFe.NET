@@ -32,7 +32,8 @@ namespace NFe.BLL.Configuracao.Entidades
             string numeroPedidoCompraB2B = null,
             bool isZonaFrancaManaus = false,
             Protocolo protocolo = null,
-            Intermediador intermediador = null)
+            Intermediador intermediador = null,
+            bool deveValidarValorTotalDaNfeEDuplicatas = true)
         {
             var emitenteUf = emitente?.Pessoa?.Endereco?.MunicipioEstadoSigla.GetValueOrDefault();
             var destinatarioUf = destinatario?.Pessoa?.Endereco?.MunicipioEstadoSigla.GetValueOrDefault();
@@ -67,6 +68,7 @@ namespace NFe.BLL.Configuracao.Entidades
             Protocolo = protocolo;
             DadosIntermediador = intermediador;
             CNf = Protocolo?.ObterCNf() ?? new Random().Next(1, 99999999).ToString("00000000");
+            DeveValidarValorTotalDaNfeEDuplicatas = deveValidarValorTotalDaNfeEDuplicatas;
         }
 
         public NotaFiscal(Classes.nfeProc notafiscalProcessada)
@@ -113,6 +115,7 @@ namespace NFe.BLL.Configuracao.Entidades
             FormasPagamento = pagamentos;
             DadosIntermediador = new Intermediador(notafiscalProcessada.NFe.infNFe.infIntermed);
             CNf = Protocolo?.ObterCNf() ?? new Random().Next(1, 99999999).ToString("00000000");
+            DeveValidarValorTotalDaNfeEDuplicatas = true;
         }
 
         public string CNf { get; private set; }
@@ -170,6 +173,8 @@ namespace NFe.BLL.Configuracao.Entidades
         public Protocolo Protocolo { get; private set; }
 
         public Intermediador DadosIntermediador { get; private set; }
+
+        public bool DeveValidarValorTotalDaNfeEDuplicatas { get; private set; }
 
         private DestinoOperacao _obterDestinoOperacao(Estado estadoEmitente, Estado? estadoDestinatario, bool isOperacaoPresencial)
         {

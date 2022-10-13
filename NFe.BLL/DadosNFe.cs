@@ -1638,8 +1638,9 @@ namespace NFe.BLL
                 return null;
             }
 
+            var vDup = NotaFiscal.Duplicatas?.Sum(duplicata => duplicata.Valor) ?? 0;
             var nFat = NotaFiscal.Numero.ToString();
-            var vOrig = NotaFiscal.Total.NFeValorTotal;
+            var vOrig = vDup > 0 ? vDup : NotaFiscal.Total.NFeValorTotal;
             var vDesc = 0M;
 
             var fat = new fat
