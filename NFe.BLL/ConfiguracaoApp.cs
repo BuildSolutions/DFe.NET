@@ -69,8 +69,8 @@ namespace NFe.BLL
         public virtual bool ValidarConfiguracaoApp(out string errors)
         {
             errors = string.Empty;
-            var validatorCfg = new ConfiguracaoServicoValidator();
-            var resultadoCfg = validatorCfg.Validate(CfgServico);
+            //var validatorCfg = new ConfiguracaoServicoValidator();
+            //var resultadoCfg = validatorCfg.Validate(CfgServico);
 
             var validatorEmitente = new EmitenteValidator();
             var resultadoEmitente = validatorEmitente.Validate(Emitente);
@@ -79,10 +79,10 @@ namespace NFe.BLL
                 errors += string.Join("\r\n", resultadoEmitente.Errors.Select(err => err.ErrorMessage));
             }
 
-            if (!resultadoCfg.IsValid)
-            {
-                errors += string.Join("\r\n", resultadoCfg.Errors.Select(err => err.ErrorMessage));
-            }
+            //if (!resultadoCfg.IsValid)
+            //{
+            //    errors += string.Join("\r\n", resultadoCfg.Errors.Select(err => err.ErrorMessage));
+            //}
 
             return string.IsNullOrEmpty(errors);
         }

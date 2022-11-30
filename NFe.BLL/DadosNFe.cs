@@ -183,7 +183,8 @@ namespace NFe.BLL
             infNFe.autXML = GetAutorizadosXML();
             infNFe.infIntermed = GetInformacaoIntermediador();
 
-            if (_cfgApp.Emitente.Pessoa.Endereco.MunicipioEstadoSigla == DFe.Classes.Entidades.Estado.SC)
+            if (_cfgApp.Emitente.Pessoa.Endereco.MunicipioEstadoSigla == DFe.Classes.Entidades.Estado.SC
+                || _cfgApp.Emitente.Pessoa.Endereco.MunicipioEstadoSigla == DFe.Classes.Entidades.Estado.PR)
             {
                 infNFe.infRespTec = GetRespTec();
             }
@@ -1171,6 +1172,7 @@ namespace NFe.BLL
             {
                 case CSTCOFINS.cofins01:
                 case CSTCOFINS.cofins02:
+                case CSTCOFINS.cofins50:
                     return new COFINSAliq
                     {
                         CST = cstCOFINS,
@@ -1201,7 +1203,6 @@ namespace NFe.BLL
                     };
 
                 case CSTCOFINS.cofins49:
-                case CSTCOFINS.cofins50:
                 case CSTCOFINS.cofins51:
                 case CSTCOFINS.cofins52:
                 case CSTCOFINS.cofins53:
@@ -1278,6 +1279,7 @@ namespace NFe.BLL
             {
                 case CSTPIS.pis01:
                 case CSTPIS.pis02:
+                case CSTPIS.pis50:
                     return new PISAliq
                     {
                         CST = cstPIS,
@@ -1310,7 +1312,6 @@ namespace NFe.BLL
                     };
 
                 case CSTPIS.pis49:
-                case CSTPIS.pis50:
                 case CSTPIS.pis51:
                 case CSTPIS.pis52:
                 case CSTPIS.pis53:
