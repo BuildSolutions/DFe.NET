@@ -34,7 +34,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
 
         public ICMSSN202(NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMSSN202 icms)
         {
-            CSOSN = Csosnicms.Csosn201;
+            CSOSN = Csosnicms.Csosn202;
             Origem = icms.orig;
 
             ModalidadeCalculoST = icms.modBCST;

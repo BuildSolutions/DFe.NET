@@ -60,7 +60,7 @@ namespace NFe.BLL
             }
 
             var xLgr = Emitente.Pessoa.Endereco.Logradouro;
-            if (xLgr.Length > 60)
+            if (xLgr?.Length > 60)
             {
                 xLgr = xLgr.Substring(0, 60);
             }
