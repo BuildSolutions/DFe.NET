@@ -10,9 +10,10 @@ A biblioteca foi desenvolvida em **C#** utilizando Visual Studio Community 2022 
 **Versões suportadas:**
 |  Escopos  |  Frameworks Suportados  |
 | ------------------- | ------------------- |
-| NFe, NFCe, CTe, MDFe | .NET 4.6.2, .NET 4.7, .NET 4.7.1, .NET 4.7.2, .NET 4.8, .NetStandard 2.0, .NET 6.0 |
-| Impressões com OpenFastReport (NFe, NFCe, CTe, MDFe) | ..NET 4.6.2, .NET 4.7, .NET 4.7.1, .NET 4.7.2, .NET 4.8, .NetStandard 2.0, .NET 6.0 |
-| Impressões com FastReport(versão paga) (NFe, NFCe, CTe, MDFe) | .NET 4.6.2, .NET 4.7, .NET 4.7.1, .NET 4.7.2, .NET 4.8 |
+| NFe, NFCe, CTe, MDFe | .NET 4.6.2, .NET 4.7, .NET 4.7.1, .NET 4.7.2, .NET 4.8, .NetStandard 2.0, .NET 6.0 .NET 7.0 |
+| Impressões com OpenFastReport (NFe, NFCe, CTe, MDFe) | ..NET 4.6.2, .NET 4.7, .NET 4.7.1, .NET 4.7.2, .NET 4.8, .NetStandard 2.0, .NET 6.0(windows+linux) .NET 7.0(windows) |
+| Impressões com FastReport(versão paga) (NFe, NFCe, CTe, MDFe) | .NET 4.6.2, .NET 4.7, .NET 4.7.1, .NET 4.7.2, .NET 4.8 .NetStandard 2.0, .NET 6.0 .NET 7.0(windows) |
+| Impressões com FastReport.Skia(versão paga) (NFe) | .NET 7.0(windows+linux+mobile) |
 
 ***Não temos suporte para .NetFramework 4.5.2 ou 4.5 ou menor. A Biblioteca irá seguir o [ciclo de vida de versões da microsoft](https://dotnet.microsoft.com/en-us/learn/dotnet/what-is-dotnet-framework), sendo retirado a compatibilidade de versoes específicas e antigas do .Net caso a microsoft retire seu suporte.***
 
@@ -109,6 +110,14 @@ Foi necessário a instalação da biblioteca **libgdiplus**
     && apt-get install -y --no-install-recommends libgdiplus libc6-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+    
+Caso aconteça algum erro de System.OutOfMemoryException, utilize a versão 6.0.5, o código acima instala a versão padrão dependendo da versão do SO (6.0.4), para instalar a 6.0.5 utilize o seguinte código, nesse caso para Debian 10:
+
+> RUN apt-get update && apt-get remove libgdiplus -y && apt autoremove -y && apt-get install -y apt-transport-https dirmngr gnupg ca-certificates \
+ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF \
+ RUN echo "deb https://download.mono-project.com/repo/debian stable-buster main" | tee /etc/apt/sources.list.d/mono-official-stable.list \
+ RUN apt-get update && apt-get install -y libgdiplus=6.0.5-0xamarin1+debian10b1 \
+ RUN apt show libgdiplus && rm -rf /var/lib/apt/lists/* 
 
 Tambem foi necessário copiar algumas **fontes**, o relatório de Danfe atual utiliza **Times New Roman**, as fontes contem royalties e não existe repositório online com as mesmas, porem as mesmas estão disponíveis na pasta do windows. (fontes instaladas: times.ttf, timesbd.ttf, timesbi.ttf, timesi.ttf)
 

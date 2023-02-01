@@ -357,8 +357,6 @@ namespace NFe.Utils.Enderecos
 
             #region CE
 
-            //CE ainda não possui NFCe. Rev: 09/09/2015
-
             #region Homologação
 
             foreach (var emissao in emissaoComum)
@@ -438,7 +436,7 @@ namespace NFe.Utils.Enderecos
                 addServico(new[] { ServicoNFe.NfeInutilizacao }, versao4, prod, emissao, Estado.CE, nfce, "https://nfce.sefaz.ce.gov.br/nfce4/services/NFeInutilizacao4?WSDL");
                 addServico(new[] { ServicoNFe.NfeConsultaProtocolo }, versao4, prod, emissao, Estado.CE, nfce, "https://nfce.sefaz.ce.gov.br/nfce4/services/NFeConsultaProtocolo4?WSDL");
                 addServico(new[] { ServicoNFe.NfeStatusServico }, versao4, prod, emissao, Estado.CE, nfce, "https://nfce.sefaz.ce.gov.br/nfce4/services/NFeStatusServico4?WSDL");
-                addServico(new[] { ServicoNFe.RecepcaoEventoCancelmento }, versao4, prod, emissao, Estado.CE, nfce, "https://nfce.sefaz.ce.gov.br/nfce4/services/NFeRecepcaoEvento4?WSD");
+                addServico(new[] { ServicoNFe.RecepcaoEventoCancelmento }, versao4, prod, emissao, Estado.CE, nfce, "https://nfce.sefaz.ce.gov.br/nfce4/services/NFeRecepcaoEvento4?WSDL");
 
                 #endregion
             }
@@ -1581,20 +1579,20 @@ namespace NFe.Utils.Enderecos
                     if (!(estado == Estado.SP & modelo == ModeloDocumento.NFCe))
                     {
                         addServico(new[] { ServicoNFe.RecepcaoEventoEpec }, versao1, hom, TipoEmissao.teEPEC, estado, modelo, "https://hom.nfe.fazenda.gov.br/RecepcaoEvento/RecepcaoEvento.asmx");
-                        addServico(new[] { ServicoNFe.RecepcaoEventoEpec }, versao4, hom, TipoEmissao.teEPEC, estado, modelo, "https://hom.nfe.fazenda.gov.br/NFeRecepcaoEvento4/NFeRecepcaoEvento4.asmx");
+                        addServico(new[] { ServicoNFe.RecepcaoEventoEpec }, versao4, hom, TipoEmissao.teEPEC, estado, modelo, "https://hom1.nfe.fazenda.gov.br/NFeRecepcaoEvento4/NFeRecepcaoEvento4.asmx");
                     }
 
                     if (modelo != ModeloDocumento.NFCe)
                     {
                         addServico(new[] { ServicoNFe.RecepcaoEventoManifestacaoDestinatario }, versao1, hom, TipoEmissao.teNormal, estado, modelo, "https://hom.nfe.fazenda.gov.br/RecepcaoEvento/RecepcaoEvento.asmx");
-                        addServico(new[] { ServicoNFe.RecepcaoEventoManifestacaoDestinatario }, versao4, hom, TipoEmissao.teNormal, estado, modelo, "https://hom.nfe.fazenda.gov.br/NFeRecepcaoEvento4/NFeRecepcaoEvento4.asmx");
+                        addServico(new[] { ServicoNFe.RecepcaoEventoManifestacaoDestinatario }, versao4, hom, TipoEmissao.teNormal, estado, modelo, "https://hom1.nfe.fazenda.gov.br/NFeRecepcaoEvento4/NFeRecepcaoEvento4.asmx");
                     }
 
                     //CE e SVAN possuem endereços próprios para o serviço NfeDownloadNF
                     if (estado != Estado.CE & !svanEstados.Contains(estado))
                         addServico(new[] { ServicoNFe.NfeDownloadNF }, versao2E3, hom, TipoEmissao.teNormal, estado, modelo, "https://hom.nfe.fazenda.gov.br/NfeDownloadNF/NfeDownloadNF.asmx");
                     if (modelo != ModeloDocumento.NFCe)
-                        addServico(new[] { ServicoNFe.NFeDistribuicaoDFe }, versao1, hom, TipoEmissao.teNormal, estado, modelo, "https://hom.nfe.fazenda.gov.br/NFeDistribuicaoDFe/NFeDistribuicaoDFe.asmx");
+                        addServico(new[] { ServicoNFe.NFeDistribuicaoDFe }, versao1, hom, TipoEmissao.teNormal, estado, modelo, "https://hom1.nfe.fazenda.gov.br/NFeDistribuicaoDFe/NFeDistribuicaoDFe.asmx");
                 }
             }
 
@@ -1630,6 +1628,22 @@ namespace NFe.Utils.Enderecos
             #endregion
 
             #endregion
+
+#region ConsultaGtin
+            foreach (var estado in Enum.GetValues(typeof(Estado))
+                         .Cast<Estado>()
+                         .ToList())
+            {
+                foreach (var emissao in emissaoComum)
+                {
+                    foreach (var modelo in todosOsModelos)
+                    {
+                        addServico(new[] { ServicoNFe.ConsultaGtin }, versao1, TipoAmbiente.Producao, emissao, estado, modelo, "https://dfe-servico.svrs.rs.gov.br/ws/ccgConsGTIN/ccgConsGTIN.asmx");
+                        addServico(new[] { ServicoNFe.ConsultaGtin }, versao1, TipoAmbiente.Homologacao, emissao, estado, modelo, "https://dfe-servico.svrs.rs.gov.br/ws/ccgConsGTIN/ccgConsGTIN.asmx");
+                    }
+                }
+            }
+#endregion
 
             return endServico;
         }
@@ -1685,6 +1699,8 @@ namespace NFe.Utils.Enderecos
                     return cfgServico.VersaoNfeDownloadNF;
                 case ServicoNFe.NfceAdministracaoCSC:
                     return cfgServico.VersaoNfceAministracaoCSC;
+                case ServicoNFe.ConsultaGtin:
+                    return cfgServico.VersaoConsultaGTIN;
             }
             return null;
         }
