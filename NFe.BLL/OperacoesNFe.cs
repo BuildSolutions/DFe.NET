@@ -39,6 +39,29 @@ namespace NFe.BLL
             //_servicosNFe = new ServicosNFe(cfgServico);
         }
 
+        public (bool sucesso, string produtoDescricao, string ncm, string cest, string erro) ConsultarGtinProduto(string codigoBarrasGtin)
+        {
+            //var servicoNFe = new ServicosNFe(ConfiguracaoServico.Instancia);
+            var consultaGtin = _servicosNFeInstancia.ConsultaGtin(codigoBarrasGtin.PadLeft(14, '0'));
+            if (consultaGtin.retConsGtin.cStat == 9490)
+            {
+                return (sucesso: true,
+                produtoDescricao: consultaGtin.retConsGtin.xProd,
+                ncm: consultaGtin.retConsGtin.NCM,
+                cest: consultaGtin.retConsGtin.CEST,
+                erro: string.Empty);
+            }
+         
+            return (sucesso: false, 
+                produtoDescricao: string.Empty,
+                ncm: string.Empty,
+                cest: string.Empty,
+                erro: string.Format("Não foi possível consultar o código de barras.{0}{0}Status:{1}{0}Motivo:{2}",
+                    Environment.NewLine,
+                    consultaGtin.retConsGtin.cStat,
+                    consultaGtin.retConsGtin.xMotivo));
+        }
+
         public bool ConsultarStatusSefaz(out string erro)
         {
             erro = string.Empty;

@@ -726,7 +726,7 @@ namespace NFe.BLL
                 ProdutoEspecifico = GetProdutoCombustivel(item),
                 DI = GetProdutoDI(item.DeclaracaoImportacao),
                 //NVE = {"AA0001", "AB0002", "AC0002"},
-                CEST = item.CEST,
+                CEST = item.CEST.RetornaNumeros(),
 
                 //ProdutoEspecifico = new arma
                 //{

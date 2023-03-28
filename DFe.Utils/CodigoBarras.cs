@@ -12,7 +12,7 @@ namespace DFe.Utils
                 return false;
             }
 
-            var resultado = ObterDigitoVerificador(vGTIN);
+            var resultado = ObterDigitoVerificador(vGTIN.Substring(0, vGTIN.Length - 1));
             if (resultado != vGTIN[vGTIN.Length - 1].ToString())
             {
                 return false;
@@ -21,26 +21,27 @@ namespace DFe.Utils
             return true;
         }
 
-        public static string ObterDigitoVerificador(string vGTIN)
+        public static string ObterDigitoVerificador(string vGTINSemDigitoVerificador)
         {
-            if (string.IsNullOrEmpty(vGTIN))
+            if (string.IsNullOrEmpty(vGTINSemDigitoVerificador))
             {
                 return string.Empty;
             }
 
+            vGTINSemDigitoVerificador += "0";
             //Tamanhos permitidos no GTIN = 8 / 12 / 13 / 14
             int[] GTINlength = { 8, 12, 13, 14 };
             int soma, resultado, base10;
 
-            if (!GTINlength.Contains(vGTIN.Length))
+            if (!GTINlength.Contains(vGTINSemDigitoVerificador.Length))
             {
                 return string.Empty;
             }
 
             //Checa se todos os caracteres do GTIN são números
-            for (int i = 0; i <= vGTIN.Length - 1; i++)
+            for (int i = 0; i <= vGTINSemDigitoVerificador.Length - 1; i++)
             {
-                if (!int.TryParse(vGTIN.ElementAt(i).ToString(), out int n))
+                if (!int.TryParse(vGTINSemDigitoVerificador.ElementAt(i).ToString(), out int n))
                 {
                     return string.Empty;
                 }
@@ -49,31 +50,31 @@ namespace DFe.Utils
             soma = 0;
 
             //Se for GTIN-13 multiplica todas as posições pares menos a última por 1 e as ímpares por 3. Nos outros tamanhos, faz o inverso
-            if (vGTIN.Length == 13)
+            if (vGTINSemDigitoVerificador.Length == 13)
             {
-                for (int i = 0; i <= vGTIN.Length - 2; i++)
+                for (int i = 0; i <= vGTINSemDigitoVerificador.Length - 2; i++)
                 {
                     if (i % 2 == 0)
                     {
-                        soma += (Convert.ToInt32(vGTIN.ElementAt(i).ToString()) * 1);
+                        soma += (Convert.ToInt32(vGTINSemDigitoVerificador.ElementAt(i).ToString()) * 1);
                     }
                     else
                     {
-                        soma += (Convert.ToInt32(vGTIN.ElementAt(i).ToString()) * 3);
+                        soma += (Convert.ToInt32(vGTINSemDigitoVerificador.ElementAt(i).ToString()) * 3);
                     }
                 }
             }
             else
             {
-                for (int i = 0; i <= vGTIN.Length - 2; i++)
+                for (int i = 0; i <= vGTINSemDigitoVerificador.Length - 2; i++)
                 {
                     if (i % 2 == 0)
                     {
-                        soma += Convert.ToInt32(vGTIN.ElementAt(i).ToString()) * 3;
+                        soma += Convert.ToInt32(vGTINSemDigitoVerificador.ElementAt(i).ToString()) * 3;
                     }
                     else
                     {
-                        soma += (Convert.ToInt32(vGTIN.ElementAt(i).ToString()) * 1);
+                        soma += (Convert.ToInt32(vGTINSemDigitoVerificador.ElementAt(i).ToString()) * 1);
                     }
                 }
             }
