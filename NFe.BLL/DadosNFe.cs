@@ -727,7 +727,7 @@ namespace NFe.BLL
                 DI = GetProdutoDI(item.DeclaracaoImportacao),
                 //NVE = {"AA0001", "AB0002", "AC0002"},
                 CEST = item.CEST.RetornaNumeros(),
-
+                
                 //ProdutoEspecifico = new arma
                 //{
                 //    tpArma = TipoArma.UsoPermitido,
@@ -1455,6 +1455,11 @@ namespace NFe.BLL
         {
             //TODO::
             StringBuilder sbInfAdProd = new StringBuilder();
+
+            if(!string.IsNullOrWhiteSpace(item.DadosAdicionais))
+            {
+                sbInfAdProd.AppendLine(item.DadosAdicionais + "; ");
+            }
 
             if (NotaFiscal.Emitente.HabilitarDetalhamentoImposto
                 && item.Impostos.TributosIBPT?.ValorNacional > 0

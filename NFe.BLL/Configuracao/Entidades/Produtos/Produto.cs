@@ -6,8 +6,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos
 {
     public class Produto
     {
-        public Produto(
-            string referencia,
+        public Produto(string referencia,
             string descricao,
             string ncm,
             string cest,
@@ -18,6 +17,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos
             decimal valorTotal,
             //IndicadorTotal indicadorTotal,
             Imposto impostos,
+            string dadosAdicionais,
             string codigoBarras = null,
             string unidadeTributacao = null,
             decimal quantidadeTributacao = 0,
@@ -53,6 +53,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos
             DadosCombustivel = dadosCombustivel;
             DeclaracaoImportacao = declaracaoImportacao;
             Impostos = impostos;
+            DadosAdicionais = dadosAdicionais.SanitizeString();
             IBPTValor = ibptValor;
 
             if(string.IsNullOrEmpty(PedidoCompraNumero))
@@ -138,5 +139,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos
         public Imposto Impostos { get; }
 
         public decimal IBPTValor { get; }
+
+        public string DadosAdicionais { get; }
     }
 }
