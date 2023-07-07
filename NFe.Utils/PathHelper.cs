@@ -150,7 +150,7 @@ namespace NFe.Utils
             nomeArquivo,
             dataOperacao,
             extensao));
-            stw.WriteLine(xml);
+            stw.WriteLine(AddUTF8Header(xml));
             stw.Close();
 
             return nomeArquivo;
@@ -168,7 +168,7 @@ namespace NFe.Utils
             dataOperacao);
 
             var stw = new StreamWriter(nomeArquivoXML);
-            stw.WriteLine(xml);
+            stw.WriteLine(AddUTF8Header(xml));
             stw.Close();
 
             return nomeArquivoXML;
@@ -184,6 +184,18 @@ namespace NFe.Utils
             nomeArquivo,
             dataOperacao,
             "pdf");
+        }
+
+        private static string AddUTF8Header(string xml)
+        {
+            string utf8Header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+            if (string.IsNullOrEmpty(xml)
+                || xml.StartsWith(utf8Header))
+            {
+                return xml;
+            }
+
+            return utf8Header + xml;
         }
     }
 }
