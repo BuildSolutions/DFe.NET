@@ -74,6 +74,8 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
                     return new ICMS51((NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMS51)TipoICMS);
                 case nameof(ICMS60):
                     return new ICMS60((NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMS60)TipoICMS);
+                case nameof(ICMS61):
+                    return new ICMS61((NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMS61)TipoICMS);
                 case nameof(ICMSST):
                     return new ICMSST((NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMSST)TipoICMS);
                 case nameof(ICMS70):

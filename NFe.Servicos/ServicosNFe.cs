@@ -168,9 +168,9 @@ namespace NFe.Servicos
             return ServicoNfeFactory.CriaWsdlAutorizacao(_cFgServico, _certificado, compactarMensagem);
         }
 
-        private INfeServico CriarServico(ServicoNFe servico)
+        private INfeServico CriarServico(ServicoNFe servico, string uf = null)
         {
-            return ServicoNfeFactory.CriaWsdlOutros(servico, _cFgServico, _certificado);
+            return ServicoNfeFactory.CriaWsdlOutros(servico, _cFgServico, _certificado, uf);
         }
 
         /// <summary>
@@ -762,8 +762,7 @@ namespace NFe.Servicos
         /// <param name="tipoDocumento">Tipo de documento a ser consultado</param>
         /// <param name="documento">Documento a ser consultado</param>
         /// <returns>Retorna um objeto da classe RetornoNfeConsultaCadastro com o retorno do serviço NfeConsultaCadastro</returns>
-        public RetornoNfeConsultaCadastro NfeConsultaCadastro(string uf, ConsultaCadastroTipoDocumento tipoDocumento,
-            string documento)
+        public RetornoNfeConsultaCadastro NfeConsultaCadastro(string uf, ConsultaCadastroTipoDocumento tipoDocumento, string documento)
         {
             var ufOriginal = _cFgServico.cUF;
             try
@@ -774,7 +773,7 @@ namespace NFe.Servicos
 
                 #region Cria o objeto wdsl para consulta
 
-                var ws = CriarServico(ServicoNFe.NfeConsultaCadastro);
+            var ws = CriarServico(ServicoNFe.NfeConsultaCadastro, uf);
 
                 if (_cFgServico.VersaoNfeConsultaCadastro != VersaoServico.Versao400)
                 {
