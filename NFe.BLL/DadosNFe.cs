@@ -954,6 +954,8 @@ namespace NFe.BLL
             var vICMSDeson = item.ValorICMSDesonerado;
             var motDesICMS = item.MotivoDesoneracao;
 
+
+
             switch (CST)
             {
                 case Csticms.Cst00: // Tributada integralmente
@@ -966,6 +968,17 @@ namespace NFe.BLL
                         vBC = vBC,
                         pICMS = pICMS,
                         vICMS = vICMS
+                    };
+
+                case Csticms.Cst02: // Tributada integralmente
+
+                    return new ICMS02
+                    {
+                        orig = origemMercadoria,
+                        CST = Csticms.Cst02,
+                        adRemICMS = 0,
+                        qBCMono = null,
+                        vICMSMono = 0
                     };
 
                 case Csticms.Cst10: // Tributada e com cobrança do ICMS por substituição tributária
@@ -1049,6 +1062,22 @@ namespace NFe.BLL
                         vICMS = null
                     };
 
+                case Csticms.Cst53: // Tributação com Diferimento (a exigência do preenchimento das informações do ICMS diferido fica a critério de cada UF). 
+
+                    return new ICMS53
+                    {
+                        orig = origemMercadoria,
+                        CST = Csticms.Cst53,
+                        adRemICMS = null,
+                        adRemICMSDif = null,
+                        pDif = null,
+                        qBCMono = null,
+                        qBCMonoDif = null,
+                        vICMSMono = null,
+                        vICMSMonoDif = null,
+                        vICMSMonoOp = null
+                    };
+
                 case Csticms.Cst60: // Tributação ICMS cobrado anteriormente por substituição tributária
 
                     return new ICMS60
@@ -1060,6 +1089,19 @@ namespace NFe.BLL
                         pST = 0,
                         vICMSSubstituto = 0
                     };
+
+                case Csticms.Cst61: // Tributação monofásica sobre combustíveis cobrada anteriormente
+
+                    return new ICMS61
+                    {
+                        orig = origemMercadoria,
+                        CST = Csticms.Cst61,
+                        qBCMonoRet = null,
+                        vICMSMonoRet = 0,
+                        adRemICMSRet = 0,
+                    };
+
+
 
                 case Csticms.Cst70: // Tributação ICMS com redução de base de cálculo e cobrança do ICMS por substituição tributária 
 

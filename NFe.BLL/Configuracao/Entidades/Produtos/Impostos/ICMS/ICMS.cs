@@ -56,12 +56,18 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
 
         public decimal? ValorICMSRetido { get; protected set; }
 
+        public decimal? AliquotaAdRemICMSRetido { get; protected set; }
+
+        public decimal? AliquotaAdRemICMS { get; protected set; }
+
         public static ICMS ObterIcms(ICMSBasico TipoICMS)
         {
             switch (TipoICMS.GetType().Name)
             {
                 case nameof(ICMS00):
                     return new ICMS00((NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMS00)TipoICMS);
+                case nameof(ICMS02):
+                    return new ICMS02((NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMS02)TipoICMS);
                 case nameof(ICMS10):
                     return new ICMS10((NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMS10)TipoICMS);
                 case nameof(ICMS20):
@@ -72,6 +78,8 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
                     return new ICMS40((NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMS40)TipoICMS);
                 case nameof(ICMS51):
                     return new ICMS51((NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMS51)TipoICMS);
+                case nameof(ICMS53):
+                    return new ICMS53((NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMS53)TipoICMS);
                 case nameof(ICMS60):
                     return new ICMS60((NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMS60)TipoICMS);
                 case nameof(ICMS61):
