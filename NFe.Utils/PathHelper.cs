@@ -190,7 +190,7 @@ namespace NFe.Utils
         {
             string utf8Header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
             if (string.IsNullOrEmpty(xml)
-                || xml.StartsWith(utf8Header))
+                || xml.StartsWith(utf8Header, StringComparison.InvariantCultureIgnoreCase))
             {
                 return xml;
             }
