@@ -831,6 +831,10 @@ namespace NFe.BLL
 
             var pRedBCST = item.AliquotaReducaoBaseCalculoST;
 
+            var qBCMonoRet = item.BaseCalculoICMSRetido;
+            var vICMSMonoRet = item.ValorICMSRetido;
+            var adRemICMSRet = item.AliquotaAdRemICMSRetido;
+
             switch (CSOSN)
             {
                 case Csosnicms.Csosn101:
@@ -917,6 +921,44 @@ namespace NFe.BLL
                         vCredICMSSN = null // TODO:
                     };
 
+                case Csosnicms.Cst02: // Tributada integralmente
+
+                    return new ICMS02
+                    {
+                        orig = origemMercadoria,
+                        CST = Csticms.Cst02,
+                        adRemICMS = 0,
+                        qBCMono = null,
+                        vICMSMono = 0
+                    };
+
+                case Csosnicms.Cst53: // Tributação com Diferimento (a exigência do preenchimento das informações do ICMS diferido fica a critério de cada UF). 
+
+                    return new ICMS53
+                    {
+                        orig = origemMercadoria,
+                        CST = Csticms.Cst53,
+                        adRemICMS = null,
+                        adRemICMSDif = null,
+                        pDif = null,
+                        qBCMono = null,
+                        qBCMonoDif = null,
+                        vICMSMono = null,
+                        vICMSMonoDif = null,
+                        vICMSMonoOp = null
+                    };
+
+                case Csosnicms.Cst61: // Tributação monofásica sobre combustíveis cobrada anteriormente
+
+                    return new ICMS61
+                    {
+                        orig = origemMercadoria,
+                        CST = Csticms.Cst61,
+                        qBCMonoRet = qBCMonoRet,
+                        vICMSMonoRet = vICMSMonoRet,
+                        adRemICMSRet = adRemICMSRet,
+                    };
+
                     //default:
                     //    throw new ArgumentException(string.Format("CSOSN inválido ou não informado no cadastro do produto:{0}{0}({1}) {2}",
                     //        Environment.NewLine,
@@ -954,7 +996,9 @@ namespace NFe.BLL
             var vICMSDeson = item.ValorICMSDesonerado;
             var motDesICMS = item.MotivoDesoneracao;
 
-
+            var qBCMonoRet = item.AliquotaAdRemICMSRetido;
+            var vICMSMonoRet = item.ValorICMSRetido;
+            var adRemICMSRet = item.BaseCalculoICMSRetido;
 
             switch (CST)
             {
@@ -1096,12 +1140,10 @@ namespace NFe.BLL
                     {
                         orig = origemMercadoria,
                         CST = Csticms.Cst61,
-                        qBCMonoRet = null,
-                        vICMSMonoRet = 0,
-                        adRemICMSRet = 0,
+                        qBCMonoRet = qBCMonoRet,
+                        vICMSMonoRet = vICMSMonoRet,
+                        adRemICMSRet = adRemICMSRet,
                     };
-
-
 
                 case Csticms.Cst70: // Tributação ICMS com redução de base de cálculo e cobrança do ICMS por substituição tributária 
 
@@ -1642,6 +1684,9 @@ namespace NFe.BLL
             var vFCPST = NotaFiscal.Total.FCPSubstituicaoTributaria; // * Valor Total do FCP (Fundo de Combate à Pobreza) retido por substituição tributária - Corresponde ao total da soma dos campos  id:N23d 
             var vFCPSTRet = 0; // TODO: * Valor Total do FCP retido anteriormente por Substituição Tributária - Corresponde ao total da soma dos campos  id:N27d
 
+            var qBCMonoRet = NotaFiscal.Total.QuantidadeBaseCalculoMonofasicoRetido;
+            var vICMSMonoRet = NotaFiscal.Total.ValorICMSMonofasicoRetido;
+
             decimal vIPIDevol = 0;
             if (NotaFiscal.EFinalidadeNFe == FinalidadeNFe.fnDevolucao)
             {
@@ -1673,7 +1718,9 @@ namespace NFe.BLL
                 vCOFINS = vCOFINS,
                 vOutro = vOutro,
                 vNF = vNF,
-                vTotTrib = vTotTrib
+                vTotTrib = vTotTrib,
+                qBCMonoRet = qBCMonoRet,
+                vICMSMonoRet = vICMSMonoRet
             };
 
             return new total { ICMSTot = icmsTot };
@@ -1847,7 +1894,7 @@ namespace NFe.BLL
                     indPag = IndicadorPagamentoDetalhePagamento.ipDetPgVista,
                     tPag = FormaPagamento.fpOutro,
                     vPag = NotaFiscal.Total.NFeValorTotal,
-                    xPag = "COMBINADO COM O CLIENTE"
+                    xPag = "DIRETO COM O CLIENTE"
                 });
             }
             else

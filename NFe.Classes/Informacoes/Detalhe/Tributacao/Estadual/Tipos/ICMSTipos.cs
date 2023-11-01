@@ -394,6 +394,34 @@ namespace NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.Tipos
     public enum Csosnicms
     {
         /// <summary>
+        /// 02 - Tributação monofásica própria sobre combustíveis
+        /// </summary>
+        [Description("Tributação monofásica própria sobre combustíveis")]
+        [XmlEnum("02")]
+        Cst02 = 2,
+
+        /// <summary>
+        /// 15 - Tributação monofásica própria e com responsabilidade pela retenção sobre combustíveis
+        /// </summary>
+        [Description("Tributação monofásica própria e com responsabilidade pela retenção sobre combustíveis")]
+        [XmlEnum("15")]
+        Cst15 = 15,
+
+        /// <summary>
+        /// 53 - Tributação monofásica sobre combustíveis com recolhimento diferido
+        /// </summary>
+        [Description("Tributação monofásica sobre combustíveis com recolhimento diferido")]
+        [XmlEnum("53")]
+        Cst53  = 53,
+
+        /// <summary>
+        /// 61 - Tributação monofásica sobre combustíveis cobrada anteriormente
+        /// </summary>
+        [Description("Tributação monofásica sobre combustíveis cobrada anteriormente")]
+        [XmlEnum("61")]
+        Cst61 = 61,
+
+        /// <summary>
         /// 101 - Tributada pelo Simples Nacional com permissão de crédito
         /// </summary>
         [Description("Tributada pelo Simples Nacional com permissão de crédito")]
@@ -461,7 +489,7 @@ namespace NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.Tipos
         /// </summary>
         [Description("Outros")]
         [XmlEnum("900")]
-        Csosn900 = 900
+        Csosn900 = 900,
     }
 
     #endregion

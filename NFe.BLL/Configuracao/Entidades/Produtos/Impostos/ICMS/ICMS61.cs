@@ -9,6 +9,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
             decimal valorICMSRetido,
             decimal? baseCalculoICMSRetido)
         {
+            CSOSN = Csosnicms.Cst61;
             CST = Csticms.Cst61;
             Origem = origem;
             AliquotaAdRemICMSRetido = aliquotaAdRemICMSRetido;
@@ -18,6 +19,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
 
         public ICMS61(NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMS61 icms)
         {
+            CSOSN = Csosnicms.Cst61;
             CST = Csticms.Cst61;
             Origem = icms.orig;
 
