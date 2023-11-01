@@ -9,6 +9,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
             decimal valorTotal,
             decimal? qtdBaseCalculo)
         {
+            CSOSN = Csosnicms.Cst02;
             CST = Csticms.Cst02;
             Origem = origem;
             AliquotaAdRemICMSRetido = aliquotaAdRem;
@@ -22,6 +23,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
 
         public ICMS02(NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMS02 icms)
         {
+            CSOSN = Csosnicms.Cst02;
             CST = Csticms.Cst02;
             Origem = icms.orig;
 

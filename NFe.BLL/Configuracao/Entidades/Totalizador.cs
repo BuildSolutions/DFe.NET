@@ -24,7 +24,9 @@ namespace NFe.BLL.Configuracao.Entidades
             decimal tributosIBPT,
             decimal icmsUFDestino,
             decimal icmsUFOrigem,
-            decimal fcpUFDestino)
+            decimal fcpUFDestino,
+            decimal quantidadeBaseCalculoMonofasicoRetido,
+            decimal valorBaseCalculoMonofasicoRetido)
         {
             ICMSBaseCalculo = icmsBaseCalculo;
             ICMSTotal = icmsTotal;
@@ -46,6 +48,8 @@ namespace NFe.BLL.Configuracao.Entidades
             ICMSUFDestino = icmsUFDestino;
             ICMSUFOrigem = icmsUFOrigem;
             FCPUFDestino = fcpUFDestino;
+            ValorICMSMonofasicoRetido = valorBaseCalculoMonofasicoRetido;
+            QuantidadeBaseCalculoMonofasicoRetido = quantidadeBaseCalculoMonofasicoRetido;
         }
 
         public Totalizador(ICMSTot total)
@@ -70,6 +74,8 @@ namespace NFe.BLL.Configuracao.Entidades
             ICMSUFDestino = total.vICMSUFDest ?? 0M;
             ICMSUFOrigem = total.vICMSUFRemet ?? 0M;
             FCPUFDestino = total.vFCPUFDest ?? 0M;
+            ValorICMSMonofasicoRetido = total.vICMSMonoRet ?? 0M;
+            QuantidadeBaseCalculoMonofasicoRetido = total.qBCMonoRet ?? 0M;
         }
 
         public decimal ICMSBaseCalculo { get; }
@@ -111,5 +117,9 @@ namespace NFe.BLL.Configuracao.Entidades
         public decimal ICMSUFOrigem { get; }
 
         public decimal FCPUFDestino { get; }
+
+        public decimal QuantidadeBaseCalculoMonofasicoRetido { get; }
+
+        public decimal ValorICMSMonofasicoRetido { get; }
     }
 }
