@@ -42,6 +42,7 @@ using CTe.Servicos.Factory;
 using CTe.Utils.CTe;
 using CTe.Utils.Evento;
 using CteEletronico = CTe.Classes.CTe;
+using CteEletronicoOS = CTe.CTeOSClasses.CTeOS;
 
 namespace CTe.Servicos.Eventos
 {
@@ -50,6 +51,11 @@ namespace CTe.Servicos.Eventos
         public retEventoCTe Executar(CteEletronico cte, int sequenciaEvento, EventoContainer container, CTeTipoEvento cTeTipoEvento, ConfiguracaoServico configuracaoServico = null)
         {
             return Executar(cTeTipoEvento, sequenciaEvento, cte.Chave(), cte.infCte.emit.CNPJ, container, configuracaoServico);
+        }
+
+        public retEventoCTe Executar(CteEletronicoOS cte, int sequenciaEvento, EventoContainer container, CTeTipoEvento cTeTipoEvento, ConfiguracaoServico configuracaoServico = null)
+        {
+            return Executar(cTeTipoEvento, sequenciaEvento, cte.Chave(), cte.InfCte.emit.CNPJ, container, configuracaoServico);
         }
 
         public async Task<retEventoCTe> ExecutarAsync(CteEletronico cte, int sequenciaEvento, EventoContainer container, CTeTipoEvento cTeTipoEvento, ConfiguracaoServico configuracaoServico = null)
@@ -61,7 +67,10 @@ namespace CTe.Servicos.Eventos
         {
             var evento = FactoryEvento.CriaEvento(cTeTipoEvento, sequenciaEvento, chave, cnpj, container, configuracaoServico);
             evento.Assina(configuracaoServico);
-            evento.ValidarSchema(configuracaoServico);
+            
+            if (configuracaoServico.IsValidaSchemas)
+                evento.ValidarSchema(configuracaoServico);
+
             evento.SalvarXmlEmDisco(configuracaoServico);
 
             XmlNode retornoXml = null;
@@ -88,7 +97,10 @@ namespace CTe.Servicos.Eventos
         {
             var evento = FactoryEvento.CriaEvento(cTeTipoEvento, sequenciaEvento, chave, cnpj, container, configuracaoServico);
             evento.Assina(configuracaoServico);
-            evento.ValidarSchema(configuracaoServico);
+            
+            if (configuracaoServico.IsValidaSchemas)
+                evento.ValidarSchema(configuracaoServico);
+            
             evento.SalvarXmlEmDisco(configuracaoServico);
 
             var webService = WsdlFactory.CriaWsdlCteEvento(configuracaoServico);

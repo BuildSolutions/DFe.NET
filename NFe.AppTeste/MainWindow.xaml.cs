@@ -1767,9 +1767,9 @@ namespace NFe.AppTeste
 
 
 
-                impr.Imprimir("EPSON TM-T20 Receipt5");
-                impr.GerarJPEG(fileDialog.FileName.Replace(".jpeg", "") + ".jpeg");
-
+                impr.Imprimir(salvarArquivoPdfEm: fileDialog.FileName.Replace(".pdf", "") + ".pdf");
+                //var bytes = impr.PdfBytes();
+                //var base64 = Convert.ToBase64String(bytes);
             }
             catch (Exception ex)
             {
