@@ -26,7 +26,8 @@ namespace NFe.BLL.Configuracao.Entidades
             decimal icmsUFOrigem,
             decimal fcpUFDestino,
             decimal quantidadeBaseCalculoMonofasicoRetido,
-            decimal valorBaseCalculoMonofasicoRetido)
+            decimal valorBaseCalculoMonofasicoRetido,
+            decimal valorIRRetido)
         {
             ICMSBaseCalculo = icmsBaseCalculo;
             ICMSTotal = icmsTotal;
@@ -50,6 +51,7 @@ namespace NFe.BLL.Configuracao.Entidades
             FCPUFDestino = fcpUFDestino;
             ValorICMSMonofasicoRetido = valorBaseCalculoMonofasicoRetido;
             QuantidadeBaseCalculoMonofasicoRetido = quantidadeBaseCalculoMonofasicoRetido;
+            ValorIRRetido = valorIRRetido;
         }
 
         public Totalizador(ICMSTot total)
@@ -121,5 +123,7 @@ namespace NFe.BLL.Configuracao.Entidades
         public decimal QuantidadeBaseCalculoMonofasicoRetido { get; }
 
         public decimal ValorICMSMonofasicoRetido { get; }
+
+        public decimal ValorIRRetido { get; }
     }
 }

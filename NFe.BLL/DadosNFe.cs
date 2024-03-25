@@ -1671,6 +1671,7 @@ namespace NFe.BLL
             var vOutro = NotaFiscal.Total.OutrasDespesasAcessorias;
             var vNF = NotaFiscal.Total.NFeValorTotal;
             var vTotTrib = NotaFiscal.Total.TributosIBPT;
+            var vIRRF = NotaFiscal.Total.ValorIRRetido;
             //var vTotTrib = !_notaFiscal.Emitente.HabilitarDetalhamentoImposto
             //    || _notaFiscal.Destinatario.EConsumidorFinal != ConsumidorFinal.cfConsumidorFinal 
             //    ? 0 : _notaFiscal.Total.TributosIBPT;
@@ -1723,7 +1724,14 @@ namespace NFe.BLL
                 vICMSMonoRet = vICMSMonoRet
             };
 
-            return new total { ICMSTot = icmsTot };
+            var total = new total { ICMSTot = icmsTot };
+
+            if(vIRRF > 0)
+            {
+                total.retTrib = new retTrib { vBCIRRF = vProd, vIRRF = vIRRF };
+            }
+
+            return total;
         }
 
         private cobr GetCobranca()
