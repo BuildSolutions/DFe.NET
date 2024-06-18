@@ -525,7 +525,7 @@ namespace NFe.BLL
         public void Dispose()
         {
             _servicosNFe?.Dispose();
-            _servicosNFeInstancia?.Dispose();
+            _servicosNFe = null;
         }
     }
 }

@@ -98,6 +98,8 @@ namespace NFe.Danfe.Nativo.NFCe
             printCupom.PrinterSettings.PrinterName = !string.IsNullOrEmpty(nomeImpressora) ?
                     nomeImpressora : printCupom.PrinterSettings.PrinterName;
 
+            printCupom.DefaultPageSettings.PaperSize = new PaperSize("Custom", printCupom.PrinterSettings.DefaultPageSettings.PaperSize.Width, 10000);
+
             if (!string.IsNullOrEmpty(salvarArquivoPdfEm))
             {
                 printCupom.DefaultPageSettings.PrinterSettings.PrintToFile = true;
@@ -490,7 +492,7 @@ namespace NFe.Danfe.Nativo.NFCe
             if(_nfe.infNFe.pag?[0].detPag != null)
             {
                 _totalPago = _nfe.infNFe.pag[0].detPag.Sum(t => t.vPag);
-                _troco = _totalPago - valorTotal;
+                _troco = _totalPago - _nfe.infNFe.total.ICMSTot.vNF;
             }
 
             _y += 2;
