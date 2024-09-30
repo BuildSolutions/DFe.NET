@@ -801,7 +801,8 @@ namespace NFe.BLL
             return new ICMS
             {
                 TipoICMS =
-                    NotaFiscal.Emitente.ECRT == CRT.SimplesNacional 
+                    NotaFiscal.Emitente.ECRT == CRT.SimplesNacional
+                    || NotaFiscal.Emitente.ECRT == CRT.SimplesNacionalMei
                         ? InformarCSOSN(item)
                         : InformarICMS(item)
             };
