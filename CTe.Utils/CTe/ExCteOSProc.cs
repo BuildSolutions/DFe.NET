@@ -30,94 +30,72 @@
 /* http://www.zeusautomacao.com.br/                                             */
 /* Rua Comendador Francisco josé da Cunha, 111 - Itabaiana - SE - 49500-000     */
 /********************************************************************************/
-using System.Collections.Generic;
-using System.Xml.Serialization;
 
-namespace NFe.Classes.Informacoes.Cana
+using System.IO;
+using CTe.Classes;
+using DFe.Utils;
+using cteOSProc = CTe.Classes.cteOSProc;
+
+namespace CTe.Utils.CTe
 {
-    public class cana
+    public static class ExtCteOSProc
     {
-        private decimal _qTotMes;
-        private decimal _qTotAnt;
-        private decimal _qTotGer;
-        private decimal _vFor;
-        private decimal _vTotDed;
-        private decimal _vLiqFor;
-
         /// <summary>
-        ///     ZC02 - Identificação da safra
+        ///     Carrega um arquivo XML para um objeto da classe cteOSProc
         /// </summary>
-        public string safra { get; set; }
-
-        /// <summary>
-        ///     ZC03 - Mês e ano de referência
-        /// </summary>
-        public string @ref { get; set; }
-
-        /// <summary>
-        ///     ZC04 - Grupo Fornecimento diário de cana
-        /// </summary>
-        [XmlElement("forDia")]
-        public List<forDia> forDia { get; set; }
-
-        /// <summary>
-        ///     ZC07 - Quantidade Total do Mês
-        /// </summary>
-        public decimal qTotMes
+        /// <param name="cteOSProc"></param>
+        /// <param name="arquivoXml">arquivo XML</param>
+        /// <returns>Retorna um cteOSProc carregada com os dados do XML</returns>
+        public static cteOSProc CarregarDeArquivoXml(this cteOSProc cteOSProc, string arquivoXml)
         {
-            get { return _qTotMes; }
-            set { _qTotMes = value.Arredondar(10); }
+            return FuncoesXml.ArquivoXmlParaClasse<cteOSProc>(arquivoXml);
         }
 
         /// <summary>
-        ///     ZC08 - Quantidade Total Anterior
+        ///     Converte o objeto cteOSProc para uma string no formato XML
         /// </summary>
-        public decimal qTotAnt
+        /// <param name="cteOSProc"></param>
+        /// <returns>Retorna uma string no formato XML com os dados do cteOSProc</returns>
+        public static string ObterXmlString(this cteOSProc cteOSProc)
         {
-            get { return _qTotAnt; }
-            set { _qTotAnt = value.Arredondar(10); }
+            return FuncoesXml.ClasseParaXmlString(cteOSProc);
         }
 
         /// <summary>
-        ///     ZC09 - Quantidade Total Geral
+        ///     Coverte uma string XML no formato cteOSProc para um objeto cteOSProc
         /// </summary>
-        public decimal qTotGer
+        /// <param name="cteOSProc"></param>
+        /// <param name="xmlString"></param>
+        /// <returns>Retorna um objeto do tipo cteOSProc</returns>
+        public static cteOSProc CarregarDeXmlString(this cteOSProc cteOSProc, string xmlString)
         {
-            get { return _qTotGer; }
-            set { _qTotGer = value.Arredondar(10); }
+            var s = FuncoesXml.ObterNodeDeStringXml(typeof(cteOSProc).Name, xmlString);
+            return FuncoesXml.XmlStringParaClasse<cteOSProc>(s);
         }
 
         /// <summary>
-        ///     ZC10 - Grupo Deduções – Taxas e Contribuições
+        ///     Grava os dados do objeto cteOSProc em um arquivo XML
         /// </summary>
-        [XmlElement("deduc")]
-        public List<deduc> deduc { get; set; }
-
-        /// <summary>
-        ///     ZC13 - Valor dos Fornecimentos
-        /// </summary>
-        public decimal vFor
+        /// <param name="cteOSProc">Objeto cteOSProc</param>
+        /// <param name="arquivoXml">Diretório com nome do arquivo a ser gravado</param>
+        public static void SalvarArquivoXml(this cteOSProc cteOSProc, string arquivoXml)
         {
-            get { return _vFor; }
-            set { _vFor = value.Arredondar(2); }
+            FuncoesXml.ClasseParaArquivoXml(cteOSProc, arquivoXml);
         }
 
-        /// <summary>
-        ///     ZC14 - Valor Total da Dedução
-        /// </summary>
-        public decimal vTotDed
+        public static void SalvarXmlEmDisco(this cteOSProc cteOSProc, ConfiguracaoServico configuracaoServico = null)
         {
-            get { return _vTotDed; }
-            set { _vTotDed = value.Arredondar(2); }
-        }
+            if (cteOSProc == null) return;
 
-        /// <summary>
-        ///     ZC15 - Valor Líquido dos Fornecimentos
-        /// </summary>
-        public decimal vLiqFor
-        {
-            get { return _vLiqFor; }
-            set { _vLiqFor = value.Arredondar(2); }
+            var instanciaServico = configuracaoServico ?? ConfiguracaoServico.Instancia;
+
+            if (instanciaServico.NaoSalvarXml()) return;
+
+            var caminhoXml = instanciaServico.DiretorioSalvarXml;
+
+            var arquivoSalvar = Path.Combine(caminhoXml, cteOSProc.CTeOS.Chave() + "-cteOSProc.xml");
+
+            FuncoesXml.ClasseParaArquivoXml(cteOSProc, arquivoSalvar);
         }
     }
 }
