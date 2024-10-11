@@ -70,6 +70,8 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
                     return new ICMS02((NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMS02)TipoICMS);
                 case nameof(ICMS10):
                     return new ICMS10((NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMS10)TipoICMS);
+                case nameof(ICMSPart):
+                    return new ICMSPart((NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMSPart)TipoICMS);
                 case nameof(ICMS20):
                     return new ICMS20((NFe.Classes.Informacoes.Detalhe.Tributacao.Estadual.ICMS20)TipoICMS);
                 case nameof(ICMS30):
