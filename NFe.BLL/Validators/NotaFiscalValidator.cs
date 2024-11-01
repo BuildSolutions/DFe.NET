@@ -26,9 +26,7 @@ namespace NFe.BLL.Validators
             RuleFor(nfe => nfe.DadosTransporte).SetValidator(new DadosTransporteValidator()).When(nfe => nfe.DadosTransporte != null).WithMessage("Dados de Transporte inválidos!");
             RuleFor(nfe => nfe.Total).NotNull().WithMessage("Totalizador da NFe não informado!").DependentRules(() => RuleFor(nfe => nfe.Total).SetValidator(new TotalizadorValidator()));
             RuleForEach(nfe => nfe.Duplicatas).SetValidator(_ => new DuplicataValidator()).When(nfe => nfe.Duplicatas?.Count > 0).WithMessage((_, duplicata) => $"Dados inválidos do Parcela: {duplicata.Codigo}");
-            
-            //Removido trava por causa do FUNRURAL que faz com que as parcelas fiquem diferentes do total da NF
-            //RuleFor(nfe => nfe.Total.NFeValorTotal).Equal(parc => parc.Duplicatas.Sum(dup => dup.Valor)).When(nfe => nfe.DeveValidarValorTotalDaNfeEDuplicatas && nfe.Duplicatas?.Count > 0).WithMessage("Valor Total da NF-e não corresponde com o Somatório Total das duplicatas.");
+            RuleFor(nfe => nfe.Total.NFeValorTotal).Equal(parc => parc.Duplicatas.Sum(dup => dup.Valor)).When(nfe => nfe.DeveValidarValorTotalDaNfeEDuplicatas && nfe.Duplicatas?.Count > 0).WithMessage("Valor Total da NF-e não corresponde com o Somatório Total das duplicatas.");
             
             RuleFor(nfe => nfe.Produtos).NotNull().WithMessage("Produtos da NFe não informado!").DependentRules(() =>
             {
