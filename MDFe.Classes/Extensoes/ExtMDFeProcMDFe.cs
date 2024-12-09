@@ -17,9 +17,10 @@ namespace MDFe.Classes.Extensoes
             return FuncoesXml.ClasseParaXmlString(mdfe);
         }
 
-        public static void SalvarXmlEmDisco(this MDFeProcMDFe mdfe, string nomeArquivo = null)
+        public static void SalvarXmlEmDisco(this MDFeProcMDFe mdfe, string nomeArquivo = null, MDFeConfiguracao cfgMdfe = null)
         {
-            if (MDFeConfiguracao.NaoSalvarXml()) return;
+            var config = cfgMdfe ?? MDFeConfiguracao.Instancia;
+            if (config.NaoSalvarXml()) return;
 
             if (string.IsNullOrEmpty(nomeArquivo))
             {
@@ -27,7 +28,7 @@ namespace MDFe.Classes.Extensoes
                 var strFolderYear = data.ToString("yyyy");
                 var strFolderMonth = data.ToString("MM_yyyy");
 
-                nomeArquivo = System.IO.Path.Combine(MDFeConfiguracao.CaminhoSalvarXml,
+                nomeArquivo = System.IO.Path.Combine(config.CaminhoSalvarXml,
                     "Processados",
                     strFolderYear,
                     strFolderMonth) + @"\" + mdfe.MDFe.Chave() + "-procMDFe.xml";

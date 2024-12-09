@@ -1,36 +1,3 @@
-﻿/********************************************************************************/
-/* Projeto: Biblioteca ZeusNFe                                                  */
-/* Biblioteca C# para emissão de Nota Fiscal Eletrônica - NFe e Nota Fiscal de  */
-/* Consumidor Eletrônica - NFC-e (http://www.nfe.fazenda.gov.br)                */
-/*                                                                              */
-/* Direitos Autorais Reservados (c) 2014 Adenilton Batista da Silva             */
-/*                                       Zeusdev Tecnologia LTDA ME             */
-/*                                                                              */
-/*  Você pode obter a última versão desse arquivo no GitHub                     */
-/* localizado em https://github.com/adeniltonbs/Zeus.Net.NFe.NFCe               */
-/*                                                                              */
-/*                                                                              */
-/*  Esta biblioteca é software livre; você pode redistribuí-la e/ou modificá-la */
-/* sob os termos da Licença Pública Geral Menor do GNU conforme publicada pela  */
-/* Free Software Foundation; tanto a versão 2.1 da Licença, ou (a seu critério) */
-/* qualquer versão posterior.                                                   */
-/*                                                                              */
-/*  Esta biblioteca é distribuída na expectativa de que seja útil, porém, SEM   */
-/* NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU      */
-/* ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral Menor*/
-/* do GNU para mais detalhes. (Arquivo LICENÇA.TXT ou LICENSE.TXT)              */
-/*                                                                              */
-/*  Você deve ter recebido uma cópia da Licença Pública Geral Menor do GNU junto*/
-/* com esta biblioteca; se não, escreva para a Free Software Foundation, Inc.,  */
-/* no endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.          */
-/* Você também pode obter uma copia da licença em:                              */
-/* http://www.opensource.org/licenses/lgpl-license.php                          */
-/*                                                                              */
-/* Zeusdev Tecnologia LTDA ME - adenilton@zeusautomacao.com.br                  */
-/* http://www.zeusautomacao.com.br/                                             */
-/* Rua Comendador Francisco josé da Cunha, 111 - Itabaiana - SE - 49500-000     */
-/********************************************************************************/
-
 using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
@@ -554,6 +521,126 @@ namespace NFe.AppTeste
                     Convert.ToInt16(sequenciaEvento), cpfcnpj, chave, nProtEvento);
 
                 TrataRetorno(retornoComprovante);
+
+                #endregion
+            }
+            catch (ComunicacaoException ex)
+            {
+                Funcoes.Mensagem(ex.Message, "Erro", MessageBoxButton.OK);
+            }
+            catch (ValidacaoSchemaException ex)
+            {
+                Funcoes.Mensagem(ex.Message, "Erro", MessageBoxButton.OK);
+            }
+            catch (Exception ex)
+            {
+                if (!string.IsNullOrEmpty(ex.Message))
+                    Funcoes.Mensagem(ex.Message, "Erro", MessageBoxButton.OK);
+            }
+        }
+
+        private void BtnConciliacaoFinanceira_Click(object sender, RoutedEventArgs e)
+        {
+            const string titulo = "Conciliação Financeira NFe";
+
+            try
+            {
+                #region Conciliação Financeira NFe
+
+                var idlote = Funcoes.InpuBox(this, titulo, "Identificador de controle do Lote de envio:", "1");
+                if (string.IsNullOrEmpty(idlote)) throw new Exception("A Id do Lote deve ser informada!");
+
+                var sequenciaEvento = Funcoes.InpuBox(this, titulo, "Número sequencial do evento:", "1");
+                if (string.IsNullOrEmpty(sequenciaEvento))
+                    throw new Exception("O número sequencial deve ser informado!");
+
+                var chave = Funcoes.InpuBox(this, titulo, "Chave da NFe:", "35240311656919000154550750000008281647961399");
+                if (string.IsNullOrEmpty(chave)) throw new Exception("A Chave deve ser informada!");
+                if (chave.Length != 44) throw new Exception("Chave deve conter 44 caracteres!");
+
+                var meioPagamento = Funcoes.InpuBox(this, titulo, "Meio de Pagamento:", "17");
+                if (string.IsNullOrEmpty(meioPagamento)) throw new Exception("Código do Meio de pagamento deve ser informado!");
+
+                var dhPagamentoStr = Funcoes.InpuBox(this, titulo, "Data de Pagamento:", DateTime.Now.ToString("dd/MM/yyyy"));
+                if (string.IsNullOrEmpty(dhPagamentoStr)) throw new Exception("A data de pagamento deve ser informada!");
+
+                if (!DateTime.TryParse(dhPagamentoStr, out DateTime dhPagamento))
+                    throw new Exception("Data inválida!");
+
+                decimal? valorPagamento = null;
+                var valorPagamentoStr = Funcoes.InpuBox(this, titulo, "Valor do Pagamento:", "1");
+                if (string.IsNullOrEmpty(valorPagamentoStr)) throw new Exception("Valor do pagamento deve ser informado!");
+                if (!string.IsNullOrEmpty(valorPagamentoStr)) valorPagamento = Convert.ToDecimal(valorPagamentoStr);
+
+
+                var servicoNFe = new ServicosNFe(_configuracoes.CfgServico);
+                var cpfcnpj = string.IsNullOrEmpty(_configuracoes.Emitente.CNPJ)
+                    ? _configuracoes.Emitente.CPF
+                    : _configuracoes.Emitente.CNPJ;
+
+                var _pagamento = new Classes.Servicos.Evento.detPagEvento()
+                {
+                    tPag = (FormaPagamento)Convert.ToInt32(meioPagamento),
+                    dPag = dhPagamento,
+                    vPag = valorPagamento.GetValueOrDefault()
+                };
+                var retornoConciliacao = servicoNFe.RecepcaoEventoConciliacaoFinanceira(Convert.ToInt32(idlote),
+                    Convert.ToInt16(sequenciaEvento), cpfcnpj, chave, new List<Classes.Servicos.Evento.detPagEvento>() { _pagamento }, DFe.Classes.Entidades.Estado.SP);
+
+                TrataRetorno(retornoConciliacao);
+
+                #endregion
+            }
+            catch (ComunicacaoException ex)
+            {
+                Funcoes.Mensagem(ex.Message, "Erro", MessageBoxButton.OK);
+            }
+            catch (ValidacaoSchemaException ex)
+            {
+                Funcoes.Mensagem(ex.Message, "Erro", MessageBoxButton.OK);
+            }
+            catch (Exception ex)
+            {
+                if (!string.IsNullOrEmpty(ex.Message))
+                    Funcoes.Mensagem(ex.Message, "Erro", MessageBoxButton.OK);
+            }
+        }
+
+        private void BtnCancConciliacaoFinanceira_Click(object sender, RoutedEventArgs e)
+        {
+            const string titulo = "Cancelar Conciliação Financeira NFe";
+
+            try
+            {
+                #region Cancelar Conciliação Financeira NFe
+
+                var idlote = Funcoes.InpuBox(this, titulo, "Identificador de controle do Lote de envio:", "1");
+                if (string.IsNullOrEmpty(idlote)) throw new Exception("A Id do Lote deve ser informada!");
+
+                var sequenciaEvento = Funcoes.InpuBox(this, titulo, "Número sequencial do evento:", "1");
+                if (string.IsNullOrEmpty(sequenciaEvento))
+                    throw new Exception("O número sequencial deve ser informado!");
+
+                var chave = Funcoes.InpuBox(this, titulo, "Chave da NFe:", "35240311656919000154550750000008281647961399");
+                if (string.IsNullOrEmpty(chave)) throw new Exception("A Chave deve ser informada!");
+                if (chave.Length != 44) throw new Exception("Chave deve conter 44 caracteres!");
+
+                var nProtEvento = Funcoes.InpuBox(this, titulo, "Nº Prot Evento:");
+
+                if (string.IsNullOrEmpty(nProtEvento))
+                    throw new Exception("O nº Prot Evento deve ser informado!");
+
+
+
+                var servicoNFe = new ServicosNFe(_configuracoes.CfgServico);
+                var cpfcnpj = string.IsNullOrEmpty(_configuracoes.Emitente.CNPJ)
+                    ? _configuracoes.Emitente.CPF
+                    : _configuracoes.Emitente.CNPJ;
+
+                var retornoConciliacao = servicoNFe.RecepcaoEventoCancConciliacaoFinanceira(Convert.ToInt32(idlote),
+                    Convert.ToInt16(sequenciaEvento), cpfcnpj, chave, nProtEvento);
+
+                TrataRetorno(retornoConciliacao);
 
                 #endregion
             }
