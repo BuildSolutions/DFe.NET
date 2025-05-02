@@ -1,6 +1,7 @@
 ﻿using DFe.Classes.Entidades;
 using DFe.Utils.Extensoes;
 using NFe.BLL.Configuracao.Entidades.Produtos;
+using NFe.Classes.Informacoes;
 using NFe.Classes.Informacoes.Identificacao.Tipos;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,8 @@ namespace NFe.BLL.Configuracao.Entidades
             Emitente emitente,
             Destinatario destinatario,
             Transporte dadosTransporte,
+            EnderecoEntrega enderecoEntrega,
+            EnderecoRetirada enderecoRetirada,
             Totalizador total,
             IReadOnlyList<Produto> produtos,
             IReadOnlyList<Duplicata> duplicatas,
@@ -49,6 +52,8 @@ namespace NFe.BLL.Configuracao.Entidades
             DataSaida = dataSaida;
             ETipoNFe = eTipoNFe;
             Destinatario = destinatario;
+            EnderecoEntrega = enderecoEntrega;
+            EnderecoRetirada = enderecoRetirada;
             EPresencaComprador = ePresencaComprador;
             EIndicadorIntermediador = eIndicadorIntermediador;
             EFinalidadeNFe = eFinalidadeNFe;
@@ -98,6 +103,8 @@ namespace NFe.BLL.Configuracao.Entidades
             DataSaida = nfe.infNFe.ide.dhSaiEnt?.DateTime ?? nfe.infNFe.ide.dhEmi.DateTime;
             ETipoNFe = nfe.infNFe.ide.tpNF;
             Destinatario = new Destinatario(nfe.infNFe.dest);
+            EnderecoEntrega = new EnderecoEntrega(nfe.infNFe.entrega);
+            EnderecoRetirada = new EnderecoRetirada(nfe.infNFe.retirada);
             EPresencaComprador = nfe.infNFe.ide.indPres.GetValueOrDefault();
             EIndicadorIntermediador = nfe.infNFe.ide.indIntermed;
             EFinalidadeNFe = nfe.infNFe.ide.finNFe;
@@ -137,6 +144,10 @@ namespace NFe.BLL.Configuracao.Entidades
         public TipoNFe ETipoNFe { get; private set; }
 
         public Destinatario Destinatario { get; private set; }
+        
+        public EnderecoEntrega EnderecoEntrega { get; private set; }
+        
+        public EnderecoRetirada EnderecoRetirada { get; private set; }
 
         public PresencaComprador EPresencaComprador { get; private set; }
 

@@ -174,6 +174,7 @@ namespace NFe.BLL
                 compra = GetCompra()
             };
 
+            infNFe.entrega = GetEnderecoEntrega();
             infNFe.det = GetProdutos();
             infNFe.total = GetTotal();
             infNFe.cobr = GetCobranca();
@@ -496,6 +497,64 @@ namespace NFe.BLL
                 cPais = cPais,
                 xPais = xPais,
                 fone = fone
+            };
+        }
+        private entrega GetEnderecoEntrega()
+        {
+            if (NotaFiscal.EnderecoEntrega == null
+                || NotaFiscal.EnderecoEntrega.Endereco == null
+                || string.IsNullOrEmpty(NotaFiscal.EnderecoEntrega.Endereco.Logradouro))
+            {
+                return null;
+            }
+
+            var xLgr = NotaFiscal.EnderecoEntrega.Endereco.Logradouro;
+            var nro = NotaFiscal.EnderecoEntrega.Endereco.Numero;
+            var xCpl = NotaFiscal.EnderecoEntrega.Endereco.Complemento;
+            var xBairro = NotaFiscal.EnderecoEntrega.Endereco.Bairro;
+            var cMun = Convert.ToInt64(NotaFiscal.EnderecoEntrega.Endereco.MunicipioCodigoIBGE);
+
+            var xMun = NotaFiscal.EnderecoEntrega.Endereco.MunicipioNome;
+            var uf = NotaFiscal.EnderecoEntrega.Endereco.MunicipioEstadoSigla;
+            var cep = NotaFiscal.EnderecoEntrega.Endereco.CEP;
+            var cPais = NotaFiscal.EnderecoEntrega.Endereco.PaisCodigo;
+            var xPais = NotaFiscal.EnderecoEntrega.Endereco.PaisNome;
+            var fone = NotaFiscal.EnderecoEntrega.Fone;
+            var email = NotaFiscal.EnderecoEntrega.Email;
+
+            var nome = NotaFiscal.EnderecoEntrega.Nome;
+            var cnpj = string.Empty;
+            var cpf = string.Empty;
+            var ie = string.Empty;
+            if (NotaFiscal.EnderecoEntrega.CPFCNPJ.Length == 14)
+            {
+                cnpj = NotaFiscal.EnderecoEntrega.CPFCNPJ;
+                ie = NotaFiscal.EnderecoEntrega.RGIE;
+            }
+            else if (NotaFiscal.EnderecoEntrega.CPFCNPJ.Length == 11)
+            {
+                cpf = NotaFiscal.EnderecoEntrega.CPFCNPJ;
+            }
+
+            long.TryParse(cep, out long lCEP);
+
+            return new entrega
+            {
+                xLgr = xLgr,
+                nro = nro,
+                xCpl = xCpl,
+                xBairro = xBairro,
+                cMun = cMun,
+                xMun = xMun,
+                UF = uf?.GetSiglaUfString(),
+                CEP = lCEP,
+                cPais = cPais,
+                xPais = xPais,
+                fone = fone,
+                xNome = nome,
+                CNPJ = cnpj,
+                CPF = cpf,
+                IE = ie
             };
         }
 
