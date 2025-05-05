@@ -27,13 +27,16 @@ namespace NFe.BLL.Configuracao.Entidades
 
         public EnderecoEntrega(entrega entrega)
         {
-            Endereco = new Endereco(entrega);
+            if (entrega != null)
+            {
+                Endereco = new Endereco(entrega);
 
-            Nome = entrega.xNome;
-            CPFCNPJ = !string.IsNullOrEmpty(entrega.CNPJ)? entrega.CNPJ: entrega.CPF;
-            RGIE = entrega.IE;
-            Fone = entrega.fone;
-            Email = entrega.email;
+                Nome = entrega.xNome;
+                CPFCNPJ = !string.IsNullOrEmpty(entrega.CNPJ) ? entrega.CNPJ : entrega.CPF;
+                RGIE = entrega.IE;
+                Fone = entrega.fone;
+                Email = entrega.email;
+            }
         }
 
         public Endereco Endereco { get; }

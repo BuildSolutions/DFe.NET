@@ -27,13 +27,16 @@ namespace NFe.BLL.Configuracao.Entidades
 
         public EnderecoRetirada(retirada retirada)
         {
-            Endereco = new Endereco(retirada);
+            if (retirada != null)
+            {
+                Endereco = new Endereco(retirada);
 
-            Nome = retirada.xNome;
-            CPFCNPJ = !string.IsNullOrEmpty(retirada.CNPJ)? retirada.CNPJ: retirada.CPF;
-            RGIE = retirada.IE;
-            Fone = retirada.fone;
-            Email = retirada.email;
+                Nome = retirada.xNome;
+                CPFCNPJ = !string.IsNullOrEmpty(retirada.CNPJ) ? retirada.CNPJ : retirada.CPF;
+                RGIE = retirada.IE;
+                Fone = retirada.fone;
+                Email = retirada.email;
+            }
         }
 
         public Endereco Endereco { get; }
