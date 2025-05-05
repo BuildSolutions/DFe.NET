@@ -37,8 +37,9 @@ namespace NFe.BLL.Validators
             {
                 RuleForEach(nfe => nfe.FormasPagamento).SetValidator(new PagamentoValidator()).WithMessage((_, pagamento) => $"Dados inválidos do Pagamento: {pagamento.FormaPagamento}");
             });
+
+            RuleFor(nfe => nfe.EnderecoEntrega).SetValidator(new EnderecoEntregaValidator(Enums.EPessoa.Destinatario)).When(nfe => nfe.EnderecoEntrega != null).WithMessage("Endereço de entrega inválido!");
+            RuleFor(nfe => nfe.EnderecoRetirada).SetValidator(new EnderecoRetiradaValidator(Enums.EPessoa.Destinatario)).When(nfe => nfe.EnderecoRetirada != null).WithMessage("Endereço de retirada inválido!");
         }
-
-
     }
 }

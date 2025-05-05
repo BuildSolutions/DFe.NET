@@ -1,4 +1,5 @@
 ﻿using DFe.Classes.Extensoes;
+using DFe.Classes.Extensoes;
 using DFe.Classes.Flags;
 using DFe.Utils;
 using DFe.Utils.Extensoes;
@@ -175,6 +176,7 @@ namespace NFe.BLL
             };
 
             infNFe.entrega = GetEnderecoEntrega();
+            infNFe.retirada = GetEnderecoRetirada();
             infNFe.det = GetProdutos();
             infNFe.total = GetTotal();
             infNFe.cobr = GetCobranca();
@@ -510,7 +512,7 @@ namespace NFe.BLL
 
             var xLgr = NotaFiscal.EnderecoEntrega.Endereco.Logradouro;
             var nro = NotaFiscal.EnderecoEntrega.Endereco.Numero;
-            var xCpl = NotaFiscal.EnderecoEntrega.Endereco.Complemento;
+            string xCpl = !string.IsNullOrEmpty(NotaFiscal.EnderecoEntrega.Endereco.Complemento) ? NotaFiscal.EnderecoEntrega.Endereco.Complemento : null;
             var xBairro = NotaFiscal.EnderecoEntrega.Endereco.Bairro;
             var cMun = Convert.ToInt64(NotaFiscal.EnderecoEntrega.Endereco.MunicipioCodigoIBGE);
 
@@ -519,13 +521,13 @@ namespace NFe.BLL
             var cep = NotaFiscal.EnderecoEntrega.Endereco.CEP;
             var cPais = NotaFiscal.EnderecoEntrega.Endereco.PaisCodigo;
             var xPais = NotaFiscal.EnderecoEntrega.Endereco.PaisNome;
-            var fone = NotaFiscal.EnderecoEntrega.Fone;
-            var email = NotaFiscal.EnderecoEntrega.Email;
+            string fone = !string.IsNullOrEmpty(NotaFiscal.EnderecoEntrega.Fone) ? NotaFiscal.EnderecoEntrega.Fone : null;
+            var email = !string.IsNullOrEmpty(NotaFiscal.EnderecoEntrega.Email) ? NotaFiscal.EnderecoEntrega.Email : null;
 
-            var nome = NotaFiscal.EnderecoEntrega.Nome;
-            var cnpj = string.Empty;
-            var cpf = string.Empty;
-            var ie = string.Empty;
+            string nome = !string.IsNullOrEmpty(NotaFiscal.EnderecoEntrega.Nome) ? NotaFiscal.EnderecoEntrega.Nome : null;
+            string cnpj = null;
+            string cpf = null;
+            string ie = null;
             if (NotaFiscal.EnderecoEntrega.CPFCNPJ.Length == 14)
             {
                 cnpj = NotaFiscal.EnderecoEntrega.CPFCNPJ;
@@ -539,6 +541,64 @@ namespace NFe.BLL
             long.TryParse(cep, out long lCEP);
 
             return new entrega
+            {
+                xLgr = xLgr,
+                nro = nro,
+                xCpl = xCpl,
+                xBairro = xBairro,
+                cMun = cMun,
+                xMun = xMun,
+                UF = uf?.GetSiglaUfString(),
+                CEP = lCEP,
+                cPais = cPais,
+                xPais = xPais,
+                fone = fone,
+                xNome = nome,
+                CNPJ = cnpj,
+                CPF = cpf,
+                IE = ie
+            };
+        }
+        private retirada GetEnderecoRetirada()
+        {
+            if (NotaFiscal.EnderecoRetirada == null
+                || NotaFiscal.EnderecoRetirada.Endereco == null
+                || string.IsNullOrEmpty(NotaFiscal.EnderecoRetirada.Endereco.Logradouro))
+            {
+                return null;
+            }
+
+            var xLgr = NotaFiscal.EnderecoRetirada.Endereco.Logradouro;
+            var nro = NotaFiscal.EnderecoRetirada.Endereco.Numero;
+            string xCpl = !string.IsNullOrEmpty(NotaFiscal.EnderecoRetirada.Endereco.Complemento) ? NotaFiscal.EnderecoRetirada.Endereco.Complemento : null;
+            var xBairro = NotaFiscal.EnderecoRetirada.Endereco.Bairro;
+            var cMun = Convert.ToInt64(NotaFiscal.EnderecoRetirada.Endereco.MunicipioCodigoIBGE);
+
+            var xMun = NotaFiscal.EnderecoRetirada.Endereco.MunicipioNome;
+            var uf = NotaFiscal.EnderecoRetirada.Endereco.MunicipioEstadoSigla;
+            var cep = NotaFiscal.EnderecoRetirada.Endereco.CEP;
+            var cPais = NotaFiscal.EnderecoRetirada.Endereco.PaisCodigo;
+            var xPais = NotaFiscal.EnderecoRetirada.Endereco.PaisNome;
+            string fone = !string.IsNullOrEmpty(NotaFiscal.EnderecoRetirada.Fone) ? NotaFiscal.EnderecoRetirada.Fone : null;
+            var email = !string.IsNullOrEmpty(NotaFiscal.EnderecoRetirada.Email) ? NotaFiscal.EnderecoRetirada.Email : null;
+
+            string nome = !string.IsNullOrEmpty(NotaFiscal.EnderecoRetirada.Nome) ? NotaFiscal.EnderecoRetirada.Nome : null;
+            string cnpj = null;
+            string cpf = null;
+            string ie = null;
+            if (NotaFiscal.EnderecoRetirada.CPFCNPJ.Length == 14)
+            {
+                cnpj = NotaFiscal.EnderecoRetirada.CPFCNPJ;
+                ie = NotaFiscal.EnderecoRetirada.RGIE;
+            }
+            else if (NotaFiscal.EnderecoRetirada.CPFCNPJ.Length == 11)
+            {
+                cpf = NotaFiscal.EnderecoRetirada.CPFCNPJ;
+            }
+
+            long.TryParse(cep, out long lCEP);
+
+            return new retirada
             {
                 xLgr = xLgr,
                 nro = nro,
