@@ -17,7 +17,11 @@ namespace NFe.Utils
         QrCodeVersao1 = 100,
 
         [Description("Versão 2.0 do QR-Code")]
-        QrCodeVersao2 = 2
+        QrCodeVersao2 = 2,
+
+        [Description("Versão 3.0 do QR-Code")]
+        QrCodeVersao3 = 3,
+
     }
 
     public enum EFolderType
