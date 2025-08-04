@@ -72,7 +72,7 @@ namespace NFe.BLL.Configuracao.Entidades
             COFINS = total.vCOFINS;
             OutrasDespesasAcessorias = total.vOutro;
             NFeValorTotal = total.vNF;
-            TributosIBPT = total.vTotTrib;
+            TributosIBPT = total.vTotTrib ?? 0M;
             ICMSUFDestino = total.vICMSUFDest ?? 0M;
             ICMSUFOrigem = total.vICMSUFRemet ?? 0M;
             FCPUFDestino = total.vFCPUFDest ?? 0M;
