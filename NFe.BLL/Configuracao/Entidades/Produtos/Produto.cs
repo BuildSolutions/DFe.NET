@@ -29,7 +29,8 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos
             decimal desconto = 0,
             decimal ibptValor = 0,
             string pedidoCompraNumero = null,
-            int? pedidoCompraItem = null)
+            int? pedidoCompraItem = null,
+            string codigoBeneficioFiscal = null)
         {
             Referencia = referencia.SanitizeString();
             CodigoBarras = codigoBarras.SanitizeString();
@@ -55,6 +56,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos
             Impostos = impostos;
             DadosAdicionais = dadosAdicionais.SanitizeString();
             IBPTValor = ibptValor;
+            CodigoBeneficioFiscal = codigoBeneficioFiscal.SanitizeString();
 
             if(string.IsNullOrEmpty(PedidoCompraNumero))
             {
@@ -87,6 +89,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos
             DeclaracaoImportacao = null;
             Impostos = new Imposto(produto.imposto);
             IBPTValor = produto.imposto.vTotTrib ?? 0;
+            CodigoBeneficioFiscal = produto.prod.cBenef.SanitizeString();
 
             if (string.IsNullOrEmpty(PedidoCompraNumero))
             {
@@ -141,5 +144,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos
         public decimal IBPTValor { get; }
 
         public string DadosAdicionais { get; }
+
+        public string CodigoBeneficioFiscal { get; }
     }
 }

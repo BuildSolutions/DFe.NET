@@ -1,10 +1,12 @@
-﻿using DFe.Classes.Extensoes;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using DFe.Classes.Extensoes;
 using DFe.Classes.Flags;
 using DFe.Utils;
 using DFe.Utils.Extensoes;
 using FluentValidation;
-using FluentValidation.Internal;
 using NFe.BLL.Configuracao.Entidades;
 using NFe.BLL.Configuracao.Entidades.Produtos;
 using NFe.BLL.Configuracao.Entidades.Produtos.Impostos;
@@ -33,10 +35,6 @@ using NFe.Utils.InformacoesSuplementares;
 using NFe.Utils.NFe;
 using Shared.NFe.Classes.Informacoes.InfRespTec;
 using Shared.NFe.Classes.Informacoes.Intermediador;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using COFINS = NFe.BLL.Configuracao.Entidades.Produtos.Impostos.COFINS;
 using IPI = NFe.BLL.Configuracao.Entidades.Produtos.Impostos.IPI;
 
@@ -200,7 +198,7 @@ namespace NFe.BLL
 
         private List<autXML> GetAutorizadosXML()
         {
-            if(NotaFiscal.Emitente.AutorizadosXmlDocumentos == null
+            if (NotaFiscal.Emitente.AutorizadosXmlDocumentos == null
                 || NotaFiscal.Emitente.AutorizadosXmlDocumentos.Count == 0)
             {
                 return null;
@@ -230,7 +228,7 @@ namespace NFe.BLL
 
         private infIntermed GetInformacaoIntermediador()
         {
-            if(!NotaFiscal.EIndicadorIntermediador.EValido()
+            if (!NotaFiscal.EIndicadorIntermediador.EValido()
                 || NotaFiscal.EIndicadorIntermediador == IndicadorIntermediador.iiSemIntermediador
                 || NotaFiscal.DadosIntermediador == null)
             {
@@ -290,7 +288,7 @@ namespace NFe.BLL
                 NFref = GetNFRef()
             };
 
-            if(indIntermed.EValido())
+            if (indIntermed.EValido())
             {
                 ide.indIntermed = indIntermed;
             }
@@ -808,6 +806,7 @@ namespace NFe.BLL
             var vProd = item.ValorTotal;
             var vDesc = item.Desconto + item.Impostos.ICMS.ValorICMSDesonerado.GetValueOrDefault();
             var uTrib = !string.IsNullOrEmpty(item.UnidadeTributacao) ? item.UnidadeTributacao : item.UnidadeCompra;
+            var cBenef = item.CodigoBeneficioFiscal;
 
             // TODO: Se unidade comercial for diferente de unidade tributada, criar conversão. Eg. pwNFE2.XML.NFeXML._gerarXMLNFe:1332
             var qTrib = item.QuantidadeTributacao > 0 ? item.QuantidadeTributacao : item.Quantidade;
@@ -846,7 +845,8 @@ namespace NFe.BLL
                 DI = GetProdutoDI(item.DeclaracaoImportacao),
                 //NVE = {"AA0001", "AB0002", "AC0002"},
                 CEST = item.CEST.RetornaNumeros(),
-                
+                cBenef = cBenef
+
                 //ProdutoEspecifico = new arma
                 //{
                 //    tpArma = TipoArma.UsoPermitido,
@@ -1155,7 +1155,7 @@ namespace NFe.BLL
                         vBC = vBC,
                         pICMS = pICMS,
                         vICMS = vICMS,
-                        
+
                         modBCST = (DeterminacaoBaseIcmsSt)modBCST,
                         vBCST = vBCST,
                         pICMSST = pICMSST,
@@ -1660,7 +1660,7 @@ namespace NFe.BLL
             //TODO::
             StringBuilder sbInfAdProd = new StringBuilder();
 
-            if(!string.IsNullOrWhiteSpace(item.DadosAdicionais))
+            if (!string.IsNullOrWhiteSpace(item.DadosAdicionais))
             {
                 sbInfAdProd.AppendLine(item.DadosAdicionais + "; ");
             }
@@ -1765,7 +1765,7 @@ namespace NFe.BLL
 
         private static string GetProdutoEAN(string codigoBarras)
         {
-            if(!CodigoBarras.IsGtinValido(codigoBarras))
+            if (!CodigoBarras.IsGtinValido(codigoBarras))
             {
                 return "SEM GTIN";
             }
@@ -1846,7 +1846,7 @@ namespace NFe.BLL
 
             var total = new total { ICMSTot = icmsTot };
 
-            if(vIRRF > 0)
+            if (vIRRF > 0)
             {
                 total.retTrib = new retTrib { vBCIRRF = vProd, vIRRF = vIRRF };
             }
@@ -2047,7 +2047,7 @@ namespace NFe.BLL
 
         private card GetDadosPagamentoCartao(PagamentoIntegracaoCartao pagamentoIntegracaoCartao)
         {
-            if(pagamentoIntegracaoCartao == null)
+            if (pagamentoIntegracaoCartao == null)
             {
                 return null;
             }

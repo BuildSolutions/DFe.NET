@@ -19,7 +19,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
                     CST = Csticms.Cst41;
                     break;
                 case ECstIcms40.CST50:
-                    CST = Csticms.Cst51;
+                    CST = Csticms.Cst50;
                     break;
             }
 
