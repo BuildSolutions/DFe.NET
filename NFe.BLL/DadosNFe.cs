@@ -1890,7 +1890,11 @@ namespace NFe.BLL
                 return null;
             }
 
-            return new List<ProdutoEspecifico>()
+            var uf = _cfgApp.CfgServico.ModeloDocumento == ModeloDocumento.NFCe
+                ? NotaFiscal.Emitente.Pessoa.Endereco.MunicipioEstadoSigla?.GetSiglaUfString()
+                : NotaFiscal.Destinatario.Pessoa.Endereco.MunicipioEstadoSigla?.GetSiglaUfString();
+
+                return new List<ProdutoEspecifico>()
             {
                 new comb
                 {
@@ -1900,7 +1904,7 @@ namespace NFe.BLL
                     pGNn = item.DadosCombustivel.PercentualGasNaturalNacional == 0 ? null : item.DadosCombustivel.PercentualGasNaturalNacional,
                     pGNi = item.DadosCombustivel.PercentualGasNaturalImportado == 0 ? null : item.DadosCombustivel.PercentualGasNaturalImportado,
                     vPart = item.DadosCombustivel.ValorPartida == 0 ? null : item.DadosCombustivel.ValorPartida,
-                    UFCons = NotaFiscal.Destinatario.Pessoa.Endereco.MunicipioEstadoSigla?.GetSiglaUfString()
+                    UFCons = uf
                 }
             };
         }
