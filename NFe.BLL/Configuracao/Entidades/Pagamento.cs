@@ -33,7 +33,7 @@ namespace NFe.BLL.Configuracao.Entidades
         /// </summary>
         public static ISet<FormaPagamento> FormaPagamentoCartao = new HashSet<FormaPagamento>()
         {
-            FormaPagamento.fpCartaoCredito, FormaPagamento.fpCartaoDebito
+            FormaPagamento.fpCartaoCredito, FormaPagamento.fpCartaoDebito, FormaPagamento.fpPagamentoInstantaneoPIXDinamico
         };
     }
 }
