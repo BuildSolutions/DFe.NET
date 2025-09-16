@@ -294,7 +294,8 @@ namespace NFe.BLL
 
             if (retornoAutorizacao.cStat == 104)
             {
-                if (retornoAutorizacao.protNFe.infProt.cStat != 100)
+                if (retornoAutorizacao.protNFe.infProt.cStat != 100
+                    && retornoAutorizacao.protNFe.infProt.cStat != 150)
                 {
                     erro = string.Format("({0}) {1}",
                         retornoAutorizacao.protNFe.infProt.cStat,
@@ -359,7 +360,8 @@ namespace NFe.BLL
                 return false;
             }
 
-            if (retornoAutorizacao.protNFe[0].infProt.cStat != 100) // Denegada
+            if (retornoAutorizacao.protNFe[0].infProt.cStat != 100
+                && retornoAutorizacao.protNFe[0].infProt.cStat != 150) // Contingencia
             {
                 erro = string.Format("({0}) {1}",
                         retornoAutorizacao.protNFe[0].infProt.cStat,
@@ -407,7 +409,8 @@ namespace NFe.BLL
                 return false;
             }
 
-            if (retornoConsulta.protNFe.infProt.cStat != 100) // Denegada
+            if (retornoConsulta.protNFe.infProt.cStat != 100
+                && retornoConsulta.protNFe.infProt.cStat != 150) // Contingencia
             {
                 erro = string.Format("({0}) {1}",
                         retornoConsulta.protNFe.infProt.cStat,
