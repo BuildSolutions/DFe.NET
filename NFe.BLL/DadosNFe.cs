@@ -2018,8 +2018,8 @@ namespace NFe.BLL
                     troco = totalPago - NotaFiscal.Total.NFeValorTotal;
                 }
             }
-            else if (_cfgApp.CfgServico.ModeloDocumento == ModeloDocumento.NFe
-                && (NotaFiscal.Duplicatas == null
+            else if (//_cfgApp.CfgServico.ModeloDocumento == ModeloDocumento.NFe &&
+                (NotaFiscal.Duplicatas == null
                     || NotaFiscal.Duplicatas.Count == 0)) // Cliente quer que NF-e seja sempre a vista
             {
                 pagamentos.Add(new detPag

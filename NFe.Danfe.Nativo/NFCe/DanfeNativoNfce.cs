@@ -290,8 +290,8 @@ namespace NFe.Danfe.Nativo.NFCe
                 nome.Desenhar(x + 75, _y);
                 _y += nome.Medida.Altura;
 
-                AdicionarTexto quantidade = new AdicionarTexto(g, detalhe.prod.qCom.ToString("N3"), 7);
-                AdicionarTexto valorUnitario = new AdicionarTexto(g, detalhe.prod.vUnCom.ToString("N4"), 7);
+                AdicionarTexto quantidade = new AdicionarTexto(g, detalhe.prod.qCom.ToString("##,##0.###"), 7);
+                AdicionarTexto valorUnitario = new AdicionarTexto(g, detalhe.prod.vUnCom.ToString("##,##0.00##"), 7);
                 AdicionarTexto vezesX = new AdicionarTexto(g, "x", 7);
                 AdicionarTexto unidadeSigla = new AdicionarTexto(g, detalhe.prod.uCom.Length <= 2 ? detalhe.prod.uCom : detalhe.prod.uCom.Substring(0, 2), 7);
 
@@ -876,9 +876,12 @@ namespace NFe.Danfe.Nativo.NFCe
 
         private FontFamily CarregarFontePadraoNfceNativa(string font = null)
         {
+            //return new FontFamily("Arial");
+
             PrivateFontCollection colecaoDeFontes = null;
             try
             {
+
                 if (!string.IsNullOrWhiteSpace(font))
                 {
                     return new FontFamily(font);
