@@ -35,5 +35,10 @@ namespace NFe.BLL.Configuracao.Entidades
         {
             FormaPagamento.fpCartaoCredito, FormaPagamento.fpCartaoDebito, FormaPagamento.fpPagamentoInstantaneoPIXDinamico
         };
+
+        public void SetValor(decimal valor)
+        {
+            this.Valor = valor;
+        }
     }
 }
