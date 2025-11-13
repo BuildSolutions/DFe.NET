@@ -20,9 +20,9 @@ namespace NFe.BLL.Configuracao.Entidades
             Endereco = endereco;
             Nome = nome;
             CPFCNPJ = cpfcnpj;
-            RGIE = rgie;
-            Fone = fone;
-            Email = email;
+            RGIE = rgie.SanitizeString();
+            Fone = fone.SanitizeString();
+            Email = email.SanitizeString();
         }
 
         public EnderecoEntrega(entrega entrega)
@@ -33,9 +33,9 @@ namespace NFe.BLL.Configuracao.Entidades
 
                 Nome = entrega.xNome;
                 CPFCNPJ = !string.IsNullOrEmpty(entrega.CNPJ) ? entrega.CNPJ : entrega.CPF;
-                RGIE = entrega.IE;
-                Fone = entrega.fone;
-                Email = entrega.email;
+                RGIE = entrega.IE.SanitizeString();
+                Fone = entrega.fone.SanitizeString();
+                Email = entrega.email.SanitizeString();
             }
         }
 
