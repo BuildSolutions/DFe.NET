@@ -1,10 +1,10 @@
 ﻿using NFe.Classes.Informacoes.Total;
 
-namespace NFe.BLL.Configuracao.Entidades
+namespace NFe.BLL.Configuracao.Entidades.Totalizadores
 {
-    public class Totalizador
+    public class TotalizadorICMS
     {
-        public Totalizador(
+        public TotalizadorICMS(
             decimal icmsBaseCalculo,
             decimal icmsTotal,
             decimal icmsDesonerado,
@@ -26,7 +26,7 @@ namespace NFe.BLL.Configuracao.Entidades
             decimal icmsUFOrigem,
             decimal fcpUFDestino,
             decimal quantidadeBaseCalculoMonofasicoRetido,
-            decimal valorBaseCalculoMonofasicoRetido,
+            decimal valorICMSMonofasicoRetido,
             decimal valorIRRetido)
         {
             ICMSBaseCalculo = icmsBaseCalculo;
@@ -49,12 +49,12 @@ namespace NFe.BLL.Configuracao.Entidades
             ICMSUFDestino = icmsUFDestino;
             ICMSUFOrigem = icmsUFOrigem;
             FCPUFDestino = fcpUFDestino;
-            ValorICMSMonofasicoRetido = valorBaseCalculoMonofasicoRetido;
+            ValorICMSMonofasicoRetido = valorICMSMonofasicoRetido;
             QuantidadeBaseCalculoMonofasicoRetido = quantidadeBaseCalculoMonofasicoRetido;
             ValorIRRetido = valorIRRetido;
         }
 
-        public Totalizador(ICMSTot total)
+        public TotalizadorICMS(ICMSTot total)
         {
             ICMSBaseCalculo = total.vBC;
             ICMSTotal = total.vICMS;

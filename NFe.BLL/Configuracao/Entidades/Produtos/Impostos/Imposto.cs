@@ -1,4 +1,6 @@
-﻿using NFe.Classes.Informacoes.Detalhe.Tributacao;
+﻿using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS_IBS;
+using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS_IBS.GrupoTributacao;
+using NFe.Classes.Informacoes.Detalhe.Tributacao;
 
 namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos
 {
@@ -6,6 +8,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos
     {
         public Imposto(
             ICMS.ICMS icms,
+            CBSIBSImposto cbsibs,
             PIS pis,
             COFINS cofins,
             IPI ipi,
@@ -13,6 +16,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos
             TributosIBPT tributosIBPT = null,
             ImpostoImportacao impostoImportacao = null)
         {
+            CBSIBS = cbsibs;
             IPI = ipi;
             PIS = pis;
             COFINS = cofins;
@@ -49,6 +53,11 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos
                 ICMS = Impostos.ICMS.ICMS.ObterIcms(imposto.ICMS.TipoICMS);
             }
 
+            if (imposto.IBSCBS != null)
+            {
+                CBSIBS = new CBSIBSImposto(imposto.IBSCBS);
+            }
+
             TributosIBPT = new TributosIBPT(0, 0, 0, imposto.vTotTrib ?? 0);
         }
 
@@ -65,5 +74,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos
         public TributosIBPT TributosIBPT { get; set; }
 
         public ICMS.ICMS ICMS { get; set; }
+
+        public CBSIBSImposto CBSIBS { get; set; }
     }
 }

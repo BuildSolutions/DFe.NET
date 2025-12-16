@@ -1,6 +1,7 @@
 ﻿using DFe.Classes.Entidades;
 using DFe.Utils.Extensoes;
 using NFe.BLL.Configuracao.Entidades.Produtos;
+using NFe.BLL.Configuracao.Entidades.Totalizadores;
 using NFe.Classes.Informacoes;
 using NFe.Classes.Informacoes.Identificacao.Tipos;
 using System;
@@ -116,7 +117,7 @@ namespace NFe.BLL.Configuracao.Entidades
             IsExportacao = Destinatario?.Pessoa?.Endereco?.MunicipioEstadoSigla == Estado.EX && ETipoNFe == TipoNFe.tnSaida;
             DadosTransporte = transportadora;
             NumeroPedidoCompraB2B = nfe.infNFe.compra?.xPed;
-            Total = new Totalizador(nfe.infNFe.total.ICMSTot);
+            Total = new Totalizador(nfe.infNFe.total);
             Duplicatas = duplicatas;
             DadosAdicionaisFisco = nfe.infNFe.infAdic?.infAdFisco;
             DadosAdicionaisContribuinte = nfe.infNFe.infAdic?.infCpl;

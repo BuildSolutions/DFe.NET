@@ -10,6 +10,12 @@ using FluentValidation;
 using NFe.BLL.Configuracao.Entidades;
 using NFe.BLL.Configuracao.Entidades.Produtos;
 using NFe.BLL.Configuracao.Entidades.Produtos.Impostos;
+using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS_IBS;
+using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS_IBS.CreditoPresumido;
+using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS_IBS.GrupoTributacao;
+using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS_IBS.GrupoTributacao.CreditoPresumido;
+using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS_IBS.GrupoTributacao.Monofasico;
+using NFe.BLL.Configuracao.Entidades.Totalizadores;
 using NFe.BLL.Enums;
 using NFe.BLL.Validators;
 using NFe.Classes;
@@ -911,7 +917,342 @@ namespace NFe.BLL
                 IPI = GetProdutoIPI(item.Impostos.IPI),
                 II = GetProdutoII(item.Impostos.ImpostoImportacao),
                 PIS = GetProdutoPIS(item.Impostos.PIS),
-                COFINS = GetProdutoCOFINS(item.Impostos.COFINS)
+                COFINS = GetProdutoCOFINS(item.Impostos.COFINS),
+                IBSCBS = GetProdutoCBSIBS(item.Impostos.CBSIBS)
+                //IS = GetProdutoIS(item.I),
+            };
+        }
+
+        private IBSCBS GetProdutoCBSIBS(CBSIBSImposto cbiIbsImposto)
+        {
+            if(cbiIbsImposto == null)
+            {
+                return null;
+            }
+
+            var ibsCbs = new IBSCBS()
+            {
+
+                CST = cbiIbsImposto.Cst,
+                cClassTrib = cbiIbsImposto.ClassificacaoTributaria,
+
+                gIBSCBS = ObterCbsIbsGrupo(cbiIbsImposto.CbsIbs),
+                gTransfCred = ObterCbsIbsGrupoTransferenciaCredito(cbiIbsImposto?.CbsIbs?.GrupoTransferenciaCredito),
+                gIBSCBSMono = ObterCbsIbsGrupoMonofasico(cbiIbsImposto?.CbsIbs?.GrupoTributacaoMonofasico),
+                gCredPresOper = ObterCbsIbsGrupoCreditoPresumidoOperacao(cbiIbsImposto?.CbsIbs?.GrupoCreditoPresumido),
+                gCredPresIBSZFM = ObterCbsIbsGrupoCreditoPresumidoZFM(cbiIbsImposto?.CbsIbs?.GrupoCreditoPresumido?.IBSGrupoCreditoPresumidoZFM),
+                gAjusteCompet = null,
+                gEstornoCred = null
+            };
+            
+            if (cbiIbsImposto?.IsDoacao == true)
+            {
+                ibsCbs.indDoacao = "1";
+            }
+
+            return ibsCbs;
+        }
+
+        private gIBSCBS ObterCbsIbsGrupo(CBSIBSGrupo grupoCbsIbs)
+        {
+            if (grupoCbsIbs == null)
+            {
+                return null;
+            }
+
+            return new gIBSCBS()
+            {
+                vBC = grupoCbsIbs.BaseCalculo,
+                gCBS = ObterCbsIbsGrupoCbs(grupoCbsIbs?.CBSGrupo),
+                gIBSUF = ObterCbsIbsGrupoIbsUF(grupoCbsIbs?.IBSGrupo?.IBSUFGrupo),
+                gIBSMun = ObterCbsIbsGrupoIbsMunicipio(grupoCbsIbs?.IBSGrupo?.IBSMunicipioGrupo),
+                gTribCompraGov = ObterCbsIbsGrupoCompraGovernamental(grupoCbsIbs?.GrupoTributacaoCompraGoverno),
+                gTribRegular = ObterCbsIbsGrupoTributacaoRegular(grupoCbsIbs?.GrupoTributacaoRegular),
+                vIBS = grupoCbsIbs?.IBSGrupo?.ValorTotal,
+            };
+        }
+
+        private gCBS ObterCbsIbsGrupoCbs(CBSGrupo cbs)
+        {
+            if (cbs == null)
+            {
+                return null;
+            }
+
+            return new gCBS()
+            {
+                pCBS = cbs.AliquotaPercentual,
+                
+                gDif = ObterCbsIbsGrupoDiferimento(cbs?.GrupoDiferimento),
+                gDevTrib = ObterCbsIbsGrupoDevolucaoTributo(cbs?.GrupoDevolucaoTributo),
+                gRed = ObterCbsIbsGrupoReducaoAliquota(cbs?.GrupoReducao),
+                vCBS = cbs.ValorTotal
+            };
+        }
+
+        private gIBSUF ObterCbsIbsGrupoIbsUF(IBSUFGrupo ibsUF)
+        {
+            if (ibsUF == null)
+            {
+                return null;
+            }
+
+            return new gIBSUF()
+            {
+                pIBSUF = ibsUF.AliquotaPercentual,
+
+                gDif = ObterCbsIbsGrupoDiferimento(ibsUF?.GrupoDiferimento),
+                gDevTrib = ObterCbsIbsGrupoDevolucaoTributo(ibsUF?.GrupoDevolucaoTributo),
+                gRed = ObterCbsIbsGrupoReducaoAliquota(ibsUF?.GrupoReducao),
+                vIBSUF = ibsUF.ValorTotal
+            };
+        }
+
+        private gIBSMun ObterCbsIbsGrupoIbsMunicipio(IBSMunicipioGrupo ibsMunicipio)
+        {
+            if (ibsMunicipio == null)
+            {
+                return null;
+            }
+
+            return new gIBSMun()
+            {
+                pIBSMun = ibsMunicipio.AliquotaPercentual,
+
+                gDif = ObterCbsIbsGrupoDiferimento(ibsMunicipio?.GrupoDiferimento),
+                gDevTrib = ObterCbsIbsGrupoDevolucaoTributo(ibsMunicipio?.GrupoDevolucaoTributo),
+                gRed = ObterCbsIbsGrupoReducaoAliquota(ibsMunicipio?.GrupoReducao),
+                vIBSMun = ibsMunicipio.ValorTotal
+            };
+        }
+
+        private gDif ObterCbsIbsGrupoDiferimento(CBSIBSGrupoDiferimento diferimento)
+        {
+            if (diferimento == null)
+            {
+                return null;
+            }
+
+            return new gDif()
+            {
+                pDif = diferimento.PercentualDiferimento,
+                vDif = diferimento.ValorDiferimento
+            };
+        }
+
+        private gDevTrib ObterCbsIbsGrupoDevolucaoTributo(CBSIBSGrupoDevolucaoTributo devolucaoTributo)
+        {
+            if (devolucaoTributo == null)
+            {
+                return null;
+            }
+
+            return new gDevTrib()
+            {
+                vDevTrib = devolucaoTributo.ValorDevolvido
+            };
+        }
+
+        private gRed ObterCbsIbsGrupoReducaoAliquota(CBSIBSGrupoReducao reducao)
+        {
+            if (reducao == null)
+            {
+                return null;
+            }
+
+            return new gRed()
+            {
+                pRedAliq = reducao.PercentualReducao,
+                pAliqEfet = reducao.AliquotaEfetiva
+            };
+        }
+
+        private gTribCompraGov ObterCbsIbsGrupoCompraGovernamental(CBSIBSGrupoTributacaoCompraGoverno compraGovernamental)
+        {
+            if (compraGovernamental == null)
+            {
+                return null;
+            }
+
+            return new gTribCompraGov()
+            {
+                pAliqCBS = compraGovernamental.AliquotaPercentualCBS,
+                vTribCBS = compraGovernamental.ValorTributoCBS,
+                pAliqIBSUF = compraGovernamental.AliquotaPercentualIBSUF,
+                vTribIBSUF = compraGovernamental.ValorTributoIBSUF,
+                pAliqIBSMun = compraGovernamental.AliquotaPercentualIBSMunicipio,
+                vTribIBSMun = compraGovernamental.ValorTributoIBSMunicipio,
+            };
+        }
+
+        private gTribRegular ObterCbsIbsGrupoTributacaoRegular(CBSIBSGrupoTributacaoRegular tributacaoRegular)
+        {
+            if (tributacaoRegular == null)
+            {
+                return null;
+            }
+
+            return new gTribRegular()
+            {
+                CSTReg = tributacaoRegular.CSTRegular,
+                cClassTribReg = tributacaoRegular.CClassTribRegular,
+                pAliqEfetRegIBSUF = tributacaoRegular.AliquotaPercentualRegularIBSUF,
+                vTribRegIBSUF = tributacaoRegular.ValorTributoRegularIBSUF,
+                pAliqEfetRegIBSMun = tributacaoRegular.AliquotaPercentualRegularIBSMunicipio,
+                vTribRegIBSMun = tributacaoRegular.ValorTributoRegularIBSMunicipio,
+                pAliqEfetRegCBS = tributacaoRegular.AliquotaPercentualRegularCBS,
+                vTribRegCBS = tributacaoRegular.ValorTributoRegularCBS
+            };
+        }
+
+        private gCredPresOper ObterCbsIbsGrupoCreditoPresumidoOperacao(CBSIBSGrupoCreditoPresumido creditoPresumido)
+        {
+            if (creditoPresumido == null)
+            {
+                return null;
+            }
+
+            return new gCredPresOper()
+            {
+                vBCCredPres = creditoPresumido.BaseCalculoCreditoPresumido,
+                cCredPres = creditoPresumido.CodigoClassificacaoCreditoPresumido,
+                gCBSCredPres = ObterCbsIbsGrupoCreditoPresumido(creditoPresumido?.CBSGrupoCreditoPresumido),
+                gIBSCredPres = ObterCbsIbsGrupoCreditoPresumido(creditoPresumido?.IBSGrupoCreditoPresumido),
+            };
+        }
+
+        private gIBSCredPres ObterCbsIbsGrupoCreditoPresumido(GrupoCreditoPresumidoBase creditoPresumido)
+        {
+            if (creditoPresumido == null)
+            {
+                return null;
+            }
+
+            return new gIBSCredPres()
+            {
+                pCredPres = creditoPresumido.PercentualCredito,
+                vCredPres = creditoPresumido.ValorCredito,
+                vCredPresCondSus = creditoPresumido.ValorCreditoEmCondicaoSuspensiva
+            };
+        }
+
+        private gCredPresIBSZFM ObterCbsIbsGrupoCreditoPresumidoZFM(IBSGrupoCreditoPresumidoZFM creditoPresumidoZFM)
+        {
+            if (creditoPresumidoZFM == null)
+            {
+                return null;
+            }
+
+            return new gCredPresIBSZFM()
+            {
+                competApur = creditoPresumidoZFM.AnoMesCompetenciaApuracao,
+                tpCredPresIBSZFM = creditoPresumidoZFM.TipoCreditoPresumidoIBSZFM,
+                vCredPresIBSZFM = creditoPresumidoZFM.ValorCreditoPresumidoIBSZFM
+            };
+        }
+
+        private gIBSCBSMono ObterCbsIbsGrupoMonofasico(CBSIBSGrupoMonofasico grupoMonofasico)
+        {
+            if (grupoMonofasico == null)
+            {
+                return null;
+            }
+
+            return new gIBSCBSMono()
+            {
+                gMonoPadrao = ObterCbsIbsGrupoMonofasicoPadrao(grupoMonofasico?.GrupoMonofasicoTributado),
+                gMonoReten = ObterCbsIbsGrupoMonofasicoSujeitoRetencao(grupoMonofasico?.GrupoMonofasicoSujeitoRetencao),
+                gMonoRet = ObterCbsIbsGrupoMonofasicoRetido(grupoMonofasico?.GrupoMonofasicoRetido),
+                gMonoDif = ObterCbsIbsGrupoMonofasicoDiferimento(grupoMonofasico?.GrupoMonofasicoDiferido),
+
+                vTotCBSMonoItem = grupoMonofasico.ValorTotalMonofasicoCBS,
+                vTotIBSMonoItem = grupoMonofasico.ValorTotalMonofasicoIBS
+            };
+        }
+
+        private gMonoPadrao ObterCbsIbsGrupoMonofasicoPadrao(CBSIBSGrupoMonofasicoTributado grupoMonofasicoTributado)
+        {
+            if(grupoMonofasicoTributado == null
+                || grupoMonofasicoTributado.Quantidade == 0)
+            {
+                return null;
+            }
+
+            return new gMonoPadrao()
+            {
+                qBCMono = grupoMonofasicoTributado.Quantidade,
+                adRemCBS = grupoMonofasicoTributado.AliquotaAdRemCBS,
+                adRemIBS = grupoMonofasicoTributado.AliquotaAdRemIBS,
+                vCBSMono = grupoMonofasicoTributado.ValorMonofasicoCBS,
+                vIBSMono = grupoMonofasicoTributado.ValorMonofasicoIBS
+            };
+        }
+
+        private gMonoReten ObterCbsIbsGrupoMonofasicoSujeitoRetencao(CBSIBSGrupoMonofasicoSujeitoRetencao grupoMonofasicoSujeitoRetencao)
+        {
+            if (grupoMonofasicoSujeitoRetencao == null
+                || grupoMonofasicoSujeitoRetencao.Quantidade == 0)
+            {
+                return null;
+            }
+
+            return new gMonoReten()
+            {
+                qBCMonoReten = grupoMonofasicoSujeitoRetencao.Quantidade,
+                adRemCBSReten = grupoMonofasicoSujeitoRetencao.AliquotaAdRemCBS,
+                adRemIBSReten = grupoMonofasicoSujeitoRetencao.AliquotaAdRemIBS,
+                vCBSMonoReten = grupoMonofasicoSujeitoRetencao.ValorMonofasicoCBS,
+                vIBSMonoReten = grupoMonofasicoSujeitoRetencao.ValorMonofasicoIBS
+            };
+        }
+
+        private gMonoRet ObterCbsIbsGrupoMonofasicoRetido(CBSIBSMonofasicoGrupoBase grupoMonofasicoRetido)
+        {
+            if (grupoMonofasicoRetido == null
+                || grupoMonofasicoRetido.Quantidade == 0)
+            {
+                return null;
+            }
+
+            return new gMonoRet()
+            {
+                qBCMonoRet = grupoMonofasicoRetido.Quantidade,
+                adRemCBSRet = grupoMonofasicoRetido.AliquotaAdRemCBS,
+                adRemIBSRet = grupoMonofasicoRetido.AliquotaAdRemIBS,
+                vCBSMonoRet = grupoMonofasicoRetido.ValorMonofasicoCBS,
+                vIBSMonoRet = grupoMonofasicoRetido.ValorMonofasicoIBS
+            };
+        }
+
+        private gTransfCred ObterCbsIbsGrupoTransferenciaCredito(CBSIBSGrupoTransferenciaCredito grupoTransferenciaCredito)
+        {
+            if (grupoTransferenciaCredito == null
+                || (grupoTransferenciaCredito.ValorASerTransferidoIBS == 0
+                    && grupoTransferenciaCredito.ValorASerTransferidoCBS == 0))
+            {
+                return null;
+            }
+
+            return new gTransfCred()
+            {
+                vCBS = grupoTransferenciaCredito.ValorASerTransferidoIBS,
+                vIBS = grupoTransferenciaCredito.ValorASerTransferidoCBS,
+            };
+        }
+
+        private gMonoDif ObterCbsIbsGrupoMonofasicoDiferimento(CBSIBSGrupoMonofasicoDiferimento grupoMonofasicoDiferimento)
+        {
+            if (grupoMonofasicoDiferimento == null)
+            {
+                return null;
+            }
+
+            return new gMonoDif()
+            {
+                pDifCBS = grupoMonofasicoDiferimento.PercentualMonofasicoCBSDiferimento,
+                pDifIBS = grupoMonofasicoDiferimento.PercentualMonofasicoIBSDiferimento,
+                vCBSMonoDif = grupoMonofasicoDiferimento.PercentualMonofasicoCBSDiferimento,
+                vIBSMonoDif = grupoMonofasicoDiferimento.ValorMonofasicoIBSDiferimento
             };
         }
 
@@ -1775,47 +2116,185 @@ namespace NFe.BLL
 
         private total GetTotal()
         {
-            var vICMSBC = NotaFiscal.Total.ICMSBaseCalculo;
-            var vICMS = NotaFiscal.Total.ICMSTotal;
-            var vICMSDeson = NotaFiscal.Total.ICMSDesonerado;
-            var vBCST = NotaFiscal.Total.ICMSSTBaseCalculo;
-            var vST = NotaFiscal.Total.ICMSSTTotal;
-            var vProd = NotaFiscal.Total.ProdutosTotal;
-            var vFrete = NotaFiscal.Total.Frete;
-            var vSeg = NotaFiscal.Total.Seguro;
-            var vDesc = NotaFiscal.Total.Desconto + NotaFiscal.Total.ICMSDesonerado;
-            var vII = NotaFiscal.Total.ImpostoImportacao;
-            var vIPI = NotaFiscal.Total.IPI;
-            var vPIS = NotaFiscal.Total.PIS;
-            var vCOFINS = NotaFiscal.Total.COFINS;
-            var vOutro = NotaFiscal.Total.OutrasDespesasAcessorias;
-            var vNF = NotaFiscal.Total.NFeValorTotal;
-            var vTotTrib = NotaFiscal.Total.TributosIBPT;
-            var vIRRF = NotaFiscal.Total.ValorIRRetido;
+            var total = new total 
+            { 
+                ICMSTot = GetIcmsTotal(),
+                retTrib = GetRetTribTotal(),
+                IBSCBSTot = GetCbsIbsTotal(NotaFiscal.Total.TotalizadorCBSIBS)
+            };
+
+            return total;
+        }
+
+        private IBSCBSTot GetCbsIbsTotal(TotalizadorCBSIBS totalizador)
+        {
+            if(totalizador == null)
+            {
+                return null;
+            }
+
+            return new IBSCBSTot()
+            {
+                vBCIBSCBS = totalizador?.CBSIBSBaseCalculo ?? 0,
+                gCBS = GetTotalizadorCBS(totalizador?.TotalizadorCBS),
+                gIBS = GetTotalizadorIBS(totalizador?.TotalizadorIBS),
+                gEstornoCred = GetTotalizadorEstornoCredito(totalizador?.TotalizadorCBSIBSEstornoCredito),
+                gMono = GetTotalizadorMonofasico(totalizador?.TotalizadorCBSIBSMonofasico)
+            };
+        }
+
+        private gCBSTotal GetTotalizadorCBS(TotalizadorCBS totalizador)
+        {
+            if (totalizador == null)
+            {
+                return null;
+            }
+
+            return new gCBSTotal()
+            {
+                vCBS = totalizador.ValorTotal,
+                vDevTrib = totalizador.DevolucaoTributosValorTotal,
+                vDif = totalizador.DiferimentoValorTotal,
+                vCredPres = totalizador.CreditoPresumidoValorTotal,
+                vCredPresCondSus = totalizador.CreditoPresumidoEmCondicaoSuspensivaValorTotal
+            };
+        }
+
+        private gIBSUFTotal GetTotalizadorIBSUF(TotalizadorIBSUF totalizador)
+        {
+            if (totalizador == null)
+            {
+                return null;
+            }
+
+            return new gIBSUFTotal()
+            {
+                vIBSUF = totalizador.ValorTotal,
+                vDevTrib = totalizador.DevolucaoTributosValorTotal,
+                vDif = totalizador.DiferimentoValorTotal,
+            };
+        }
+
+        private gIBSMunTotal GetTotalizadorIBSMunicipio(TotalizadorIBSMunicipio totalizador)
+        {
+            if (totalizador == null)
+            {
+                return null;
+            }
+
+            return new gIBSMunTotal()
+            {
+                vIBSMun = totalizador.ValorTotal,
+                vDevTrib = totalizador.DevolucaoTributosValorTotal,
+                vDif = totalizador.DiferimentoValorTotal,
+            };
+        }
+
+        private gIBSTotal GetTotalizadorIBS(TotalizadorIBS totalizador)
+        {
+            if (totalizador == null)
+            {
+                return null;
+            }
+
+            return new gIBSTotal()
+            {
+                vIBS = totalizador.ValorTotal,
+                gIBSUF = GetTotalizadorIBSUF(totalizador.TotalizadorIBSUF),
+                gIBSMun = GetTotalizadorIBSMunicipio(totalizador.TotalizadorIBSMunicipio),
+                vCredPres = totalizador.CreditoPresumidoValorTotal,
+                vCredPresCondSus = totalizador.CreditoPresumidoEmCondicaoSuspensivaValorTotal
+            };
+        }
+
+        private gEstornoCredTotal GetTotalizadorEstornoCredito(TotalizadorCBSIBSEstornoCredito totalizador)
+        {
+            if (totalizador == null)
+            {
+                return null;
+            }
+
+            return new gEstornoCredTotal()
+            {
+                vCBSEstCred = totalizador.CBSValorEstornado,
+                vIBSEstCred = totalizador.IBSValorEstornado
+            };
+        }
+
+        private gMonoTotal GetTotalizadorMonofasico(TotalizadorCBSIBSMonofasico totalizador)
+        {
+            if (totalizador == null)
+            {
+                return null;
+            }
+
+            return new gMonoTotal()
+            {
+                vCBSMono = totalizador.CBSMonofasicoValorTotal,
+                vIBSMono = totalizador.IBSMonofasicoValorTotal,
+                vCBSMonoReten = totalizador.CBSMonofasicoSujeitoRetencaoValorTotal,
+                vIBSMonoReten = totalizador.IBSMonofasicoSujeitoRetencaoValorTotal,
+                vCBSMonoRet = totalizador.CBSMonofasicoRetidoValorTotal,
+                vIBSMonoRet = totalizador.IBSMonofasicoRetidoValorTotal,
+            };
+        }
+
+        private retTrib GetRetTribTotal()
+        {
+            if(NotaFiscal.Total.TotalizadorICMS.ValorIRRetido == 0)
+            {
+                return null;
+            }
+
+            return new retTrib
+            {
+                vBCIRRF = NotaFiscal.Total.TotalizadorICMS.ProdutosTotal,
+                vIRRF = NotaFiscal.Total.TotalizadorICMS.ValorIRRetido
+            };
+        }
+
+        private ICMSTot GetIcmsTotal()
+        {
+            var vICMSBC = NotaFiscal.Total.TotalizadorICMS.ICMSBaseCalculo;
+            var vICMS = NotaFiscal.Total.TotalizadorICMS.ICMSTotal;
+            var vICMSDeson = NotaFiscal.Total.TotalizadorICMS.ICMSDesonerado;
+            var vBCST = NotaFiscal.Total.TotalizadorICMS.ICMSSTBaseCalculo;
+            var vST = NotaFiscal.Total.TotalizadorICMS.ICMSSTTotal;
+            var vFrete = NotaFiscal.Total.TotalizadorICMS.Frete;
+            var vProd = NotaFiscal.Total.TotalizadorICMS.ProdutosTotal;
+            var vSeg = NotaFiscal.Total.TotalizadorICMS.Seguro;
+            var vDesc = NotaFiscal.Total.TotalizadorICMS.Desconto + NotaFiscal.Total.TotalizadorICMS.ICMSDesonerado;
+            var vII = NotaFiscal.Total.TotalizadorICMS.ImpostoImportacao;
+            var vIPI = NotaFiscal.Total.TotalizadorICMS.IPI;
+            var vPIS = NotaFiscal.Total.TotalizadorICMS.PIS;
+            var vCOFINS = NotaFiscal.Total.TotalizadorICMS.COFINS;
+            var vOutro = NotaFiscal.Total.TotalizadorICMS.OutrasDespesasAcessorias;
+            var vNF = NotaFiscal.Total.TotalizadorICMS.NFeValorTotal;
+            var vTotTrib = NotaFiscal.Total.TotalizadorICMS.TributosIBPT;
             //var vTotTrib = !_notaFiscal.Emitente.HabilitarDetalhamentoImposto
             //    || _notaFiscal.Destinatario.EConsumidorFinal != ConsumidorFinal.cfConsumidorFinal 
-            //    ? 0 : _notaFiscal.Total.TributosIBPT;
+            //    ? 0 : _notaFiscal.Total.TotalizadorICMS.TributosIBPT;
 
-            var vICMSUFDest = NotaFiscal.Total.ICMSUFDestino;
-            var vICMSUFRemet = NotaFiscal.Total.ICMSUFOrigem;
-            var vFCPUFDest = NotaFiscal.Total.FCPUFDestino;
+            var vICMSUFDest = NotaFiscal.Total.TotalizadorICMS.ICMSUFDestino;
+            var vICMSUFRemet = NotaFiscal.Total.TotalizadorICMS.ICMSUFOrigem;
+            var vFCPUFDest = NotaFiscal.Total.TotalizadorICMS.FCPUFDestino;
 
 
             var vFCP = 0; // TODO: * Valor Total do FCP (Fundo de Combate à Pobreza) - Corresponde ao total da soma dos campos  id:N17c
-            var vFCPST = NotaFiscal.Total.FCPSubstituicaoTributaria; // * Valor Total do FCP (Fundo de Combate à Pobreza) retido por substituição tributária - Corresponde ao total da soma dos campos  id:N23d 
+            var vFCPST = NotaFiscal.Total.TotalizadorICMS.FCPSubstituicaoTributaria; // * Valor Total do FCP (Fundo de Combate à Pobreza) retido por substituição tributária - Corresponde ao total da soma dos campos  id:N23d 
             var vFCPSTRet = 0; // TODO: * Valor Total do FCP retido anteriormente por Substituição Tributária - Corresponde ao total da soma dos campos  id:N27d
 
-            var qBCMonoRet = NotaFiscal.Total.QuantidadeBaseCalculoMonofasicoRetido;
-            var vICMSMonoRet = NotaFiscal.Total.ValorICMSMonofasicoRetido;
+            var qBCMonoRet = NotaFiscal.Total.TotalizadorICMS.QuantidadeBaseCalculoMonofasicoRetido;
+            var vICMSMonoRet = NotaFiscal.Total.TotalizadorICMS.ValorICMSMonofasicoRetido;
 
             decimal vIPIDevol = 0;
             if (NotaFiscal.EFinalidadeNFe == FinalidadeNFe.fnDevolucao)
             {
                 vIPI = 0;
-                vIPIDevol = NotaFiscal.Total.IPI;
+                vIPIDevol = NotaFiscal.Total.TotalizadorICMS.IPI;
             }
 
-            var icmsTot = new ICMSTot
+            return new ICMSTot
             {
                 vBC = vICMSBC,
                 vICMS = vICMS,
@@ -1843,15 +2322,6 @@ namespace NFe.BLL
                 qBCMonoRet = qBCMonoRet,
                 vICMSMonoRet = vICMSMonoRet
             };
-
-            var total = new total { ICMSTot = icmsTot };
-
-            if (vIRRF > 0)
-            {
-                total.retTrib = new retTrib { vBCIRRF = vProd, vIRRF = vIRRF };
-            }
-
-            return total;
         }
 
         private cobr GetCobranca()
@@ -1863,7 +2333,7 @@ namespace NFe.BLL
 
             var vDup = NotaFiscal.Duplicatas?.Sum(duplicata => duplicata.Valor) ?? 0;
             var nFat = NotaFiscal.Numero.ToString();
-            var vOrig = vDup > 0 ? vDup : NotaFiscal.Total.NFeValorTotal;
+            var vOrig = vDup > 0 ? vDup : NotaFiscal.Total.TotalizadorICMS.NFeValorTotal;
             var vDesc = 0M;
 
             var fat = new fat
@@ -2013,9 +2483,9 @@ namespace NFe.BLL
                     });
                 }
                 var totalPago = NotaFiscal.FormasPagamento.Sum(pag => pag.Valor);
-                if (totalPago > NotaFiscal.Total.NFeValorTotal)
+                if (totalPago > NotaFiscal.Total.TotalizadorICMS.NFeValorTotal)
                 {
-                    troco = totalPago - NotaFiscal.Total.NFeValorTotal;
+                    troco = totalPago - NotaFiscal.Total.TotalizadorICMS.NFeValorTotal;
                 }
             }
             else if (//_cfgApp.CfgServico.ModeloDocumento == ModeloDocumento.NFe &&
@@ -2026,7 +2496,7 @@ namespace NFe.BLL
                 {
                     indPag = IndicadorPagamentoDetalhePagamento.ipDetPgVista,
                     tPag = FormaPagamento.fpOutro,
-                    vPag = NotaFiscal.Total.NFeValorTotal,
+                    vPag = NotaFiscal.Total.TotalizadorICMS.NFeValorTotal,
                     xPag = "DIRETO COM O CLIENTE"
                 });
             }

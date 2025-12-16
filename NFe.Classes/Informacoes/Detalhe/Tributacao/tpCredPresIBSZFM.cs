@@ -7,22 +7,22 @@ namespace NFe.Classes.Informacoes.Detalhe.Tributacao
     {
         [Description("Sem Crédito Presumido")]
         [XmlEnum("0")]
-        tpCredPresIbsZfm0,
+        tpCredPresIbsZfm0 = 0,
 
         [Description("Bens de consumo final (55%)")]
         [XmlEnum("1")]
-        tpCredPresIbsZfm1,
+        tpCredPresIbsZfm1 = 1,
 
         [Description("Bens de capital (75%)")]
         [XmlEnum("2")]
-        tpCredPresIbsZfm2,
+        tpCredPresIbsZfm2 = 2,
 
         [Description("Bens intermediários (90,25%)")]
         [XmlEnum("3")]
-        tpCredPresIbsZfm3,
+        tpCredPresIbsZfm3 = 3,
 
         [Description("Bens de informática e outros definidos em legislação (100%)")]
         [XmlEnum("4")]
-        tpCredPresIbsZfm4
+        tpCredPresIbsZfm4 = 4
     }
 }

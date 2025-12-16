@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using NFe.BLL.Configuracao.Entidades;
+using NFe.BLL.Configuracao.Entidades.Totalizadores;
 
 namespace NFe.BLL.Validators
 {
