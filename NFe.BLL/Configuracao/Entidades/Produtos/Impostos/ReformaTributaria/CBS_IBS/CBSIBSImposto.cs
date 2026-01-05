@@ -9,10 +9,10 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
     /// </summary>
     public class CBSIBSImposto
     {
-        public CBSIBSImposto(CSTIBSCBS cst, cClassTrib classificacaoTributaria, bool isDoacao, CBSIBSGrupo cbsIbs)
+        public CBSIBSImposto(CSTIBSCBS cst, int classificacaoTributaria, bool isDoacao, CBSIBSGrupo cbsIbs)
         {
             Cst = cst;
-            ClassificacaoTributaria = classificacaoTributaria;
+            ClassificacaoTributaria = classificacaoTributaria.ToString("D6");
             CbsIbs = cbsIbs;
         }
 
@@ -30,17 +30,17 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
 
         /// <summary>cClassTrib - Código de Situação Tributária do IBS e CBS (UB13)
         /// Utilizar tabela CÓDIGO DE CLASSIFICAÇÃO TRIBUTÁRIA DO IBS E DA CBS</summary>
-        public CSTIBSCBS Cst { get; set; }
+        public CSTIBSCBS Cst { get; }
 
         /// <summary>CST - Código de Classificação Tributária do IBS e CBS (UB14)
         /// Utilizar tabela CÓDIGO DE CLASSIFICAÇÃO TRIBUTÁRIA DO IBS E DA CBS</summary>
-        public cClassTrib ClassificacaoTributaria { get; set; }
+        public string ClassificacaoTributaria { get; }
 
         /// <summary>indDoacao - Indica a natureza da operação de doação, orientando a apuração e a geração de débitos ou estornos conforme o cenário(UB14a)
         /// Informar “1” quando doação</summary>
-        public bool? IsDoacao { get; set; }
+        public bool? IsDoacao { get; }
 
         /// <summary>Tag: IBSCBS/gIBSCBS (UB15)</summary>
-        public CBSIBSGrupo CbsIbs { get; set; }
+        public CBSIBSGrupo CbsIbs { get; }
     }
 }

@@ -15,7 +15,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
         private readonly decimal _baseCalculo;
 
         public CBSIBSGrupoTributacaoRegular(CSTIBSCBS cstRegular,
-            cClassTrib cClassTribRegular,
+            int cClassTribRegular,
             decimal aliquotaPercentualRegularCBS,
             decimal aliquotaPercentualRegularIBSUF,
             decimal aliquotaPercentualRegularIBSMunicipio,
@@ -24,7 +24,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
             decimal valorTributoRegularIBSMunicipio)
         {
             CSTRegular = cstRegular;
-            CClassTribRegular = cClassTribRegular;
+            CClassTribRegular = cClassTribRegular.ToString("D6");
 
             AliquotaPercentualRegularCBS = aliquotaPercentualRegularCBS;
             AliquotaPercentualRegularIBSUF = aliquotaPercentualRegularIBSUF;
@@ -58,7 +58,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
         /// <summary>cClassTribReg — Código de Classificação Tributária do IBS e CBS (UB70)
         /// Informado como seria caso não cumprida a condição resolutória/suspensiva.
         /// Utilizar tabela CÓDIGO DE CLASSIFICAÇÃO TRIBUTÁRIA DO IBS E DA CBS</summary>
-        public cClassTrib CClassTribRegular { get; }
+        public string CClassTribRegular { get; }
 
         /// <summary>pAliqEfetRegIBSUF — Valor da alíquota do IBS da UF (UB71)
         /// Informado como seria caso não cumprida a condição resolutória/suspensiva.</summary>

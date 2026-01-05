@@ -26,13 +26,33 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
 
         public CBSIBSGrupoMonofasico(gIBSCBSMono monofasico)
         {
-            GrupoMonofasicoTributado = new CBSIBSGrupoMonofasicoTributado(monofasicoPadrao: monofasico?.gMonoPadrao);
-            GrupoMonofasicoSujeitoRetencao = new CBSIBSGrupoMonofasicoSujeitoRetencao(monofasicoSujeitoRetencao: monofasico?.gMonoReten);
-            GrupoMonofasicoRetido = new CBSIBSGrupoMonofasicoRetido(monofasicoRetido: monofasico?.gMonoRet);
-            GrupoMonofasicoDiferido = new CBSIBSGrupoMonofasicoDiferimento(monofasicoDiferimento: monofasico?.gMonoDif);
+            if (monofasico == null)
+            {
+                return;
+            }
 
-            ValorTotalMonofasicoCBS = monofasico.vTotCBSMonoItem;
-            ValorTotalMonofasicoIBS = monofasico.vTotIBSMonoItem;
+            if (monofasico.gMonoPadrao != null)
+            {
+                GrupoMonofasicoTributado = new CBSIBSGrupoMonofasicoTributado(monofasicoPadrao: monofasico?.gMonoPadrao);
+            }
+
+            if (monofasico.gMonoReten != null)
+            {
+                GrupoMonofasicoSujeitoRetencao = new CBSIBSGrupoMonofasicoSujeitoRetencao(monofasicoSujeitoRetencao: monofasico?.gMonoReten);
+            }
+
+            if (monofasico.gMonoRet != null)
+            {
+                GrupoMonofasicoRetido = new CBSIBSGrupoMonofasicoRetido(monofasicoRetido: monofasico?.gMonoRet);
+            }
+
+            if (monofasico.gMonoDif != null)
+            {
+                GrupoMonofasicoDiferido = new CBSIBSGrupoMonofasicoDiferimento(monofasicoDiferimento: monofasico?.gMonoDif);
+            }
+
+            ValorTotalMonofasicoCBS = monofasico?.vTotCBSMonoItem ?? 0;
+            ValorTotalMonofasicoIBS = monofasico?.vTotIBSMonoItem ?? 0;
         }
 
         public CBSIBSGrupoMonofasicoTributado GrupoMonofasicoTributado { get; set; }

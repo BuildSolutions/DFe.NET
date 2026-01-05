@@ -34,19 +34,47 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
 
         public CBSIBSGrupo(IBSCBS ibsCbs)
         {
-            var ibsUf = new IBSUFGrupo(ibsCbs: ibsCbs?.gIBSCBS);
-            var ibsMunicipio = new IBSMunicipioGrupo(ibsCbs: ibsCbs?.gIBSCBS);
+            if(ibsCbs == null)
+            {
+                return;
+            }
 
-            BaseCalculo = ibsCbs.gIBSCBS.vBC;
-            
-            IBSGrupo = new IBSGrupo(ibsUFGrupo: ibsUf, ibsMunicipioGrupo: ibsMunicipio, valorTotal: ibsCbs?.gIBSCBS?.vIBS ?? 0);
-            CBSGrupo = new CBSGrupo(ibsCbs: ibsCbs?.gIBSCBS);
-            
-            GrupoTributacaoRegular = new CBSIBSGrupoTributacaoRegular(tributacaoRegular: ibsCbs?.gIBSCBS?.gTribRegular);
-            GrupoTributacaoCompraGoverno = new CBSIBSGrupoTributacaoCompraGoverno(compraGoverno: ibsCbs?.gIBSCBS?.gTribCompraGov);
-            GrupoTributacaoMonofasico = new CBSIBSGrupoMonofasico(monofasico: ibsCbs.gIBSCBSMono);
-            GrupoTransferenciaCredito = new CBSIBSGrupoTransferenciaCredito(transferenciaCredito: ibsCbs?.gTransfCred);
-            GrupoCreditoPresumido = new CBSIBSGrupoCreditoPresumido(creditoPresumidoOperacao: ibsCbs?.gCredPresOper, creditoPresumidoZFM: ibsCbs?.gCredPresIBSZFM);
+            if (ibsCbs.gIBSCBS != null)
+            {
+                var ibsUf = new IBSUFGrupo(ibsCbs: ibsCbs?.gIBSCBS);
+                var ibsMunicipio = new IBSMunicipioGrupo(ibsCbs: ibsCbs?.gIBSCBS);
+
+                BaseCalculo = ibsCbs.gIBSCBS.vBC;
+
+                IBSGrupo = new IBSGrupo(ibsUFGrupo: ibsUf, ibsMunicipioGrupo: ibsMunicipio, valorTotal: ibsCbs?.gIBSCBS?.vIBS ?? 0);
+                CBSGrupo = new CBSGrupo(ibsCbs: ibsCbs?.gIBSCBS);
+
+                if (ibsCbs.gIBSCBS.gTribRegular != null)
+                {
+                    GrupoTributacaoRegular = new CBSIBSGrupoTributacaoRegular(tributacaoRegular: ibsCbs?.gIBSCBS?.gTribRegular);
+                }
+
+                if (ibsCbs.gIBSCBS.gTribCompraGov != null)
+                {
+                    GrupoTributacaoCompraGoverno = new CBSIBSGrupoTributacaoCompraGoverno(compraGoverno: ibsCbs?.gIBSCBS?.gTribCompraGov);
+                }
+            }
+
+            if (ibsCbs.gIBSCBSMono != null)
+            {
+                GrupoTributacaoMonofasico = new CBSIBSGrupoMonofasico(monofasico: ibsCbs.gIBSCBSMono);
+            }
+
+            if (ibsCbs.gTransfCred != null)
+            {
+                GrupoTransferenciaCredito = new CBSIBSGrupoTransferenciaCredito(transferenciaCredito: ibsCbs?.gTransfCred);
+            }
+
+            if (ibsCbs.gCredPresOper != null
+                || ibsCbs.gCredPresIBSZFM != null)
+            {
+                GrupoCreditoPresumido = new CBSIBSGrupoCreditoPresumido(creditoPresumidoOperacao: ibsCbs?.gCredPresOper, creditoPresumidoZFM: ibsCbs?.gCredPresIBSZFM);
+            }
         }
 
         /// <summary>vBc - Base de cálculo do ibs e cbs (UB15)</summary>
