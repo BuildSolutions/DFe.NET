@@ -10,6 +10,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
             decimal baseCalculo,
             decimal aliquota,
             decimal valorTotal,
+            decimal aliquotaReducaoBaseCalculo,
             DeterminacaoBaseIcmsSt modalidadeCalculoST,
             decimal baseCalculoST,
             decimal aliquotaST,
@@ -20,6 +21,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ICMS
             Origem = origem;
             ModalidadeCalculo = modalidadeCalculo;
             BaseCalculo = baseCalculo;
+            AliquotaReducaoBaseCalculo = aliquotaReducaoBaseCalculo.NuloSeZero();
             Aliquota = aliquota;
             ValorTotal = valorTotal;
 

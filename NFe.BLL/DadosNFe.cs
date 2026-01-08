@@ -1290,6 +1290,7 @@ namespace NFe.BLL
             var pFCPST = item.AliquotaFCP;
             var vFCPST = item.ValorTotalFCP;
 
+            var pRedBC = item.AliquotaReducaoBaseCalculo;
             var pRedBCST = item.AliquotaReducaoBaseCalculoST;
 
             var qBCMonoRet = item.BaseCalculoICMSRetido;
@@ -1369,7 +1370,7 @@ namespace NFe.BLL
                         CSOSN = Csosnicms.Csosn900,
                         modBC = DeterminacaoBaseIcms.DbiValorOperacao, // 3
                         vBC = vBC,
-                        pRedBC = null, // TODO: 
+                        pRedBC = pRedBC,
                         pICMS = pICMS,
                         vICMS = vICMS,
                         modBCST = vBCST == 0 || vICMSST == 0 ? null : modBCST,
