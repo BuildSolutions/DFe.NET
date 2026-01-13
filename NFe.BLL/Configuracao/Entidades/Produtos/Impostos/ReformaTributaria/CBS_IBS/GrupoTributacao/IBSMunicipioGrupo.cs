@@ -26,12 +26,12 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
                                                      aliquotaEfetiva) { }
 
         public IBSMunicipioGrupo(gIBSCBS ibsCbs) : base(eImpostoReformaTributariaTipo: Enumerators.EImpostoReformaTributariaTipo.IBSMUN,
-                                                     aliquota: ibsCbs?.gIBSUF?.pIBSUF ?? 0,
-                                                     valor: ibsCbs?.gIBSUF?.vIBSUF ?? 0,
-                                                     percentualDiferimento: ibsCbs?.gIBSUF?.gDif?.pDif ?? 0,
-                                                     valorDiferimento: ibsCbs?.gIBSUF?.gDif?.vDif ?? 0,
-                                                     valorDevolucaoTributos: ibsCbs?.gIBSUF?.gDevTrib?.vDevTrib ?? 0,
-                                                     percentualReducaoAliquota: ibsCbs?.gIBSUF?.gRed?.pRedAliq ?? 0,
-                                                     aliquotaEfetiva: ibsCbs?.gIBSUF?.gRed?.pAliqEfet ?? 0) { }
+                                                     aliquota: ibsCbs?.gIBSMun?.pIBSMun ?? 0,
+                                                     valor: ibsCbs?.gIBSMun?.vIBSMun ?? 0,
+                                                     percentualDiferimento: ibsCbs?.gIBSMun?.gDif?.pDif ?? 0,
+                                                     valorDiferimento: ibsCbs?.gIBSMun?.gDif?.vDif ?? 0,
+                                                     valorDevolucaoTributos: ibsCbs?.gIBSMun?.gDevTrib?.vDevTrib ?? 0,
+                                                     percentualReducaoAliquota: ibsCbs?.gIBSMun?.gRed?.pRedAliq ?? 0,
+                                                     aliquotaEfetiva: ibsCbs?.gIBSMun?.gRed?.pAliqEfet ?? 0) { }
     }
 }

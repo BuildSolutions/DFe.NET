@@ -27,12 +27,12 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
         { }
 
         public CBSGrupo(gIBSCBS ibsCbs) : base(eImpostoReformaTributariaTipo: Enumerators.EImpostoReformaTributariaTipo.IBSUF,
-                                                     aliquota: ibsCbs?.gIBSUF?.pIBSUF ?? 0,
-                                                     valor: ibsCbs?.gIBSUF?.vIBSUF ?? 0,
-                                                     percentualDiferimento: ibsCbs?.gIBSUF?.gDif?.pDif ?? 0,
-                                                     valorDiferimento: ibsCbs?.gIBSUF?.gDif?.vDif ?? 0,
-                                                     valorDevolucaoTributos: ibsCbs?.gIBSUF?.gDevTrib?.vDevTrib ?? 0,
-                                                     percentualReducaoAliquota: ibsCbs?.gIBSUF?.gRed?.pRedAliq ?? 0,
-                                                     aliquotaEfetiva: ibsCbs?.gIBSUF?.gRed?.pAliqEfet ?? 0) { }
+                                                     aliquota: ibsCbs?.gCBS?.pCBS ?? 0,
+                                                     valor: ibsCbs?.gCBS?.vCBS ?? 0,
+                                                     percentualDiferimento: ibsCbs?.gCBS?.gDif?.pDif ?? 0,
+                                                     valorDiferimento: ibsCbs?.gCBS?.gDif?.vDif ?? 0,
+                                                     valorDevolucaoTributos: ibsCbs?.gCBS?.gDevTrib?.vDevTrib ?? 0,
+                                                     percentualReducaoAliquota: ibsCbs?.gCBS?.gRed?.pRedAliq ?? 0,
+                                                     aliquotaEfetiva: ibsCbs?.gCBS?.gRed?.pAliqEfet ?? 0) { }
     }
 }
