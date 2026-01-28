@@ -41,6 +41,8 @@ namespace NFe.BLL.Validators
 
             RuleFor(nfe => nfe.EnderecoEntrega).SetValidator(new EnderecoEntregaValidator(Enums.EPessoa.Destinatario)).When(nfe => nfe.EnderecoEntrega != null).WithMessage("Endereço de entrega inválido!");
             RuleFor(nfe => nfe.EnderecoRetirada).SetValidator(new EnderecoRetiradaValidator(Enums.EPessoa.Destinatario)).When(nfe => nfe.EnderecoRetirada != null).WithMessage("Endereço de retirada inválido!");
+
+            RuleFor(nfe => nfe.Total.TotalizadorICMS.NFeValorTotal).GreaterThan(0).When(nfe => nfe.EFinalidadeNFe != Classes.Informacoes.Identificacao.Tipos.FinalidadeNFe.fnComplementar && nfe.EFinalidadeNFe != Classes.Informacoes.Identificacao.Tipos.FinalidadeNFe.fnAjuste).WithMessage("Valor Total da NF-e não pode ser 0 (zero).");
         }
     }
 }
