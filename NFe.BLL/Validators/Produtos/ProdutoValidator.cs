@@ -6,7 +6,7 @@ namespace NFe.BLL.Validators.Produtos
 {
     public class ProdutoValidator : AbstractValidator<Produto>
     {
-        public ProdutoValidator()
+        public ProdutoValidator(bool deveValidarQuantidadeEValores)
         {
             RuleFor(produto => produto.Referencia).NotEmpty().WithMessage(produto => $"Referência do produto {produto.Descricao} não informado!");
             RuleFor(produto => produto.Descricao).NotEmpty().WithMessage(produto => $"Descrição não informado!");
@@ -17,7 +17,8 @@ namespace NFe.BLL.Validators.Produtos
             RuleFor(produto => produto.CFOP).NotEmpty().WithMessage(produto => $"CFOP do produto {produto.Descricao} não informado!");
             RuleFor(produto => produto.UnidadeCompra).NotEmpty().WithMessage(produto => $"Unidade de Medida do produto {produto.Descricao}  não informada!");
             RuleFor(produto => produto.UnidadeTributacao).MaximumLength(6).WithMessage(produto => $"Unidade de Tributação é inválida do produto {produto.Descricao} não informado!");
-            RuleFor(produto => produto.Quantidade).GreaterThan(0).WithMessage(produto => $"Quantidade do produto {produto.Descricao} informada é inválida!");
+            RuleFor(produto => produto.Quantidade).GreaterThan(0).When(produto => deveValidarQuantidadeEValores).WithMessage(produto => $"Quantidade do produto {produto.Descricao} informada é inválida!");
+            RuleFor(produto => produto.ValorUnitario).GreaterThan(0).When(produto => deveValidarQuantidadeEValores).WithMessage(produto => $"Valor unitário do produto {produto.Descricao} informado é inválido!");
             RuleFor(produto => produto.Impostos).NotNull().WithMessage(produto => $"Imposto do produto {produto.Descricao} não informado!").DependentRules(() =>
             {
                 RuleFor(nfe => nfe.Impostos).SetValidator(new ImpostoValidator()).WithMessage((_, imposto) => $"Dados inválidos do Imposto {imposto}");

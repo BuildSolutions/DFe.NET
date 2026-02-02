@@ -37,7 +37,7 @@ namespace NFe.BLL.Configuracao.ValueObjects
             NomeRazaoSocial = emitente.xNome.SanitizeString().SubstringMaxLength(60);
             ApelidoFantasia = emitente.xFant.SanitizeString();
             Endereco = new Endereco(emitente.enderEmit);
-            Telefone = null;
+            Telefone = emitente?.enderEmit?.fone > 0 ? emitente?.enderEmit?.fone : null;
             CPFCNPJ = emitente.CNPJ.RetornaNumeros();
             RGInscricaoEstadual = emitente.IE.RetornaAlfanumericos();
             Email = null;
@@ -47,11 +47,11 @@ namespace NFe.BLL.Configuracao.ValueObjects
 
         public Pessoa(dest destinatario)
         {
-            PessoaTipo = ETipoPessoa.Juridica;
+            PessoaTipo = !string.IsNullOrWhiteSpace(destinatario.CPF) ? ETipoPessoa.Fisica : ETipoPessoa.Juridica;
             NomeRazaoSocial = destinatario.xNome.SanitizeString().SubstringMaxLength(60);
             ApelidoFantasia = null;
             Endereco = new Endereco(destinatario.enderDest);
-            Telefone = null;
+            Telefone = destinatario?.enderDest?.fone > 0 ? destinatario?.enderDest?.fone : null;
             CPFCNPJ = destinatario.CPF ?? destinatario.CNPJ;
             RGInscricaoEstadual = destinatario.IE;
             Email = destinatario.email;

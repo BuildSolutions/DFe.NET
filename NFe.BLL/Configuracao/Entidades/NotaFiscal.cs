@@ -99,6 +99,13 @@ namespace NFe.BLL.Configuracao.Entidades
 
             nfe.infNFe.pag?.ForEach(item => item.detPag?.ForEach(pagamento => pagamentos.Add(new Pagamento(pagamento.tPag, pagamento.vPag))));
 
+            bool isConsumidorFinal = false;
+            if(nfe.infNFe.ide.indFinal.HasValue
+                && nfe.infNFe.ide.indFinal.Value == ConsumidorFinal.cfConsumidorFinal)
+            {
+                isConsumidorFinal = true;
+            }
+
             Serie = nfe.infNFe.ide.serie;
             Numero = nfe.infNFe.ide.nNF;
             Emitente = new Emitente(nfe.infNFe.emit);
@@ -106,7 +113,7 @@ namespace NFe.BLL.Configuracao.Entidades
             DataEmissao = nfe.infNFe.ide.dhEmi.DateTime;
             DataSaida = nfe.infNFe.ide.dhSaiEnt?.DateTime ?? nfe.infNFe.ide.dhEmi.DateTime;
             ETipoNFe = nfe.infNFe.ide.tpNF;
-            Destinatario = new Destinatario(nfe.infNFe.dest);
+            Destinatario = new Destinatario(nfe.infNFe.dest, isConsumidorFinal);
             EnderecoEntrega = new EnderecoEntrega(nfe.infNFe.entrega);
             EnderecoRetirada = new EnderecoRetirada(nfe.infNFe.retirada);
             EPresencaComprador = nfe.infNFe.ide.indPres.GetValueOrDefault();

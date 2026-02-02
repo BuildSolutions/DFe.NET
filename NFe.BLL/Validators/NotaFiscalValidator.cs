@@ -31,7 +31,7 @@ namespace NFe.BLL.Validators
             
             RuleFor(nfe => nfe.Produtos).NotNull().WithMessage("Produtos da NFe não informado!").DependentRules(() =>
             {
-                RuleForEach(nfe => nfe.Produtos).SetValidator(new ProdutoValidator()).WithMessage((_, produto) => $"Dados inválidos do Produto: ({produto.Referencia}) {produto.Descricao}");
+                RuleForEach(nfe => nfe.Produtos).SetValidator(nfe => new ProdutoValidator(deveValidarQuantidadeEValores: nfe.EFinalidadeNFe == Classes.Informacoes.Identificacao.Tipos.FinalidadeNFe.fnNormal || nfe.EFinalidadeNFe == Classes.Informacoes.Identificacao.Tipos.FinalidadeNFe.fnDevolucao)).WithMessage((_, produto) => $"Dados inválidos do Produto: ({produto.Referencia}) {produto.Descricao}");
             });
             //RuleForEach(nfe => nfe.Produtos).SetValidator(new ProdutoValidator()).WithMessage((_, produto) => $"Dados inválidos do Produto: ({produto.Referencia}) {produto.Descricao}");
             RuleFor(nfe => nfe.FormasPagamento).NotNull().When(_ => modeloDocumento == DFe.Classes.Flags.ModeloDocumento.NFCe).WithMessage("Forma de Pagamento da NFCe não informado!").DependentRules(() =>

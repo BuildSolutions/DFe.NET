@@ -30,14 +30,14 @@ namespace NFe.BLL.Configuracao.Entidades
             }
         }
 
-        public Destinatario(dest destinatario)
+        public Destinatario(dest destinatario, bool isConsumidorFinal)
         {
             Pessoa = new Pessoa(destinatario);
             IsMEIIsentoIncideICMS = false;
             IsProdutorRural = false;
             IsSuframa = !string.IsNullOrEmpty(destinatario.ISUF);
             SuframaNumero = destinatario.ISUF.SanitizeString();
-            EConsumidorFinal = ConsumidorFinal.cfNao;
+            EConsumidorFinal = isConsumidorFinal ? ConsumidorFinal.cfConsumidorFinal : ConsumidorFinal.cfNao;
 
             if (EConsumidorFinal == ConsumidorFinal.cfConsumidorFinal
                 && Pessoa?.PessoaTipo == ETipoPessoa.Fisica
