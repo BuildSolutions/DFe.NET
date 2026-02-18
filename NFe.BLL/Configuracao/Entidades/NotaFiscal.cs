@@ -1,4 +1,5 @@
 ﻿using DFe.Classes.Entidades;
+using DFe.Classes.Flags;
 using DFe.Utils.Extensoes;
 using NFe.BLL.Configuracao.Entidades.Produtos;
 using NFe.BLL.Configuracao.Entidades.Totalizadores;
@@ -106,6 +107,32 @@ namespace NFe.BLL.Configuracao.Entidades
                 isConsumidorFinal = true;
             }
 
+            Destinatario destinatario = null;
+            EnderecoEntrega enderecoEntrega = null;
+            EnderecoRetirada enderecoRetirada = null;
+            Intermediador intermediador = null;
+
+            if (nfe.infNFe.dest != null)
+            {
+                destinatario = new Destinatario(nfe.infNFe.dest, isConsumidorFinal);
+            }
+
+            if (nfe.infNFe.entrega != null)
+            {
+                enderecoEntrega = new EnderecoEntrega(nfe.infNFe.entrega);
+            }
+
+            if (nfe.infNFe.retirada != null)
+            {
+                enderecoRetirada = new EnderecoRetirada(nfe.infNFe.retirada);
+            }
+
+            if (nfe.infNFe.retirada != null)
+            {
+                intermediador = new Intermediador(nfe.infNFe.infIntermed);
+            }
+
+            EModelo = nfe.infNFe.ide.mod;
             Serie = nfe.infNFe.ide.serie;
             Numero = nfe.infNFe.ide.nNF;
             Emitente = new Emitente(nfe.infNFe.emit);
@@ -113,9 +140,9 @@ namespace NFe.BLL.Configuracao.Entidades
             DataEmissao = nfe.infNFe.ide.dhEmi.DateTime;
             DataSaida = nfe.infNFe.ide.dhSaiEnt?.DateTime ?? nfe.infNFe.ide.dhEmi.DateTime;
             ETipoNFe = nfe.infNFe.ide.tpNF;
-            Destinatario = new Destinatario(nfe.infNFe.dest, isConsumidorFinal);
-            EnderecoEntrega = new EnderecoEntrega(nfe.infNFe.entrega);
-            EnderecoRetirada = new EnderecoRetirada(nfe.infNFe.retirada);
+            Destinatario = destinatario;
+            EnderecoEntrega = enderecoEntrega;
+            EnderecoRetirada = enderecoRetirada;
             EPresencaComprador = nfe.infNFe.ide.indPres.GetValueOrDefault();
             EIndicadorIntermediador = nfe.infNFe.ide.indIntermed;
             EFinalidadeNFe = nfe.infNFe.ide.finNFe;
@@ -131,7 +158,7 @@ namespace NFe.BLL.Configuracao.Entidades
             Produtos = produtos;
             Protocolo = new Protocolo(notafiscalProcessada.protNFe.infProt);
             FormasPagamento = pagamentos;
-            DadosIntermediador = new Intermediador(notafiscalProcessada.NFe.infNFe.infIntermed);
+            DadosIntermediador = intermediador;
             CNf = Protocolo?.ObterCNf() ?? new Random().Next(1, 99999999).ToString("00000000");
             DeveValidarValorTotalDaNfeEDuplicatas = true;
             DeveValidarDataEmissaoAtrasada = true;
@@ -140,6 +167,7 @@ namespace NFe.BLL.Configuracao.Entidades
         public string CNf { get; private set; }
 
         //public string ChaveAcesso { get; private set; }
+        public ModeloDocumento EModelo { get; set; }
 
         public int Serie { get; private set; }
 

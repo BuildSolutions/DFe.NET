@@ -32,11 +32,16 @@ namespace NFe.BLL.Configuracao.Entidades
 
         public Destinatario(dest destinatario, bool isConsumidorFinal)
         {
+            if(destinatario == null)
+            {
+                return;
+            }
+
             Pessoa = new Pessoa(destinatario);
             IsMEIIsentoIncideICMS = false;
             IsProdutorRural = false;
-            IsSuframa = !string.IsNullOrEmpty(destinatario.ISUF);
-            SuframaNumero = destinatario.ISUF.SanitizeString();
+            IsSuframa = !string.IsNullOrEmpty(destinatario?.ISUF);
+            SuframaNumero = destinatario?.ISUF?.SanitizeString();
             EConsumidorFinal = isConsumidorFinal ? ConsumidorFinal.cfConsumidorFinal : ConsumidorFinal.cfNao;
 
             if (EConsumidorFinal == ConsumidorFinal.cfConsumidorFinal

@@ -47,6 +47,11 @@ namespace NFe.BLL.Configuracao.ValueObjects
 
         public Pessoa(dest destinatario)
         {
+            if(destinatario == null)
+            {
+                return;
+            }
+
             PessoaTipo = !string.IsNullOrWhiteSpace(destinatario.CPF) ? ETipoPessoa.Fisica : ETipoPessoa.Juridica;
             NomeRazaoSocial = destinatario.xNome.SanitizeString().SubstringMaxLength(60);
             ApelidoFantasia = null;
@@ -55,6 +60,13 @@ namespace NFe.BLL.Configuracao.ValueObjects
             CPFCNPJ = destinatario.CPF ?? destinatario.CNPJ;
             RGInscricaoEstadual = destinatario.IE;
             Email = destinatario.email;
+
+            if(PessoaTipo == ETipoPessoa.Juridica
+                && string.IsNullOrEmpty(RGInscricaoEstadual)
+                && destinatario.indIEDest == indIEDest.NaoContribuinte)
+            {
+                RGInscricaoEstadual = "ISENTO";
+            }
 
             InformarInscricaoEstadualIsento();
         }
