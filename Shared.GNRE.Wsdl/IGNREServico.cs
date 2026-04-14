@@ -2,7 +2,7 @@
 
 namespace GNRE.Wsdl
 {
-    public interface INfeServico
+    public interface IGnreServico
     {
         gnreCabecMsg gnreCabecMsg { get; set; }
         XmlNode Execute(XmlNode nfeDadosMsg);

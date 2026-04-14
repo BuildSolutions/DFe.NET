@@ -5,7 +5,7 @@ using CTe.CTeOSDocumento.Common;
 
 namespace GNRE.Wsdl.Consulta.ConfiguracaoUF
 {
-    public class GnreConfiguracaoUF2 : INfeServico
+    public class GnreConfiguracaoUF2 : IGnreServico
     {
         //Envelope SOAP para envio
         private SoapEnvelope soapEnvelope;

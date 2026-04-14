@@ -78,7 +78,7 @@ namespace GNRE.Servicos
             return PathHelper.SalvarArquivoXML(_cFgServico, EFolderType.LOTES, nomeArquivo, DateTime.Now, xmlString);
         }
 
-        private INfeServico CriarServico(EServicosGNRE servico)
+        private IGnreServico CriarServico(EServicosGNRE servico)
         {
             return ServicoGNREFactory.CriaWsdlOutros(servico, _cFgServico, _certificado);
         }

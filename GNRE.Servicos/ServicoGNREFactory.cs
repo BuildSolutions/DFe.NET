@@ -19,7 +19,7 @@ namespace GNRE.Servicos
         /// <param name="cfg">Configuração do serviço</param>
         /// <param name="certificado">Certificado</param>
         /// <returns></returns>        
-        public static INfeServico CriaWsdlOutros(EServicosGNRE servico, ConfiguracaoServico cfg, X509Certificate2 certificado)
+        public static IGnreServico CriaWsdlOutros(EServicosGNRE servico, ConfiguracaoServico cfg, X509Certificate2 certificado)
         {
             var enderecos = Enderecador.ObterUrlServico(cfg);
 

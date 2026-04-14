@@ -6,7 +6,7 @@ using CTe.CTeOSDocumento.Common;
 
 namespace GNRE.Wsdl.Recepcao
 {
-    public class GnreLoteRecepcao2 : INfeServico
+    public class GnreLoteRecepcao2 : IGnreServico
     {
         //Envelope SOAP para envio
         private SoapEnvelope soapEnvelope;

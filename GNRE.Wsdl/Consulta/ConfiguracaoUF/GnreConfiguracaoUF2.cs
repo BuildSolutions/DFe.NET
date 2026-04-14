@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace GNRE.Wsdl.Consulta.ConfiguracaoUF
 {
     [WebServiceBinding(Name = "GnreConfigUF", Namespace = "http://www.gnre.pe.gov.br/webservice/GnreConfigUF")]
-    public class GnreConfiguracaoUF2 : SoapHttpClientProtocol, INfeServico
+    public class GnreConfiguracaoUF2 : SoapHttpClientProtocol, IGnreServico
     {
         public GnreConfiguracaoUF2(string url, X509Certificate certificado, int timeOut)
         {

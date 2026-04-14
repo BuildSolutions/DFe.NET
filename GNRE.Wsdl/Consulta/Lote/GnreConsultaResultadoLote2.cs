@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace GNRE.Wsdl.Consulta.Lote
 {
     [WebServiceBinding(Name = "GnreConsultaResultadoLoteServico", Namespace = "http://www.gnre.pe.gov.br/gnreWS/services/GnreResultadoLote")]
-    public class GnreConsultaResultadoLote2 : SoapHttpClientProtocol, INfeServico
+    public class GnreConsultaResultadoLote2 : SoapHttpClientProtocol, IGnreServico
     {
         public GnreConsultaResultadoLote2(string url, X509Certificate certificado, int timeOut)
         {
