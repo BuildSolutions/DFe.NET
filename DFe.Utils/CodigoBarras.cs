@@ -7,7 +7,9 @@ namespace DFe.Utils
     {
         public static bool IsGtinValido(string vGTIN)
         {
-            if(string.IsNullOrEmpty(vGTIN))
+            if(string.IsNullOrEmpty(vGTIN)
+                || (!vGTIN.StartsWith("789")
+                    && !vGTIN.StartsWith("790")))
             {
                 return false;
             }
