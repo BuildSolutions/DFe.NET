@@ -1,10 +1,10 @@
+using DFe.Utils;
+using DFe.Utils.Assinatura;
+using Shared.DFe.Utils;
 using System;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Xml;
-using DFe.Utils;
-using DFe.Utils.Assinatura;
-using Shared.DFe.Utils;
 using Signature = DFe.Classes.Assinatura.Signature;
 
 namespace NFe.Utils.Assinatura
@@ -69,7 +69,7 @@ namespace NFe.Utils.Assinatura
 
                 docXml.SignedInfo.SignatureMethod = signatureMethod;
 
-                var reference = new Reference { Uri = "#" + id, DigestMethod = digestMethod};
+                var reference = new Reference { Uri = "#" + id, DigestMethod = digestMethod };
 
                 // adicionando EnvelopedSignatureTransform a referencia
                 var envelopedSigntature = new XmlDsigEnvelopedSignatureTransform();
@@ -145,5 +145,43 @@ namespace NFe.Utils.Assinatura
             }
         }
 
+        public static DateTime ObterDataVencimentoCertificadoDigital(ConfiguracaoCertificado certificado)
+        {
+            var certificadoDigital = CertificadoDigital.ObterCertificado(certificado);
+            if (certificadoDigital == null)
+            {
+                throw new ArgumentNullException(nameof(certificadoDigital),
+                    "Nenhum certificado digital configurado no sistema.");
+            }
+
+            // NotAfter vem em horário local; normalizo para comparar com Now
+            return certificadoDigital.NotAfter;
+        }
+
+        public static DateTime ObterDataVencimentoCertificadoDigital(string certificadoDigitalSerial, string certificadoDigitalSenha)
+        {
+            if (string.IsNullOrWhiteSpace(certificadoDigitalSerial))
+            {
+                throw new ArgumentNullException(nameof(certificadoDigitalSerial),
+                    "Serial do certificado digital não informado.");
+            }
+
+            var certificado = new ConfiguracaoCertificado
+            {
+                TipoCertificado = TipoCertificado.A3,
+                Serial = certificadoDigitalSerial,
+                Senha = certificadoDigitalSenha
+            };
+
+            var certificadoDigital = CertificadoDigital.ObterCertificado(certificado);
+            if (certificadoDigital == null)
+            {
+                throw new ArgumentNullException(nameof(certificadoDigital),
+                    "Nenhum certificado digital configurado no sistema.");
+            }
+
+            // NotAfter vem em horário local; normalizo para comparar com Now
+            return certificadoDigital.NotAfter;
+        }
     }
 }
