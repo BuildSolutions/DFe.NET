@@ -11,7 +11,7 @@ namespace GNRE.BLL.Configuracao.Entidades
             long municipioCodigoIBGE)
         {
             ETipoDocumento = eTipoDocumento;
-            Documento = documento.RetornaNumeros();
+            Documento = documento.RetornaAlfanumericos();
             NomeRazaoSocial = nomeRazaoSocial.SanitizeString().SubstringMaxLength(60);
 
             var municipioCodigoIBGEString = municipioCodigoIBGE.ToString();

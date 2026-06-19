@@ -24,7 +24,7 @@ namespace NFe.BLL.Configuracao.ValueObjects
             ApelidoFantasia = apelidoFantasia.SanitizeString();
             Endereco = endereco;
             Telefone = telefone == 0 ? null : telefone;
-            CPFCNPJ = cpfCNPJ.RetornaNumeros();
+            CPFCNPJ = cpfCNPJ.RetornaAlfanumericos();
             RGInscricaoEstadual = rgInscricaoEstadual.RetornaAlfanumericos();
             Email = email.SanitizeString();
 
@@ -38,7 +38,7 @@ namespace NFe.BLL.Configuracao.ValueObjects
             ApelidoFantasia = emitente.xFant.SanitizeString();
             Endereco = new Endereco(emitente.enderEmit);
             Telefone = emitente?.enderEmit?.fone > 0 ? emitente?.enderEmit?.fone : null;
-            CPFCNPJ = emitente.CNPJ.RetornaNumeros();
+            CPFCNPJ = emitente.CNPJ.RetornaAlfanumericos();
             RGInscricaoEstadual = emitente.IE.RetornaAlfanumericos();
             Email = null;
 
