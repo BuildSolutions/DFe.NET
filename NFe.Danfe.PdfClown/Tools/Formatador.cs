@@ -22,7 +22,8 @@ namespace NFe.Danfe.PdfClown.Tools
         public const string FormatoNumeroNF = @"000\.000\.000";
 
         public const string CEP = @"^(\d{5})\-?(\d{3})$";
-        public const string CNPJ = @"^(\d{2})\.?(\d{3})\.?(\d{3})\/?(\d{4})\-?(\d{2})$";
+        //public const string CNPJ = @"^(\d{2})\.?(\d{3})\.?(\d{3})\/?(\d{4})\-?(\d{2})$";
+        public const string CNPJ = @"^([A-Z0-9]{2})\.?([A-Z0-9]{3})\.?([A-Z0-9]{3})\/?([A-Z0-9]{4})\-?(\d{2})$";
         public const string CPF = @"^(\d{3})\.?(\d{3})\.?(\d{3})\-?(\d{2})$";
         public const string Telefone = @"^\(?(\d{2})\)?\s*(\d{4,5})\s*\-?\s*(\d{4})$";
 

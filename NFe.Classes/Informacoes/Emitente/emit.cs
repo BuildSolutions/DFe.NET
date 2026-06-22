@@ -19,7 +19,8 @@ namespace NFe.Classes.Informacoes.Emitente
             {
                 if (string.IsNullOrEmpty(value)) return;
                 if (string.IsNullOrEmpty(_cpf))
-                    _cnpj = Regex.Match(value, @"\d+").Value;
+                    //_cnpj = Regex.Match(value, @"\d+").Value;
+                    _cnpj = Regex.Match(value, @"[A-Z0-9]+").Value;
 
                 else
                 {

@@ -23,7 +23,8 @@ namespace GNRE.Classes.Informacoes.Emitente
                 if (string.IsNullOrEmpty(_cpf)
                     && string.IsNullOrEmpty(_ie))
                 {
-                    _cnpj = Regex.Match(value, @"\d+").Value;
+                    //_cnpj = Regex.Match(value, @"\d+").Value;
+                    _cnpj = Regex.Match(value, @"[A-Z0-9]+").Value;
                 }
                 else
                 {
