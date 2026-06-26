@@ -35,6 +35,16 @@ namespace DFe.Utils.Extensoes
             Regex rgx = new Regex("[^a-zA-Z0-9 -]");
             return rgx.Replace(text, "").Trim();
         }
+        public static string RetornaAlfanumericosSemEspacoSemHifen(this string text)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return null;
+            }
+
+            Regex rgx = new Regex("[^a-zA-Z0-9]");
+            return rgx.Replace(text, "").Trim();
+        }
 
         public static string SanitizeString(this string text)
         {

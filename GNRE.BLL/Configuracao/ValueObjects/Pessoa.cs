@@ -13,7 +13,7 @@ namespace GNRE.BLL.Configuracao.ValueObjects
             long? telefone = null)
         {
             ETipoDocumento = eTipoDocumento;
-            Documento = documento.RetornaAlfanumericos();
+            Documento = documento.RetornaAlfanumericosSemEspacoSemHifen();
             NomeRazaoSocial = nomeRazaoSocial.SanitizeString();
             Endereco = endereco;
             Telefone = telefone == 0 ? null : telefone;
@@ -39,12 +39,12 @@ namespace GNRE.BLL.Configuracao.ValueObjects
         //        if (!string.IsNullOrEmpty(emitente.identificacao.CPF))
         //        {
         //            ETipoDocumento = ETipoDocumentoPessoa.CPF;
-        //            Documento = emitente.identificacao.CPF.RetornaAlfanumericos();
+        //            Documento = emitente.identificacao.CPF.RetornaNumeros();
         //        }
         //        else
         //        {
         //            ETipoDocumento = ETipoDocumentoPessoa.CNPJ;
-        //            Documento = emitente.identificacao.CNPJ.RetornaAlfanumericos();
+        //            Documento = emitente.identificacao.CNPJ.RetornaNumeros();
         //        }
         //    }
         //}
