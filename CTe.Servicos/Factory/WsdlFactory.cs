@@ -14,6 +14,7 @@ using CTe.Wsdl.ConsultaProtocolo.V4;
 using CTe.Wsdl.Evento.V4;
 using CTe.Wsdl.Recepcao.Sincrono;
 using System.Security.Cryptography.X509Certificates;
+using DFe.Classes.Entidades;
 
 namespace CTe.Servicos.Factory
 {
@@ -90,22 +91,22 @@ namespace CTe.Servicos.Factory
             return new CteRecepcaoSincronoOSV4(configuracaoWsdl);
         }
 
-        public static CteRecepcaoEvento CriaWsdlCteEvento(ConfiguracaoServico configuracaoServico = null, X509Certificate2 certificado = null)
+        public static CteRecepcaoEvento CriaWsdlCteEvento(ConfiguracaoServico configuracaoServico = null, X509Certificate2 certificado = null, Estado? ufUrl = null)
         {
-            var url = UrlHelper.ObterUrlServico(configuracaoServico).CteRecepcaoEvento;
+            var url = UrlHelper.ObterUrlServico(configuracaoServico, ufRecepcao: ufUrl).CteRecepcaoEvento;
 
-            var configuracaoWsdl = CriaConfiguracao(url, configuracaoServico, certificado);
+            var configuracaoWsdl = CriaConfiguracao(url, configuracaoServico, certificado, ufUrl);
 
             return new CteRecepcaoEvento(configuracaoWsdl);
         }
 
-        public static CteRecepcaoEventoV4 CriaWsdlCteEventoV4(ConfiguracaoServico configuracaoServico = null, X509Certificate2 certificado = null)
+        public static CteRecepcaoEventoV4 CriaWsdlCteEventoV4(ConfiguracaoServico configuracaoServico = null, X509Certificate2 certificado = null, Estado? ufUrl = null)
         {
             var configServico = configuracaoServico ?? ConfiguracaoServico.Instancia;
 
-            var url = UrlHelper.ObterUrlServico(configServico).CteRecepcaoEvento;
+            var url = UrlHelper.ObterUrlServico(configServico, ufRecepcao: ufUrl).CteRecepcaoEvento;
 
-            var configuracaoWsdl = CriaConfiguracao(url, configServico, certificado);
+            var configuracaoWsdl = CriaConfiguracao(url, configServico, certificado, ufUrl);
 
             return new CteRecepcaoEventoV4(configuracaoWsdl);
         }
@@ -121,11 +122,11 @@ namespace CTe.Servicos.Factory
         }
 
 
-        private static WsdlConfiguracao CriaConfiguracao(string url, ConfiguracaoServico configuracaoServico, X509Certificate2 certificado)
+        private static WsdlConfiguracao CriaConfiguracao(string url, ConfiguracaoServico configuracaoServico, X509Certificate2 certificado, Estado? ufUrl = null)
         {
             var configServico = configuracaoServico ?? ConfiguracaoServico.Instancia;
 
-            var codigoEstado = configServico.cUF.GetCodigoIbgeEmString();
+            var codigoEstado = ufUrl.HasValue ? ufUrl.Value.GetCodigoIbgeEmString() : configServico.cUF.GetCodigoIbgeEmString();
             var certificadoDigital = certificado ?? configServico.X509Certificate2;
             var versaoEmString = configServico.VersaoLayout.GetString();
             var timeOut = configServico.TimeOut;

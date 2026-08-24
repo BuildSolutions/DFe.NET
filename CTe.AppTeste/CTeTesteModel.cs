@@ -569,9 +569,10 @@ namespace CTe.AppTeste
         {
             var configuracaoCertificado = new ConfiguracaoCertificado
             {
+                TipoCertificado = TipoCertificado.A1Arquivo,
                 Arquivo = config.CertificadoDigital.CaminhoArquivo,
-                TipoCertificado = TipoCertificado.A1Repositorio,
                 ManterDadosEmCache = config.CertificadoDigital.ManterEmCache,
+                Senha = config.CertificadoDigital.Senha,
                 Serial = config.CertificadoDigital.NumeroDeSerie
             };
 
@@ -789,6 +790,22 @@ namespace CTe.AppTeste
 
             var servico = new EventoDesacordo(sequenciaEvento, chave, cnpj, indPres, obs);
             var retorno = servico.Discordar();
+
+            OnSucessoSync(new RetornoEEnvio(retorno));
+        }
+
+        public void EventoCancelaDesacordoCTe()
+        {
+            var config = new ConfiguracaoDao().BuscarConfiguracao();
+            CarregarConfiguracoes(config);
+
+            var cnpj = (InputBoxTuche("CNPJ Tomador"));
+            var chave = (InputBoxTuche("Chave CTe"));
+            var sequenciaEvento = int.Parse(InputBoxTuche("Sequencia Evento"));
+            var nProtEventoDesacordo = InputBoxTuche("Número do Protocolo do Evento de Desacordo");
+
+            var servico = new EventoCancelamentoDesacordo(sequenciaEvento, chave, cnpj, nProtEventoDesacordo);
+            var retorno = servico.CancelarDesacordo();
 
             OnSucessoSync(new RetornoEEnvio(retorno));
         }

@@ -664,6 +664,88 @@ namespace NFe.AppTeste
             }
         }
 
+        private void BtnPerecimentoTransporte_Click(object sender, RoutedEventArgs e)
+        {
+            const string titulo = "Perecimento Transporte NFe";
+
+            try
+            {
+                #region Perecimento, perda, roubo ou furto durante o transporte
+
+                var idlote = Funcoes.InpuBox(this, titulo, "Identificador de controle do Lote de envio:", "1");
+                if (string.IsNullOrEmpty(idlote)) throw new Exception("A Id do Lote deve ser informada!");
+
+                var sequenciaEvento = Funcoes.InpuBox(this, titulo, "Número sequencial do evento:", "1");
+                if (string.IsNullOrEmpty(sequenciaEvento))
+                    throw new Exception("O número sequencial deve ser informado!");
+
+                var chave = Funcoes.InpuBox(this, titulo, "Chave da NFe:", "35240311656919000154550750000008281647961399");
+                if (string.IsNullOrEmpty(chave)) throw new Exception("A Chave deve ser informada!");
+                if (chave.Length != 44) throw new Exception("Chave deve conter 44 caracteres!");
+
+                var nItem = Funcoes.InpuBox(this, titulo, "Número do item da NFe (nItem):", "1");
+                if (string.IsNullOrEmpty(nItem)) throw new Exception("O número do item deve ser informado!");
+
+                var vIbsStr = Funcoes.InpuBox(this, titulo, "Valor do IBS do item:", "1");
+                if (string.IsNullOrEmpty(vIbsStr)) throw new Exception("O valor do IBS deve ser informado!");
+
+                var vCbsStr = Funcoes.InpuBox(this, titulo, "Valor da CBS do item:", "1");
+                if (string.IsNullOrEmpty(vCbsStr)) throw new Exception("O valor da CBS deve ser informado!");
+
+                var qPerecimentoStr = Funcoes.InpuBox(this, titulo, "Quantidade objeto de roubo, perda, furto ou perecimento:", "1");
+                if (string.IsNullOrEmpty(qPerecimentoStr)) throw new Exception("A quantidade deve ser informada!");
+
+                var uPerecimento = Funcoes.InpuBox(this, titulo, "Unidade relativa à quantidade:", "UN");
+                if (string.IsNullOrEmpty(uPerecimento)) throw new Exception("A unidade deve ser informada!");
+
+                var vIbsEstornoStr = Funcoes.InpuBox(this, titulo, "Valor do crédito IBS a ser estornado:", "0");
+                if (string.IsNullOrEmpty(vIbsEstornoStr)) throw new Exception("O valor do crédito IBS deve ser informado!");
+
+                var vCbsEstornoStr = Funcoes.InpuBox(this, titulo, "Valor do crédito CBS a ser estornado:", "0");
+                if (string.IsNullOrEmpty(vCbsEstornoStr)) throw new Exception("O valor do crédito CBS deve ser informado!");
+
+                var servicoNFe = new ServicosNFe(_configuracoes.CfgServico);
+                var cpfcnpj = string.IsNullOrEmpty(_configuracoes.Emitente.CNPJ)
+                    ? _configuracoes.Emitente.CPF
+                    : _configuracoes.Emitente.CNPJ;
+
+                var perecimento = new Classes.Servicos.Evento.gPerecimento
+                {
+                    nItem = Convert.ToInt32(nItem),
+                    vIBS = Convert.ToDecimal(vIbsStr),
+                    vCBS = Convert.ToDecimal(vCbsStr),
+                    gControleEstoque = new Classes.Servicos.Evento.gControleEstoque
+                    {
+                        qPerecimento = Convert.ToDecimal(qPerecimentoStr),
+                        uPerecimento = uPerecimento,
+                        vIBS = Convert.ToDecimal(vIbsEstornoStr),
+                        vCBS = Convert.ToDecimal(vCbsEstornoStr)
+                    }
+                };
+
+                var retornoPerecimento = servicoNFe.RecepcaoEventoPerecimentoTransporte(Convert.ToInt32(idlote),
+                    Convert.ToInt16(sequenciaEvento), cpfcnpj, chave,
+                    new List<Classes.Servicos.Evento.gPerecimento> { perecimento });
+
+                TrataRetorno(retornoPerecimento);
+
+                #endregion
+            }
+            catch (ComunicacaoException ex)
+            {
+                Funcoes.Mensagem(ex.Message, "Erro", MessageBoxButton.OK);
+            }
+            catch (ValidacaoSchemaException ex)
+            {
+                Funcoes.Mensagem(ex.Message, "Erro", MessageBoxButton.OK);
+            }
+            catch (Exception ex)
+            {
+                if (!string.IsNullOrEmpty(ex.Message))
+                    Funcoes.Mensagem(ex.Message, "Erro", MessageBoxButton.OK);
+            }
+        }
+
         private void BtnConsultaXml_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -1431,7 +1513,8 @@ namespace NFe.AppTeste
         {
             var dest = new dest(versao)
             {
-                CNPJ = "99999999000191",
+                CNPJ = "0ZEN3MS8000127",
+                //CNPJ = "99999999000191",
                 //CPF = "99999999999",
             };
             dest.xNome = "NF-E EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL"; //Obrigatório para NFe e opcional para NFCe
@@ -1972,14 +2055,11 @@ namespace NFe.AppTeste
                     throw new Exception("O Identificador do tipo de operação deve ser um número inteiro entre 1 e 3!");
 
                 //raizCnpj
-                var raizCnpj = Funcoes.InpuBox(this, "Administração do CSC", "Raiz do CNPJ do contribuinte que está efetuando a consulta (oito primeiros dígitos do CNPJ):");
+                var raizCnpj = Funcoes.InpuBox(this, "Administração do CSC", "Raiz do CNPJ do contribuinte que está efetuando a consulta (oito primeiras posições do CNPJ):");
                 if (string.IsNullOrEmpty(raizCnpj)) throw new Exception("A Raiz do CNPJ do contribuinte deve ser informada!");
-                long l;
-                var longo = long.TryParse(raizCnpj, out l);
-                if (!longo)
-                    throw new Exception("A Raiz do CNPJ do contribuinte deve conter apenas números!");
-                if (raizCnpj.Length != 8)
-                    throw new Exception("A Raiz do CNPJ do contribuinte deve conter 8 caracteres!");
+                //NT Conjunta 2025.001: o CNPJ pode ser alfanumérico nas 12 primeiras posições
+                if (!System.Text.RegularExpressions.Regex.IsMatch(raizCnpj, "^[0-9A-Z]{8}$"))
+                    throw new Exception("A Raiz do CNPJ do contribuinte deve conter 8 caracteres, apenas números e letras maiúsculas!");
 
                 var idCsc = "";
                 var codigoCsc = "";

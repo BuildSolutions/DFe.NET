@@ -16,7 +16,7 @@ namespace NFe.Danfe.Base.NFe
             Logomarca = logomarca;
             DuasLinhas = duasLinhas;
             DocumentoCancelado = documentoCancelado;
-            QuebrarLinhasObservacao = quebrarLinhasObservacao;            
+            QuebrarLinhasObservacao = quebrarLinhasObservacao;
         }
 
         /// <summary>

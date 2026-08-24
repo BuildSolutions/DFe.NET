@@ -29,27 +29,6 @@ namespace NFe.Classes.Informacoes.Detalhe.Tributacao.Federal.Tipos
         ipi00 = 0,
 
         /// <summary>
-        /// 49 - Outras entradas
-        /// </summary>
-        [Description("Outras entradas")]
-        [XmlEnum("49")]
-        ipi49 = 49,
-
-        /// <summary>
-        /// 50 - Saída tributada
-        /// </summary>
-        [Description("Saída tributada")]
-        [XmlEnum("50")]
-        ipi50 = 50,
-
-        /// <summary>
-        /// 99 - Outras saídas
-        /// </summary>
-        [Description("Outras saídas")]
-        [XmlEnum("99")]
-        ipi99 = 99,
-
-        /// <summary>
         /// 01 - Entrada tributada com alíquota zero
         /// </summary>
         [Description("Entrada tributada com alíquota zero")]
@@ -85,6 +64,20 @@ namespace NFe.Classes.Informacoes.Detalhe.Tributacao.Federal.Tipos
         ipi05 = 05,
 
         /// <summary>
+        /// 49 - Outras entradas
+        /// </summary>
+        [Description("Outras entradas")]
+        [XmlEnum("49")]
+        ipi49 = 49,
+
+        /// <summary>
+        /// 50 - Saída tributada
+        /// </summary>
+        [Description("Saída tributada")]
+        [XmlEnum("50")]
+        ipi50 = 50,
+
+        /// <summary>
         /// 51 - Saída tributada com alíquota zero
         /// </summary>
         [Description("Saída tributada com alíquota zero")]
@@ -117,6 +110,13 @@ namespace NFe.Classes.Informacoes.Detalhe.Tributacao.Federal.Tipos
         /// </summary>
         [Description("Saída com suspensão")]
         [XmlEnum("55")]
-        ipi55 = 55
+        ipi55 = 55,
+
+        /// <summary>
+        /// 99 - Outras saídas
+        /// </summary>
+        [Description("Outras saídas")]
+        [XmlEnum("99")]
+        ipi99 = 99
     }
 }

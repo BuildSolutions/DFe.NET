@@ -37,4 +37,10 @@
     <ProjectReference Include="..\NFe.Utils\NFe.Utils.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="NFe\NFeSimplificadoTipo2.frx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

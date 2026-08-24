@@ -158,7 +158,14 @@ namespace NFe.Classes.Informacoes.Identificacao.Tipos
         /// </summary>
         [Description("DANFe NFC-e em mensagem eletrônica")]
         [XmlEnum("5")]
-        tiMsgEletronica = 5
+        tiMsgEletronica = 5,
+
+        /// <summary>
+        /// 6 - DANFe Simplificado Tipo 2
+        /// </summary>
+        [Description("DANFe Simplificado Tipo 2")]
+        [XmlEnum("6")]
+        tiSimplificadoTp2 = 6
     }
 
     /// <summary>
@@ -252,28 +259,32 @@ namespace NFe.Classes.Informacoes.Identificacao.Tipos
 
         [Description("Transferência de crédito na sucessão")]
         [XmlEnum("05")]
-        tcTransferenciaCreditoSucessao = 05
+        tcTransferenciaCreditoSucessao = 05,
+
+        [Description("Retorno por recusa na entrega ou por não localização do destinatário na tentativa de entrega")]
+        [XmlEnum("06")]
+        tcRetornoRecusaParcialEntrega = 06
     }
 
     public enum TipoNFeDebito
     {
-        [Description("Transferência de créditos para Cooperativas;")]
+        [Description("Transferência de créditos para Cooperativas")]
         [XmlEnum("01")]
         tdTransferenciaCreditoCooperativa = 01,
 
-        [Description("Anulação de Crédito por Saídas Imunes/Isentas;")]
+        [Description("Anulação de Crédito por Saídas Imunes/Isentas")]
         [XmlEnum("02")]
         tdAnulacao = 02,
 
-        [Description("Débitos de notas fiscais não processadas na apuração;")]
+        [Description("Débitos de notas fiscais não processadas na apuração")]
         [XmlEnum("03")]
         tdDebitosNaoProcessadas = 03,
 
-        [Description("Multa e juros;")]
+        [Description("Multa e juros")]
         [XmlEnum("04")]
         tdMultaJuros = 04,
 
-        [Description("Transferência de crédito na sucessão;")]
+        [Description("Transferência de crédito na sucessão")]
         [XmlEnum("05")]
         tdTransferenciaCreditoSucessao = 05,
 
@@ -532,7 +543,6 @@ namespace NFe.Classes.Informacoes.Identificacao.Tipos
         modelo2 = 2
     }
 
-    
     public enum TipoEnteGov
     {
         [Description("União")]

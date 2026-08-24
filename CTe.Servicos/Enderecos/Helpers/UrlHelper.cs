@@ -9,36 +9,51 @@ namespace CTe.Servicos.Enderecos.Helpers
 {
     public class UrlHelper
     {
-        public static UrlCTe ObterUrlServico(ConfiguracaoServico configuracaoServico = null)
+        /// <summary>
+        /// Obtem a url de Serviço. Por padrão pega as informações de ConfiguracaoServico, mas pode ser customizada individualmente. Motivo: em alguns casos a url de destino de um evento de CTe pode seguir as informações do xml e não da empresa emissora / com certificado ativo
+        /// </summary>
+        /// <param name="configuracaoServico"></param>
+        /// <param name="tipoEmissao"></param>
+        /// <param name="tipoAmbiente"></param>
+        /// <param name="ufRecepcao"></param>
+        /// <param name="versaoLayout"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public static UrlCTe ObterUrlServico(ConfiguracaoServico configuracaoServico = null, tpEmis? tipoEmissao = null , TipoAmbiente? tipoAmbiente = null, Estado? ufRecepcao = null, versao? versaoLayout = null)
         {
             var configServico = configuracaoServico ?? ConfiguracaoServico.Instancia;
 
-            switch (configServico.tpAmb)
+            var _tpEmissao = tipoEmissao ?? configServico.TipoEmissao;
+            var _tpAmb = tipoAmbiente ?? configServico.tpAmb;
+            var _cUF = ufRecepcao ?? configServico.cUF;
+            var _versao = versaoLayout ?? configServico.VersaoLayout;
+
+            switch (_tpAmb)
             {
                 case TipoAmbiente.Homologacao:
-                    if (configServico.TipoEmissao == tpEmis.teSVCRS)
+                    if (_tpEmissao == tpEmis.teSVCRS)
                     {
-                        return UrlHomologacaoSvrs(configServico);
+                        return UrlHomologacaoSvrs(_versao);
                     }
 
-                    if (configServico.TipoEmissao == tpEmis.teSVCSP)
+                    if (_tpEmissao == tpEmis.teSVCSP)
                     {
-                        return UrlHomologacaoSvcsp(configServico);
+                        return UrlHomologacaoSvcsp(_versao);
                     }
 
-                    return UrlHomologacao(configServico);
+                    return UrlHomologacao(_cUF, _versao);
                 case TipoAmbiente.Producao:
-                    if (configServico.TipoEmissao == tpEmis.teSVCRS)
+                    if (_tpEmissao == tpEmis.teSVCRS)
                     {
-                        return UrlProducaoSvrs(configServico);
+                        return UrlProducaoSvrs(_versao);
                     }
 
-                    if (configServico.TipoEmissao == tpEmis.teSVCSP)
+                    if (_tpEmissao == tpEmis.teSVCSP)
                     {
-                        return UrlProducaoSvcsp(configServico);
+                        return UrlProducaoSvcsp(_versao);
                     }
 
-                    return UrlProducao(configServico);
+                    return UrlProducao(_cUF, _versao);
             }
 
             throw new InvalidOperationException("Tipo Ambiente inválido");
@@ -51,17 +66,17 @@ namespace CTe.Servicos.Enderecos.Helpers
             switch (configServico.tpAmb)
             {
                 case TipoAmbiente.Homologacao:
-                    return UrlHomologacao(configServico).QrCode;
+                    return UrlHomologacao(configServico.cUF, configServico.VersaoLayout).QrCode;
                 case TipoAmbiente.Producao:
-                    return UrlProducao(configServico).QrCode;
+                    return UrlProducao(configServico.cUF, configServico.VersaoLayout).QrCode;
             }
 
             throw new InvalidOperationException("Tipo Ambiente inválido");
         }
 
-        private static UrlCTe UrlProducaoSvcsp(ConfiguracaoServico configuracaoServico)
+        private static UrlCTe UrlProducaoSvcsp(versao VersaoLayout)
         {
-            if (configuracaoServico.VersaoLayout == versao.ve400)
+            if (VersaoLayout == versao.ve400)
             {
                 return new UrlCTe
                 {
@@ -86,9 +101,9 @@ namespace CTe.Servicos.Enderecos.Helpers
             };
         }
 
-        private static UrlCTe UrlHomologacaoSvcsp(ConfiguracaoServico configuracaoServico)
+        private static UrlCTe UrlHomologacaoSvcsp(versao VersaoLayout)
         {
-            if (configuracaoServico.VersaoLayout == versao.ve400)
+            if (VersaoLayout == versao.ve400)
             {
                 return new UrlCTe
                 {
@@ -113,9 +128,9 @@ namespace CTe.Servicos.Enderecos.Helpers
             };
         }
 
-        private static UrlCTe UrlHomologacaoSvrs(ConfiguracaoServico configuracaoServico)
+        private static UrlCTe UrlHomologacaoSvrs(versao VersaoLayout)
         {
-            if (configuracaoServico.VersaoLayout == versao.ve400)
+            if (VersaoLayout == versao.ve400)
             {
                 return new UrlCTe
                 {
@@ -141,9 +156,9 @@ namespace CTe.Servicos.Enderecos.Helpers
             };
         }
 
-        private static UrlCTe UrlProducaoSvrs(ConfiguracaoServico configuracaoServico)
+        private static UrlCTe UrlProducaoSvrs(versao VersaoLayout)
         {
-            if (configuracaoServico.VersaoLayout == versao.ve400)
+            if (VersaoLayout == versao.ve400)
             {
                 return new UrlCTe
                 {
@@ -169,12 +184,12 @@ namespace CTe.Servicos.Enderecos.Helpers
             };
         }
 
-        private static UrlCTe UrlProducao(ConfiguracaoServico configuracaoServico)
+        private static UrlCTe UrlProducao(Estado UFRecepcao, versao VersaoLayout)
         {
-            switch (configuracaoServico.cUF)
+            switch (UFRecepcao)
             {
                 case Estado.MT:
-                    if (configuracaoServico.VersaoLayout == versao.ve400)
+                    if (VersaoLayout == versao.ve400)
                     {
                         return new UrlCTe
                         {
@@ -200,7 +215,7 @@ namespace CTe.Servicos.Enderecos.Helpers
                         CTeDistribuicaoDFe = "https://www1.cte.fazenda.gov.br/CTeDistribuicaoDFe/CTeDistribuicaoDFe.asmx"
                     };
                 case Estado.MS:
-                    if (configuracaoServico.VersaoLayout == versao.ve400)
+                    if (VersaoLayout == versao.ve400)
                     {
                         return new UrlCTe
                         {
@@ -226,7 +241,7 @@ namespace CTe.Servicos.Enderecos.Helpers
                         CTeDistribuicaoDFe = "https://www1.cte.fazenda.gov.br/CTeDistribuicaoDFe/CTeDistribuicaoDFe.asmx"
                     };
                 case Estado.MG:
-                    if (configuracaoServico.VersaoLayout == versao.ve400)
+                    if (VersaoLayout == versao.ve400)
                     {
                         return new UrlCTe
                         {
@@ -252,7 +267,7 @@ namespace CTe.Servicos.Enderecos.Helpers
                         CTeDistribuicaoDFe = "https://www1.cte.fazenda.gov.br/CTeDistribuicaoDFe/CTeDistribuicaoDFe.asmx"
                     };
                 case Estado.PR:
-                    if (configuracaoServico.VersaoLayout == versao.ve400)
+                    if (VersaoLayout == versao.ve400)
                     {
                         return new UrlCTe
                         {
@@ -278,7 +293,7 @@ namespace CTe.Servicos.Enderecos.Helpers
                         CTeDistribuicaoDFe = "https://www1.cte.fazenda.gov.br/CTeDistribuicaoDFe/CTeDistribuicaoDFe.asmx"
                     };
                 case Estado.SP:
-                    if (configuracaoServico.VersaoLayout == versao.ve400)
+                    if (VersaoLayout == versao.ve400)
                     {
                         return new UrlCTe
                         {
@@ -326,7 +341,7 @@ namespace CTe.Servicos.Enderecos.Helpers
                 case Estado.SE:
                 case Estado.TO:
                 case Estado.RS:
-                    if (configuracaoServico.VersaoLayout == versao.ve400)
+                    if (VersaoLayout == versao.ve400)
                     {
                         return new UrlCTe
                         {
@@ -357,7 +372,7 @@ namespace CTe.Servicos.Enderecos.Helpers
                 case Estado.AP:
                 case Estado.PE:
                 case Estado.RR:
-                    if (configuracaoServico.VersaoLayout == versao.ve400)
+                    if (VersaoLayout == versao.ve400)
                     {
                         return new UrlCTe
                         {
@@ -389,12 +404,12 @@ namespace CTe.Servicos.Enderecos.Helpers
 
         }
 
-        private static UrlCTe UrlHomologacao(ConfiguracaoServico configuracaoServico)
+        private static UrlCTe UrlHomologacao(Estado UFRecepcao, versao VersaoLayout)
         {
-            switch (configuracaoServico.cUF)
+            switch (UFRecepcao)
             {
                 case Estado.MT:
-                    if (configuracaoServico.VersaoLayout == versao.ve400)
+                    if (VersaoLayout == versao.ve400)
                     {
                         return new UrlCTe
                         {
@@ -421,7 +436,7 @@ namespace CTe.Servicos.Enderecos.Helpers
                         CTeDistribuicaoDFe = @"https://hom1.cte.fazenda.gov.br/CTeDistribuicaoDFe/CTeDistribuicaoDFe.asmx"
                     };
                 case Estado.MS:
-                    if (configuracaoServico.VersaoLayout == versao.ve400)
+                    if (VersaoLayout == versao.ve400)
                     {
                         return new UrlCTe
                         {
@@ -445,7 +460,7 @@ namespace CTe.Servicos.Enderecos.Helpers
                         CTeDistribuicaoDFe = @"https://hom1.cte.fazenda.gov.br/CTeDistribuicaoDFe/CTeDistribuicaoDFe.asmx"
                     };
                 case Estado.MG:
-                    if (configuracaoServico.VersaoLayout == versao.ve400)
+                    if (VersaoLayout == versao.ve400)
                     {
                         return new UrlCTe
                         {
@@ -471,7 +486,7 @@ namespace CTe.Servicos.Enderecos.Helpers
                         CTeDistribuicaoDFe = @"https://hom1.cte.fazenda.gov.br/CTeDistribuicaoDFe/CTeDistribuicaoDFe.asmx"
                     };
                 case Estado.PR:
-                    if (configuracaoServico.VersaoLayout == versao.ve400)
+                    if (VersaoLayout == versao.ve400)
                     {
                         return new UrlCTe
                         {
@@ -512,7 +527,7 @@ namespace CTe.Servicos.Enderecos.Helpers
                         CTeDistribuicaoDFe = @"https://hom1.cte.fazenda.gov.br/CTeDistribuicaoDFe/CTeDistribuicaoDFe.asmx"
                     };
                 case Estado.SP:
-                    if (configuracaoServico.VersaoLayout == versao.ve400)
+                    if (VersaoLayout == versao.ve400)
                     {
                         return new UrlCTe
                         {
@@ -555,7 +570,7 @@ namespace CTe.Servicos.Enderecos.Helpers
                 case Estado.SC:
                 case Estado.SE:
                 case Estado.TO:
-                    if (configuracaoServico.VersaoLayout == versao.ve400)
+                    if (VersaoLayout == versao.ve400)
                     {
                         return new UrlCTe
                         {
@@ -586,7 +601,7 @@ namespace CTe.Servicos.Enderecos.Helpers
                 case Estado.AP:
                 case Estado.PE:
                 case Estado.RR:
-                    if (configuracaoServico.VersaoLayout == versao.ve400)
+                    if (VersaoLayout == versao.ve400)
                     {
                         return new UrlCTe
                         {
