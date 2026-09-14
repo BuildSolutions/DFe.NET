@@ -1,0 +1,9 @@
+<Project>
+  <!-- Release nao gera .pdb: pdb nao vai para producao (vaza simbolo) e o Reactor nao tem o que copiar.
+       Debug mantem pdb normal para depuracao local. Em .targets (importado DEPOIS do csproj) para
+       sobrescrever os projetos legacy que fixam <DebugType>pdbonly</DebugType> no proprio Release. -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+</Project>
