@@ -2506,7 +2506,8 @@ namespace NFe.BLL
                 pagamentos.Add(new detPag
                 {
                     indPag = IndicadorPagamentoDetalhePagamento.ipDetPgPrazo,
-                    tPag = FormaPagamento.fpSemPagamento,
+                    //tPag = FormaPagamento.fpSemPagamento,
+                    tPag = FormaPagamento.fpPagamentoPosterior,
                     vPag = 0
                 });
             }
