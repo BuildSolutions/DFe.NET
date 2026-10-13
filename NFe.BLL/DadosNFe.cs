@@ -387,6 +387,11 @@ namespace NFe.BLL
             if (NotaFiscal.IsImportacao)
             {
                 idEstrangeiro = ie ?? string.Empty;
+
+                // Destinatario no exterior: o identificador vai em idEstrangeiro e indIEDest fica 9.
+                // Deixando a mesma string em IE o grupo dest sairia com <IE>, que a SEFAZ rejeita
+                // quando o indicador de IE do destinatario e 9.
+                ie = null;
             }
             else if (NotaFiscal.IsExportacao)
             {
