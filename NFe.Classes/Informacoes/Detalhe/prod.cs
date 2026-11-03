@@ -28,6 +28,8 @@ namespace NFe.Classes.Informacoes.Detalhe
         private string _cEan;
         private string _cEanTrib;
         private decimal _vUnCom;
+        private decimal? _vUnComLiq;
+        private decimal? _vProdLiq;
 
         /// <summary>
         ///     I02 - Código do produto ou serviço
@@ -150,6 +152,18 @@ namespace NFe.Classes.Informacoes.Detalhe
         {
             get { return _vprod; }
             set { _vprod = value.Arredondar(2); }
+        }
+
+        public decimal? vUnComLiq
+        {
+            get { return _vUnComLiq.Arredondar(10); }
+            set { _vUnComLiq = value.Arredondar(10); }
+        }
+
+        public decimal? vProdLiq
+        {
+            get { return _vProdLiq.Arredondar(2); }
+            set { _vProdLiq = value.Arredondar(2); }
         }
 
         /// <summary>
@@ -300,7 +314,7 @@ namespace NFe.Classes.Informacoes.Detalhe
 
         // l117c
         public indBemMovelUsado? indBemMovelUsado { get; set; }
-
+        
         public bool ShouldSerializenItemPed()
         {
             return nItemPed.HasValue;
@@ -334,6 +348,16 @@ namespace NFe.Classes.Informacoes.Detalhe
         public bool ShouldSerializetpCredPresIBSZFM()
         {
             return tpCredPresIBSZFM.HasValue;
+        }
+
+        public bool ShouldSerializevUnComLiq()
+        {
+            return vUnComLiq.HasValue;
+        }
+
+        public bool ShouldSerializevProdLiq()
+        {
+            return vProdLiq.HasValue;
         }
     }
 }

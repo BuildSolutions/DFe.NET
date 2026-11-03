@@ -5,6 +5,9 @@ using System.Text;
 using DFe.Http.Ext;
 using DFe.Wsdl;
 
+// Implementação legada com HttpWebRequest, usada pelos serviços do .NET Framework (NFe.Wsdl)
+#pragma warning disable SYSLIB0014
+
 namespace DFe.Http
 {
     public class RequestWS
