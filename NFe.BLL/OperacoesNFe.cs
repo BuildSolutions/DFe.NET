@@ -289,8 +289,11 @@ namespace NFe.BLL
 
             if (retornoAutorizacao.cStat == 104)
             {
-                if (retornoAutorizacao.protNFe.infProt.cStat != 100
-                    && retornoAutorizacao.protNFe.infProt.cStat != 150)
+                // Autorizada e o que NfeSituacao diz que e: 100, 120 (autorizada com
+                // avisos, NT 2026.002) e 150 (fora de prazo). Tratar o 120 como erro
+                // faz o sistema abandonar nota que a SEFAZ autorizou, e a reemissao
+                // volta como 204 (duplicidade).
+                if (!NfeSituacao.Autorizada(retornoAutorizacao.protNFe.infProt.cStat))
                 {
                     erro = string.Format("({0}) {1}",
                         retornoAutorizacao.protNFe.infProt.cStat,
@@ -355,8 +358,7 @@ namespace NFe.BLL
                 return false;
             }
 
-            if (retornoAutorizacao.protNFe[0].infProt.cStat != 100
-                && retornoAutorizacao.protNFe[0].infProt.cStat != 150) // Contingencia
+            if (!NfeSituacao.Autorizada(retornoAutorizacao.protNFe[0].infProt.cStat))
             {
                 erro = string.Format("({0}) {1}",
                         retornoAutorizacao.protNFe[0].infProt.cStat,
@@ -395,8 +397,10 @@ namespace NFe.BLL
         private bool ValidarRetornoConsultaProtocolo(retConsSitNFe retornoConsulta, out string erro)
         {
             erro = string.Empty;
-            if (retornoConsulta.cStat != 100
-                && retornoConsulta.cStat != 101)
+            // A consulta e a via de recuperacao de nota que ficou sem protocolo no
+            // sistema: recusar o 120 aqui fecharia tambem essa saida.
+            if (!NfeSituacao.Autorizada(retornoConsulta.cStat)
+                && retornoConsulta.cStat != 101 /*Cancelamento homologado, como antes*/)
             {
                 erro = string.Format("({0}) {1}",
                     retornoConsulta.cStat,
@@ -404,8 +408,7 @@ namespace NFe.BLL
                 return false;
             }
 
-            if (retornoConsulta.protNFe.infProt.cStat != 100
-                && retornoConsulta.protNFe.infProt.cStat != 150) // Contingencia
+            if (!NfeSituacao.Autorizada(retornoConsulta.protNFe.infProt.cStat))
             {
                 erro = string.Format("({0}) {1}",
                         retornoConsulta.protNFe.infProt.cStat,
