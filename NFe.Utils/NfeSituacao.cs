@@ -5,6 +5,7 @@
         public static bool Autorizada(int cStat)
         {
             return cStat == 100 /*Autorizado o uso da NF-e*/
+                || cStat == 120 /*Autorizado o uso da NF-e, com avisos de conformidade (NT 2026.002)*/
                 || cStat == 150 /*Autorizado o uso da NF-e, autorização fora de prazo*/;
         }
 
