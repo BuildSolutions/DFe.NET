@@ -799,6 +799,26 @@ namespace NFe.BLL
                 imposto = GetProdutoImposto(item),
                 impostoDevol = GetProdutoImpostoDevolucao(item.Impostos.IPI),
                 infAdProd = GetProdutoIndAdProd(item),
+                DFeReferenciado = GetDFeReferenciado(item),
+            };
+        }
+
+        /// <summary>
+        /// VC01 - Referenciamento do item de outro DFe. Na NF-e de devolucao a
+        /// referencia deixou de ser so no cabecalho (refNFe) e passou a ser por
+        /// item, chave mais nItem de origem (regra VC02-14).
+        /// </summary>
+        private DFeReferenciado GetDFeReferenciado(Produto item)
+        {
+            if (string.IsNullOrEmpty(item.DocumentoReferenciadoChaveAcesso))
+            {
+                return null;
+            }
+
+            return new DFeReferenciado
+            {
+                chaveAcesso = item.DocumentoReferenciadoChaveAcesso,
+                nItem = item.DocumentoReferenciadoItem
             };
         }
 

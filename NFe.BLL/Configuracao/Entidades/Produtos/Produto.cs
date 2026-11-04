@@ -30,7 +30,9 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos
             decimal ibptValor = 0,
             string pedidoCompraNumero = null,
             int? pedidoCompraItem = null,
-            string codigoBeneficioFiscal = null)
+            string codigoBeneficioFiscal = null,
+            string documentoReferenciadoChaveAcesso = null,
+            int? documentoReferenciadoItem = null)
         {
             Referencia = referencia.SanitizeString();
             CodigoBarras = codigoBarras.SanitizeString();
@@ -57,11 +59,26 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos
             DadosAdicionais = dadosAdicionais.SanitizeString();
             IBPTValor = ibptValor;
             CodigoBeneficioFiscal = codigoBeneficioFiscal.SanitizeString();
+            DocumentoReferenciadoChaveAcesso = documentoReferenciadoChaveAcesso.SanitizeString();
+            DocumentoReferenciadoItem = documentoReferenciadoItem;
 
             if(string.IsNullOrEmpty(PedidoCompraNumero))
             {
                 PedidoCompraItem = null;
             }
+        }
+
+        /// <summary>
+        /// Produto lido de um item de outro DFe, guardando a origem para o
+        /// referenciamento por item (grupo VC01 DFeReferenciado).
+        /// </summary>
+        /// <param name="produto">Item do documento de origem</param>
+        /// <param name="chaveAcessoOrigem">Chave de acesso do documento de origem</param>
+        public Produto(det produto, string chaveAcessoOrigem)
+            : this(produto)
+        {
+            DocumentoReferenciadoChaveAcesso = chaveAcessoOrigem.SanitizeString();
+            DocumentoReferenciadoItem = produto.nItem > 0 ? produto.nItem : (int?)null;
         }
 
         public Produto(det produto)
@@ -146,5 +163,16 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos
         public string DadosAdicionais { get; }
 
         public string CodigoBeneficioFiscal { get; }
+
+        /// <summary>
+        /// VC02 - Chave de acesso do DFe de onde este item veio. Obrigatorio na
+        /// NF-e de devolucao (finNFe = 4), regra VC02-14.
+        /// </summary>
+        public string DocumentoReferenciadoChaveAcesso { get; }
+
+        /// <summary>
+        /// VC03 - Numero do item (nItem) deste produto no DFe referenciado.
+        /// </summary>
+        public int? DocumentoReferenciadoItem { get; }
     }
 }
