@@ -96,7 +96,19 @@ namespace NFe.BLL.Configuracao.Entidades
 
             nfe.infNFe.cobr?.dup.ForEach(item => duplicatas.Add(new Duplicata(item.nDup, item.dVenc.GetValueOrDefault(), item.vDup)));
 
-            nfe.infNFe.det.ForEach(item => produtos.Add(new Produto(item)));
+            // A chave e o nItem de origem seguem com o produto para permitir o
+            // referenciamento por item na devolucao (grupo VC01 DFeReferenciado).
+            // So este construtor (leitura de XML de arquivo) preenche os dois: o
+            // item nao guarda a chave da nota em que ele esta, e depois do
+            // SelectMany dos itens de varias notas de origem nao ha mais como
+            // saber de qual XML cada item veio.
+            // A chave sai do protocolo de proposito (e nao de infNFe/@Id):
+            // devolucao referencia nota autorizada, e protNFe e a garantia de que
+            // ela foi. XML sem protocolo deixa o item sem origem, que e o
+            // comportamento correto.
+            var chaveAcessoOrigem = notafiscalProcessada.protNFe?.infProt?.chNFe;
+
+            nfe.infNFe.det.ForEach(item => produtos.Add(new Produto(item, chaveAcessoOrigem)));
 
             nfe.infNFe.pag?.ForEach(item => item.detPag?.ForEach(pagamento => pagamentos.Add(new Pagamento(pagamento.tPag, pagamento.vPag))));
 
