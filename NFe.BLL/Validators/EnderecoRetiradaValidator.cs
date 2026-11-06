@@ -11,8 +11,8 @@ namespace NFe.BLL.Validators
     {
         public EnderecoRetiradaValidator(EPessoa ePessoa)
         {
-            RuleFor(pessoa => pessoa.CPFCNPJ).Length(14).When(pessoa => pessoa.CPFCNPJ.Length != 11).WithMessage($"Endereço de entrega - Campo CNPJ é inválido!");
-            RuleFor(pessoa => pessoa.CPFCNPJ).Length(11).When(pessoa => pessoa.CPFCNPJ.Length != 14).WithMessage($"Endereço de entrega - Campo CPF é inválido!");
+            RuleFor(pessoa => pessoa.CPFCNPJ).Length(14).When(pessoa => pessoa.CPFCNPJ?.Length != 11).WithMessage($"Endereço de entrega - Campo CNPJ é inválido!");
+            RuleFor(pessoa => pessoa.CPFCNPJ).Length(11).When(pessoa => pessoa.CPFCNPJ?.Length != 14).WithMessage($"Endereço de entrega - Campo CPF é inválido!");
             RuleFor(pessoa => pessoa.RGIE).NotEmpty().When(pessoa => !string.IsNullOrEmpty(pessoa.CPFCNPJ) && pessoa.CPFCNPJ.Length == 14).WithMessage($"Endereço de entrega - Campo CNPJ é inválido!");
             RuleFor(pessoa => pessoa.Endereco).SetValidator(new EnderecoValidator(ePessoa)).When(pessoa => pessoa.Endereco != null);
         }

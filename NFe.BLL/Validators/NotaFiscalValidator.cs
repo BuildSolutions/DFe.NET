@@ -25,9 +25,9 @@ namespace NFe.BLL.Validators
             RuleFor(nfe => nfe.Emitente).NotNull().WithMessage("Emitente não informado!").DependentRules(() => RuleFor(nfe => nfe.Emitente).SetValidator(new EmitenteValidator()));
             RuleFor(nfe => nfe.Destinatario).NotNull().When(_ => modeloDocumento != DFe.Classes.Flags.ModeloDocumento.NFCe).WithMessage("Destinatário não informado!").DependentRules(() => RuleFor(nfe => nfe.Destinatario).SetValidator(new DestinatarioValidator()));
             RuleFor(nfe => nfe.DadosTransporte).SetValidator(new DadosTransporteValidator()).When(nfe => nfe.DadosTransporte != null).WithMessage("Dados de Transporte inválidos!");
-            RuleFor(nfe => nfe.Total).NotNull().WithMessage("Totalizador da NFe não informado!").DependentRules(() => RuleFor(nfe => nfe.Total).SetValidator(new TotalizadorValidator()));
+            RuleFor(nfe => nfe.Total).NotNull().WithMessage("Totalizador da NFe não informado!");
             RuleForEach(nfe => nfe.Duplicatas).SetValidator(_ => new DuplicataValidator()).When(nfe => nfe.Duplicatas?.Count > 0).WithMessage((_, duplicata) => $"Dados inválidos do Parcela: {duplicata.Codigo}");
-            RuleFor(nfe => nfe.Total.TotalizadorICMS.NFeValorTotal).Equal(parc => parc.Duplicatas.Sum(dup => dup.Valor)).When(nfe => nfe.DeveValidarValorTotalDaNfeEDuplicatas && nfe.Duplicatas?.Count > 0).WithMessage("Valor Total da NF-e não corresponde com o Somatório Total das duplicatas.");
+            RuleFor(nfe => nfe.Total.TotalizadorICMS.NFeValorTotal).Equal(parc => parc.Duplicatas.Sum(dup => dup.Valor)).When(nfe => nfe.Total?.TotalizadorICMS != null && nfe.DeveValidarValorTotalDaNfeEDuplicatas && nfe.Duplicatas?.Count > 0).WithMessage("Valor Total da NF-e não corresponde com o Somatório Total das duplicatas.");
             
             RuleFor(nfe => nfe.Produtos).NotNull().WithMessage("Produtos da NFe não informado!").DependentRules(() =>
             {
@@ -42,7 +42,7 @@ namespace NFe.BLL.Validators
             RuleFor(nfe => nfe.EnderecoEntrega).SetValidator(new EnderecoEntregaValidator(Enums.EPessoa.Destinatario)).When(nfe => nfe.EnderecoEntrega != null).WithMessage("Endereço de entrega inválido!");
             RuleFor(nfe => nfe.EnderecoRetirada).SetValidator(new EnderecoRetiradaValidator(Enums.EPessoa.Destinatario)).When(nfe => nfe.EnderecoRetirada != null).WithMessage("Endereço de retirada inválido!");
 
-            RuleFor(nfe => nfe.Total.TotalizadorICMS.NFeValorTotal).GreaterThan(0).When(nfe => nfe.EFinalidadeNFe != Classes.Informacoes.Identificacao.Tipos.FinalidadeNFe.fnComplementar && nfe.EFinalidadeNFe != Classes.Informacoes.Identificacao.Tipos.FinalidadeNFe.fnAjuste).WithMessage("Valor Total da NF-e não pode ser 0 (zero).");
+            RuleFor(nfe => nfe.Total.TotalizadorICMS.NFeValorTotal).GreaterThan(0).When(nfe => nfe.Total?.TotalizadorICMS != null && nfe.EFinalidadeNFe != Classes.Informacoes.Identificacao.Tipos.FinalidadeNFe.fnComplementar && nfe.EFinalidadeNFe != Classes.Informacoes.Identificacao.Tipos.FinalidadeNFe.fnAjuste).WithMessage("Valor Total da NF-e não pode ser 0 (zero).");
         }
     }
 }

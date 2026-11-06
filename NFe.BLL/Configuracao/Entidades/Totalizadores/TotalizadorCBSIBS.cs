@@ -39,11 +39,9 @@ namespace NFe.BLL.Configuracao.Entidades.Totalizadores
 
             if (total?.gEstornoCred?.vCBSEstCred > 0 || total?.gEstornoCred?.vIBSEstCred > 0)
             {
-                TotalizadorCBSIBSEstornoCredito = new TotalizadorCBSIBSEstornoCredito(total.gEstornoCred);
+                TotalizadorCBSIBSEstornoCredito = new TotalizadorCBSIBSEstornoCredito(total?.gEstornoCred);
             }
         }
-
-        public decimal ISTotal { get; }
 
         public decimal CBSIBSBaseCalculo { get; }
 

@@ -534,23 +534,25 @@ namespace NFe.BLL
             var cPais = NotaFiscal.EnderecoEntrega.Endereco.PaisCodigo;
             var xPais = NotaFiscal.EnderecoEntrega.Endereco.PaisNome;
             string fone = !string.IsNullOrEmpty(NotaFiscal.EnderecoEntrega.Fone) ? NotaFiscal.EnderecoEntrega.Fone : null;
-            var email = !string.IsNullOrEmpty(NotaFiscal.EnderecoEntrega.Email) ? NotaFiscal.EnderecoEntrega.Email : null;
+            // TODO: entrega/retirada aceitam email (NT 2020.006) e ele nao e emitido aqui.
 
             string nome = !string.IsNullOrEmpty(NotaFiscal.EnderecoEntrega.Nome) ? NotaFiscal.EnderecoEntrega.Nome : null;
             string cnpj = null;
             string cpf = null;
             string ie = null;
-            if (NotaFiscal.EnderecoEntrega.CPFCNPJ.Length == 14)
+            if (NotaFiscal.EnderecoEntrega.CPFCNPJ?.Length == 14)
             {
                 cnpj = NotaFiscal.EnderecoEntrega.CPFCNPJ;
                 ie = NotaFiscal.EnderecoEntrega.RGIE;
             }
-            else if (NotaFiscal.EnderecoEntrega.CPFCNPJ.Length == 11)
+            else if (NotaFiscal.EnderecoEntrega.CPFCNPJ?.Length == 11)
             {
                 cpf = NotaFiscal.EnderecoEntrega.CPFCNPJ;
             }
 
-            long.TryParse(cep, out long lCEP);
+            // Extrai os digitos antes de converter: CEP guardado como "13000-000" passa no
+            // EnderecoValidator (que compara RetornaNumeros) mas iria para o XML como 0.
+            long.TryParse(cep.RetornaNumeros(), out long lCEP);
 
             return new entrega
             {
@@ -592,23 +594,23 @@ namespace NFe.BLL
             var cPais = NotaFiscal.EnderecoRetirada.Endereco.PaisCodigo;
             var xPais = NotaFiscal.EnderecoRetirada.Endereco.PaisNome;
             string fone = !string.IsNullOrEmpty(NotaFiscal.EnderecoRetirada.Fone) ? NotaFiscal.EnderecoRetirada.Fone : null;
-            var email = !string.IsNullOrEmpty(NotaFiscal.EnderecoRetirada.Email) ? NotaFiscal.EnderecoRetirada.Email : null;
+            // TODO: entrega/retirada aceitam email (NT 2020.006) e ele nao e emitido aqui.
 
             string nome = !string.IsNullOrEmpty(NotaFiscal.EnderecoRetirada.Nome) ? NotaFiscal.EnderecoRetirada.Nome : null;
             string cnpj = null;
             string cpf = null;
             string ie = null;
-            if (NotaFiscal.EnderecoRetirada.CPFCNPJ.Length == 14)
+            if (NotaFiscal.EnderecoRetirada.CPFCNPJ?.Length == 14)
             {
                 cnpj = NotaFiscal.EnderecoRetirada.CPFCNPJ;
                 ie = NotaFiscal.EnderecoRetirada.RGIE;
             }
-            else if (NotaFiscal.EnderecoRetirada.CPFCNPJ.Length == 11)
+            else if (NotaFiscal.EnderecoRetirada.CPFCNPJ?.Length == 11)
             {
                 cpf = NotaFiscal.EnderecoRetirada.CPFCNPJ;
             }
 
-            long.TryParse(cep, out long lCEP);
+            long.TryParse(cep.RetornaNumeros(), out long lCEP);
 
             return new retirada
             {
@@ -1449,14 +1451,9 @@ namespace NFe.BLL
                         adRemICMSRet = adRemICMSRet,
                     };
 
-                    //default:
-                    //    throw new ArgumentException(string.Format("CSOSN inválido ou não informado no cadastro do produto:{0}{0}({1}) {2}",
-                    //        Environment.NewLine,
-                    //        item.NfProd_REFERENCIA,
-                    //        item.NfProd_PRODUTODESCRICAO));
             }
 
-            return null;
+            throw new ArgumentException($"CSOSN do ICMS inválido ou não implementado no sistema: {CSOSN}.");
         }
 
         private ICMSBasico InformarICMS(Configuracao.Entidades.Produtos.Impostos.ICMS.ICMS item)
@@ -1526,7 +1523,7 @@ namespace NFe.BLL
                         pICMS = pICMS,
                         vICMS = vICMS,
 
-                        modBCST = (DeterminacaoBaseIcmsSt)modBCST,
+                        modBCST = modBCST.GetValueOrDefault(),
                         vBCST = vBCST,
                         pICMSST = pICMSST,
                         vICMSST = vICMSST,
@@ -1673,17 +1670,14 @@ namespace NFe.BLL
                 case Csticms.CstPart90:
                 case Csticms.CstPart10:
                 case Csticms.CstRep41:
-                    // TODO: 
-                    return null;
-
-                    //default:
-                    //    throw new ArgumentException(string.Format("CSOSN inválido ou não informado no cadastro do produto:{0}{0}({1}) {2}",
-                    //        Environment.NewLine,
-                    //        item.NfProd_REFERENCIA,
-                    //        item.NfProd_PRODUTODESCRICAO));
+                    // Partilha (ICMSPart) e repasse (ICMSST) nao sao montados: a entidade ICMS
+                    // nao tem os campos do grupo (pBCOp, UFST, vBCSTRet, vBCSTDest). Devolver
+                    // null deixava o item com <ICMS> vazio, e a rejeicao chegava como erro
+                    // generico de schema, sem apontar a causa.
+                    throw new ArgumentException($"CST {CST} do ICMS (partilha/repasse) não implementado no sistema.");
             }
 
-            return null;
+            throw new ArgumentException($"CST do ICMS inválido ou não implementado no sistema: {CST}.");
         }
 
         private impostoDevol GetProdutoImpostoDevolucao(IPI item)

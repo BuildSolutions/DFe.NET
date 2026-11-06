@@ -75,7 +75,7 @@ namespace NFe.BLL.Configuracao.Entidades
             IsZonaFrancaManaus = isZonaFrancaManaus;
             Protocolo = protocolo;
             DadosIntermediador = intermediador;
-            CNf = Protocolo?.ObterCNf() ?? new Random().Next(1, 99999999).ToString("00000000");
+            CNf = Protocolo?.ObterCNf() ?? GerarCNf();
             
             DeveValidarValorTotalDaNfeEDuplicatas = deveValidarValorTotalDaNfeEDuplicatas;
             DeveValidarDataEmissaoAtrasada = deveValidarDataEmissaoAtrasada;
@@ -94,7 +94,7 @@ namespace NFe.BLL.Configuracao.Entidades
                 transportadora = new Transporte(nfe.infNFe.transp);
             }
 
-            nfe.infNFe.cobr?.dup.ForEach(item => duplicatas.Add(new Duplicata(item.nDup, item.dVenc.GetValueOrDefault(), item.vDup)));
+            nfe.infNFe.cobr?.dup?.ForEach(item => duplicatas.Add(new Duplicata(item.nDup, item.dVenc.GetValueOrDefault(), item.vDup)));
 
             // A chave e o nItem de origem seguem com o produto para permitir o
             // referenciamento por item na devolucao (grupo VC01 DFeReferenciado).
@@ -139,7 +139,7 @@ namespace NFe.BLL.Configuracao.Entidades
                 enderecoRetirada = new EnderecoRetirada(nfe.infNFe.retirada);
             }
 
-            if (nfe.infNFe.retirada != null)
+            if (nfe.infNFe.infIntermed != null)
             {
                 intermediador = new Intermediador(nfe.infNFe.infIntermed);
             }
@@ -168,10 +168,14 @@ namespace NFe.BLL.Configuracao.Entidades
             DadosAdicionaisFisco = nfe.infNFe.infAdic?.infAdFisco;
             DadosAdicionaisContribuinte = nfe.infNFe.infAdic?.infCpl;
             Produtos = produtos;
-            Protocolo = new Protocolo(notafiscalProcessada.protNFe.infProt);
+            // XML sem protocolo é caso válido, como diz o comentário de chaveAcessoOrigem
+            // acima: a nota fica sem protocolo em vez de estourar.
+            Protocolo = notafiscalProcessada.protNFe?.infProt == null
+                ? null
+                : new Protocolo(notafiscalProcessada.protNFe.infProt);
             FormasPagamento = pagamentos;
             DadosIntermediador = intermediador;
-            CNf = Protocolo?.ObterCNf() ?? new Random().Next(1, 99999999).ToString("00000000");
+            CNf = Protocolo?.ObterCNf() ?? GerarCNf();
             DeveValidarValorTotalDaNfeEDuplicatas = true;
             DeveValidarDataEmissaoAtrasada = true;
         }
@@ -275,6 +279,22 @@ namespace NFe.BLL.Configuracao.Entidades
             if(protocolo != null)
             {
                 Protocolo = new Protocolo(protocolo);
+            }
+        }
+
+        private static readonly Random _geradorCNf = new Random();
+
+        /// <summary>
+        /// Gera o cNF quando a nota ainda não tem chave de acesso. O gerador é único e com
+        /// lock: <see cref="Random"/> não é thread-safe e, sem semente explícita, instâncias
+        /// criadas no mesmo tick repetem a sequência — duas notas montadas juntas sairiam
+        /// com o mesmo cNF.
+        /// </summary>
+        private static string GerarCNf()
+        {
+            lock (_geradorCNf)
+            {
+                return _geradorCNf.Next(1, 99999999).ToString("00000000");
             }
         }
 

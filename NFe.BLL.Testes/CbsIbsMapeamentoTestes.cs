@@ -3,7 +3,6 @@ using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS_IBS
 using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS_IBS.GrupoTributacao;
 using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS_IBS.GrupoTributacao.CreditoPresumido;
 using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS_IBS.GrupoTributacao.Monofasico;
-using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.Enumerators;
 using NFe.BLL.Configuracao.ValueObjects;
 using NFe.Classes.Informacoes;
 using NFe.Classes.Informacoes.Detalhe.Tributacao;
@@ -89,14 +88,14 @@ namespace NFe.BLL.Testes
         }
 
         [Fact]
-        public void CbsGrupo_LidoDoXml_ETipadoComoCbs()
+        public void CbsGrupo_LidoDoXml_LeAliquotaEValorDaCbs()
         {
-            var gIbsCbs = new gIBSCBS { vBC = 100m, gCBS = new gCBS { pCBS = 8.8m, vCBS = 8.8m } };
+            var gIbsCbs = new gIBSCBS { vBC = 100m, gCBS = new gCBS { pCBS = 8.8m, vCBS = 7.7m } };
 
             var grupo = new CBSGrupo(gIbsCbs);
 
-            Assert.Equal(EImpostoReformaTributariaTipo.CBS, grupo.EImpostoReformaTributariaTipo);
             Assert.Equal(8.8m, grupo.AliquotaPercentual);
+            Assert.Equal(7.7m, grupo.ValorTotal);
         }
 
         [Fact]
@@ -167,6 +166,24 @@ namespace NFe.BLL.Testes
             var lido = new CBSIBSImposto(new IBSCBS { CST = CSTIBSCBS.cst000, cClassTrib = "000001", indDoacao = "1" });
 
             Assert.True(lido.IsDoacao);
+        }
+
+        [Fact]
+        public void CreditoPresumido_LidoDoXml_AceitaOsDoisGruposSeparadamente()
+        {
+            var somenteZfm = new CBSIBSGrupoCreditoPresumido(creditoPresumidoOperacao: null,
+                creditoPresumidoZFM: new gCredPresIBSZFM { competApur = "2026-01", vCredPresIBSZFM = 10m });
+
+            Assert.NotNull(somenteZfm.IBSGrupoCreditoPresumidoZFM);
+            Assert.Equal("2026-01", somenteZfm.IBSGrupoCreditoPresumidoZFM.AnoMesCompetenciaApuracao);
+            Assert.Equal(0m, somenteZfm.BaseCalculoCreditoPresumido);
+
+            var somenteOperacao = new CBSIBSGrupoCreditoPresumido(
+                creditoPresumidoOperacao: new gCredPresOper { vBCCredPres = 100m, cCredPres = TipocCredPres.AquisicaoResiduosReciclagem },
+                creditoPresumidoZFM: null);
+
+            Assert.Equal(100m, somenteOperacao.BaseCalculoCreditoPresumido);
+            Assert.Null(somenteOperacao.IBSGrupoCreditoPresumidoZFM);
         }
 
         [Fact]

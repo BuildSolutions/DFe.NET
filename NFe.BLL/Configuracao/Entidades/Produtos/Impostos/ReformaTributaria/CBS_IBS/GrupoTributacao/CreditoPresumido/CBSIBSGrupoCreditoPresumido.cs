@@ -62,20 +62,29 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
 
         public CBSIBSGrupoCreditoPresumido(gCredPresOper creditoPresumidoOperacao, gCredPresIBSZFM creditoPresumidoZFM)
         {
-            BaseCalculoCreditoPresumido = creditoPresumidoOperacao?.vBCCredPres ?? 0;
-            CodigoClassificacaoCreditoPresumido = creditoPresumidoOperacao.cCredPres;
-
-            if (creditoPresumidoOperacao.gCBSCredPres != null)
+            // gCredPresOper e gCredPresIBSZFM sao independentes no XML e CBSIBSGrupo chama
+            // este construtor quando qualquer um dos dois existe, entao nenhum dos dois
+            // pode ser desreferenciado direto.
+            if (creditoPresumidoOperacao != null)
             {
-                CBSGrupoCreditoPresumido = new CBSGrupoCreditoPresumido(creditoPresumidoCBS: creditoPresumidoOperacao.gCBSCredPres);
+                BaseCalculoCreditoPresumido = creditoPresumidoOperacao.vBCCredPres;
+                CodigoClassificacaoCreditoPresumido = creditoPresumidoOperacao.cCredPres;
+
+                if (creditoPresumidoOperacao.gCBSCredPres != null)
+                {
+                    CBSGrupoCreditoPresumido = new CBSGrupoCreditoPresumido(creditoPresumidoCBS: creditoPresumidoOperacao.gCBSCredPres);
+                }
+
+                if (creditoPresumidoOperacao.gIBSCredPres != null)
+                {
+                    IBSGrupoCreditoPresumido = new IBSGrupoCreditoPresumido(creditoPresumidoIBS: creditoPresumidoOperacao.gIBSCredPres);
+                }
             }
 
-            if (creditoPresumidoOperacao.gIBSCredPres != null)
+            if (creditoPresumidoZFM != null)
             {
-                IBSGrupoCreditoPresumido = new IBSGrupoCreditoPresumido(creditoPresumidoIBS: creditoPresumidoOperacao.gIBSCredPres);
+                IBSGrupoCreditoPresumidoZFM = new IBSGrupoCreditoPresumidoZFM(creditoPresumidoZFM: creditoPresumidoZFM);
             }
-
-            IBSGrupoCreditoPresumidoZFM = new IBSGrupoCreditoPresumidoZFM(creditoPresumidoZFM: creditoPresumidoZFM);
         }
 
         /// <summary>vBCCredPres — Valor da Base de Cálculo do Crédito Presumido da Operação(UB121)</summary>
