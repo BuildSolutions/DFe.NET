@@ -1,5 +1,4 @@
-﻿using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.Enumerators;
-using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.Interfaces;
+﻿using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.Interfaces;
 
 namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS_IBS.CreditoPresumido
 {
@@ -10,18 +9,14 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
     /// </summary>
     public abstract class GrupoCreditoPresumidoBase : IIBSGrupo, ICBSGrupo
     {
-        public GrupoCreditoPresumidoBase(EImpostoReformaTributariaTipoSimplificado eImpostoReformaTributariaTipoSimplificado,
-            decimal percentualCredito,
+        public GrupoCreditoPresumidoBase(decimal percentualCredito,
             decimal valorCredito,
             decimal valorCreditoPresumidoEmCondicaoSuspensiva)
         {
-            EImpostoReformaTributariaTipoSimplificado = eImpostoReformaTributariaTipoSimplificado;
             PercentualCredito = percentualCredito;
             ValorCredito = valorCredito;
             ValorCreditoEmCondicaoSuspensiva = valorCreditoPresumidoEmCondicaoSuspensiva;
         }
-
-        public EImpostoReformaTributariaTipoSimplificado EImpostoReformaTributariaTipoSimplificado { get; protected set; }
 
         /// <summary>pCredPres — Percentual do crédito presumido.</summary>
         public decimal PercentualCredito { get; protected set; }

@@ -11,8 +11,6 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
     /// </summary>
     public class CBSIBSGrupo : ICBSIBSGrupo
     {
-        private readonly IBSUFGrupo _ibsUFGrupo;
-        private readonly IBSMunicipioGrupo _ibsMunicipioGrupo;
 
         public CBSIBSGrupo(decimal baseCalculo,
             IBSGrupo ibsGrupo,

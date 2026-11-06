@@ -1,5 +1,4 @@
-﻿using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.Enumerators;
-using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.Interfaces;
+﻿using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.Interfaces;
 using NFe.Classes.Informacoes.Detalhe.Tributacao;
 
 namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS_IBS.CreditoPresumido
@@ -14,11 +13,10 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
     {
         public CBSGrupoCreditoPresumido(decimal percentualCredito,
             decimal valorCredito,
-            decimal valorCreditoEmCondicaoSuspensiva) : base(EImpostoReformaTributariaTipoSimplificado.CBS, percentualCredito, valorCredito,valorCreditoEmCondicaoSuspensiva) { }
+            decimal valorCreditoEmCondicaoSuspensiva) : base(percentualCredito, valorCredito,valorCreditoEmCondicaoSuspensiva) { }
 
         public CBSGrupoCreditoPresumido(gIBSCredPres creditoPresumidoCBS)
-                : base(eImpostoReformaTributariaTipoSimplificado: EImpostoReformaTributariaTipoSimplificado.CBS,
-                      percentualCredito: creditoPresumidoCBS?.pCredPres ?? 0,
+                : base(percentualCredito: creditoPresumidoCBS?.pCredPres ?? 0,
                       valorCredito: creditoPresumidoCBS?.vCredPres ?? 0,
                       valorCreditoPresumidoEmCondicaoSuspensiva: creditoPresumidoCBS?.vCredPresCondSus ?? 0) { }
     }

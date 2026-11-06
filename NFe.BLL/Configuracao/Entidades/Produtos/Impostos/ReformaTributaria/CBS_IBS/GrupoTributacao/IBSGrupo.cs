@@ -7,7 +7,6 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
     /// </summary>
     public class IBSGrupo : IIBSGrupo
     {
-        private readonly decimal? _valorCreditoPresumidoASerDeduzido;
 
         public IBSGrupo(IBSUFGrupo ibsUFGrupo,
             IBSMunicipioGrupo ibsMunicipioGrupo,

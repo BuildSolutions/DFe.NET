@@ -1,5 +1,4 @@
-﻿using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.Enumerators;
-using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.Interfaces;
+﻿using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.Interfaces;
 
 namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS_IBS.GrupoTributacao
 {
@@ -8,8 +7,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
     /// </summary>
     public abstract class CBSIBSGrupoBase : ICBSIBSGrupo
     {
-        protected CBSIBSGrupoBase(EImpostoReformaTributariaTipo eImpostoReformaTributariaTipo,
-            decimal? aliquota,
+        protected CBSIBSGrupoBase(decimal? aliquota,
             decimal? valor,
 
             decimal? percentualDiferimento = null,
@@ -20,7 +18,6 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
             decimal? percentualReducaoAliquota = null,
             decimal? aliquotaEfetiva = null)
         {
-            EImpostoReformaTributariaTipo = eImpostoReformaTributariaTipo;
             AliquotaPercentual = aliquota ?? 0;
             ValorTotal = valor ?? 0;
             //if (aliquota.HasValue && aliquota.Value > 0)
@@ -43,8 +40,6 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
                 GrupoDevolucaoTributo = new CBSIBSGrupoDevolucaoTributo(valorDevolucaoTributos ?? 0);
             }
         }
-
-        public EImpostoReformaTributariaTipo EImpostoReformaTributariaTipo { get; protected set; }
         //public CBSIBSGrupoTributacaoNormal GrupoTributacaoNormal { get; protected set; }
         public CBSIBSGrupoDiferimento GrupoDiferimento { get; protected set; }
         public CBSIBSGrupoDevolucaoTributo GrupoDevolucaoTributo { get; protected set; }

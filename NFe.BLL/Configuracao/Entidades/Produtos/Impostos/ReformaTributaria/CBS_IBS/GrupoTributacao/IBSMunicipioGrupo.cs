@@ -16,8 +16,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
             decimal? valorDevolucaoTributos = null,
 
             decimal? percentualReducaoAliquota = null,
-            decimal? aliquotaEfetiva = null) : base(Enumerators.EImpostoReformaTributariaTipo.IBSMUN,
-                                                     aliquota,
+            decimal? aliquotaEfetiva = null) : base(aliquota,
                                                      valor,
                                                      percentualDiferimento,
                                                      valorDiferimento,
@@ -25,8 +24,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
                                                      percentualReducaoAliquota,
                                                      aliquotaEfetiva) { }
 
-        public IBSMunicipioGrupo(gIBSCBS ibsCbs) : base(eImpostoReformaTributariaTipo: Enumerators.EImpostoReformaTributariaTipo.IBSMUN,
-                                                     aliquota: ibsCbs?.gIBSMun?.pIBSMun ?? 0,
+        public IBSMunicipioGrupo(gIBSCBS ibsCbs) : base(aliquota: ibsCbs?.gIBSMun?.pIBSMun ?? 0,
                                                      valor: ibsCbs?.gIBSMun?.vIBSMun ?? 0,
                                                      percentualDiferimento: ibsCbs?.gIBSMun?.gDif?.pDif ?? 0,
                                                      valorDiferimento: ibsCbs?.gIBSMun?.gDif?.vDif ?? 0,
