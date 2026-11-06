@@ -1,4 +1,4 @@
-using NFe.BLL.Configuracao.Entidades;
+﻿using NFe.BLL.Configuracao.Entidades;
 using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS_IBS;
 using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS_IBS.GrupoTributacao;
 using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS_IBS.GrupoTributacao.CreditoPresumido;
@@ -10,13 +10,13 @@ using NFe.Classes.Informacoes.Detalhe.Tributacao;
 using NFe.Classes.Informacoes.Total;
 using Xunit;
 
-namespace NFe.Utils.Testes
+namespace NFe.BLL.Testes
 {
     /// <summary>
     /// Guarda os mapeamentos de IBS/CBS da NFe.BLL que já saíram trocados uma vez.
     /// Cada Assert aqui falha se o campo voltar a ser ligado no vizinho errado.
     /// </summary>
-    public class NFeBllCbsIbsMapeamentoTestes
+    public class CbsIbsMapeamentoTestes
     {
         [Fact]
         public void GrupoMonofasicoPadrao_LeAdRemDeCadaImposto()

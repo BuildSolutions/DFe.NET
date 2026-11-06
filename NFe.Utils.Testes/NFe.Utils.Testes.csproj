@@ -21,7 +21,6 @@
 		<ProjectReference Include="..\DFe.Classes\DFe.Classes.csproj" />
 		<ProjectReference Include="..\NFe.Classes\NFe.Classes.csproj" />
 		<ProjectReference Include="..\NFe.Utils\NFe.Utils.csproj" />
-		<ProjectReference Include="..\NFe.BLL\NFe.BLL.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
