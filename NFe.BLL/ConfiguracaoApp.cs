@@ -26,7 +26,11 @@ namespace NFe.BLL
         {
             Emitente = empresa;
 
-            _cfgServico = ConfiguracaoServico.Instancia;
+            // Instancia propria, e nao ConfiguracaoServico.Instancia: o singleton e do
+            // processo inteiro, entao dois emitentes (ou duas threads) montando nota ao
+            // mesmo tempo sobrescreviam certificado, UF e diretorios um do outro, e a
+            // nota saia assinada com o certificado do emitente errado.
+            _cfgServico = new ConfiguracaoServico();
             _cfgServico.TimeOut = 45000;
             _cfgServico.cUF = Emitente.Pessoa.Endereco.MunicipioEstadoSigla.GetValueOrDefault();
 
@@ -47,23 +51,7 @@ namespace NFe.BLL
             _cfgServico.DiretorioSchemas = Emitente.DiretorioSchemas;
             _cfgServico.Certificado = Emitente.Certificado;
 
-            var xNome = Emitente.Pessoa.NomeRazaoSocial;
-            if (xNome.Length > 60)
-            {
-                xNome = xNome.Substring(0, 60);
-            }
-
-            var xFant = string.IsNullOrEmpty(Emitente.Pessoa.ApelidoFantasia) ? null : Emitente.Pessoa.ApelidoFantasia;
-            if (!string.IsNullOrEmpty(xFant) && xFant.Length > 60)
-            {
-                xFant = xFant.Substring(0, 60);
-            }
-
-            var xLgr = Emitente.Pessoa.Endereco.Logradouro;
-            if (xLgr?.Length > 60)
-            {
-                xLgr = xLgr.Substring(0, 60);
-            }
+            PublicarNoSingleton();
         }
 
         public virtual bool ValidarConfiguracaoApp(out string errors)
@@ -91,14 +79,30 @@ namespace NFe.BLL
         {
             get
             {
-                ConfiguracaoServico.Instancia.CopiarPropriedades(_cfgServico);
                 return _cfgServico;
             }
             set
             {
                 _cfgServico = value;
-                ConfiguracaoServico.Instancia.CopiarPropriedades(value);
+                PublicarNoSingleton();
             }
+        }
+
+        /// <summary>
+        /// Copia esta configuração para <see cref="ConfiguracaoServico.Instancia"/>. A cópia
+        /// é só de saída: nada dentro desta dll lê o singleton, todas as chamadas às outras
+        /// dlls recebem a configuração explícita. Existe apenas para o chamador que ainda
+        /// depende do singleton.
+        /// <para>Com mais de um emitente o singleton não é fonte confiável: ele guarda a
+        /// última configuração publicada e, com publicações concorrentes, pode guardar uma
+        /// mistura das duas, porque a cópia é feita propriedade a propriedade. Alteração
+        /// feita pelo chamador direto na instância devolvida por <see cref="CfgServico"/>
+        /// também não chega aqui.</para>
+        /// </summary>
+        // TODO: espelho global; apagar quando o app chamador receber CfgServico explicitamente.
+        private void PublicarNoSingleton()
+        {
+            ConfiguracaoServico.Instancia.CopiarPropriedades(_cfgServico);
         }
     }
 }

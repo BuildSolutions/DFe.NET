@@ -89,7 +89,10 @@ namespace NFe.BLL
 
         public Classes.NFe AssinaNFe()
         {
-            var assinado = NFeXML.Assina();
+            // A configuracao vai explicita: sem ela Assina cai em
+            // ConfiguracaoServico.Instancia e assinaria com o certificado do ultimo
+            // emitente que montou configuracao no processo.
+            var assinado = NFeXML.Assina(_cfgApp.CfgServico);
             NotaFiscal.AtualizarChaveAcesso(NFeXML?.infNFe?.Id?.Substring(3));
             return assinado;
         }
