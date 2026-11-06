@@ -13,6 +13,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
         {
             Cst = cst;
             ClassificacaoTributaria = classificacaoTributaria.ToString("D6");
+            IsDoacao = isDoacao;
             CbsIbs = cbsIbs;
         }
 
@@ -25,6 +26,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
 
             Cst = ibsCbs.CST;
             ClassificacaoTributaria = ibsCbs.cClassTrib;
+            IsDoacao = ibsCbs.indDoacao == "1";
             CbsIbs = new CBSIBSGrupo(ibsCbs);
         }
 

@@ -19,6 +19,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
     public class CBSIBSGrupoCreditoPresumido : ICBSIBSGrupo
     {
         public CBSIBSGrupoCreditoPresumido(TipocCredPres codigoClassificacaoCreditoPresumido,
+            decimal baseCalculoCreditoPresumido,
 
             decimal? cbsPercentualCreditoPresumido,
             decimal? cbsValorCreditoPresumido,
@@ -32,6 +33,9 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
             tpCredPresIBSZFM zfmTipoCreditoPresumido,
             decimal zfmValorCreditoPresumidoCalculadoSobreSaldoDevedorApurado)
         {
+            CodigoClassificacaoCreditoPresumido = codigoClassificacaoCreditoPresumido;
+            BaseCalculoCreditoPresumido = baseCalculoCreditoPresumido;
+
             if (cbsPercentualCreditoPresumido.HasValue && cbsPercentualCreditoPresumido.Value > 0)
             {
                 CBSGrupoCreditoPresumido = new CBSGrupoCreditoPresumido(percentualCredito: cbsPercentualCreditoPresumido ?? 0,
@@ -39,16 +43,21 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
                     valorCreditoEmCondicaoSuspensiva: cbsValorCreditoPresumidoEmCondicaoSuspensiva ?? 0);
             }
 
-            if (cbsPercentualCreditoPresumido.HasValue && cbsPercentualCreditoPresumido.Value > 0)
+            if (ibsPercentualCreditoPresumido.HasValue && ibsPercentualCreditoPresumido.Value > 0)
             {
                 IBSGrupoCreditoPresumido = new IBSGrupoCreditoPresumido(percentualCredito: ibsPercentualCreditoPresumido ?? 0,
                     valorCredito: ibsValorCreditoPresumido ?? 0,
                     valorCreditoEmCondicaoSuspensiva: ibsValorCreditoPresumidoEmCondicaoSuspensiva ?? 0);
             }
 
-            IBSGrupoCreditoPresumidoZFM = new IBSGrupoCreditoPresumidoZFM(dataCompetenciaApuracao: zfmDataCompetenciaApuracao,
-                tipoCreditoPresumidoIBSZFM: zfmTipoCreditoPresumido,
-                valorCreditoPresumidoIBSZFM: zfmValorCreditoPresumidoCalculadoSobreSaldoDevedorApurado);
+            // O grupo gCredPresIBSZFM so pode sair quando ha competencia de apuracao:
+            // sem ela o grupo iria para o XML com competApur vazio e a SEFAZ rejeita.
+            if (!string.IsNullOrEmpty(zfmDataCompetenciaApuracao))
+            {
+                IBSGrupoCreditoPresumidoZFM = new IBSGrupoCreditoPresumidoZFM(dataCompetenciaApuracao: zfmDataCompetenciaApuracao,
+                    tipoCreditoPresumidoIBSZFM: zfmTipoCreditoPresumido,
+                    valorCreditoPresumidoIBSZFM: zfmValorCreditoPresumidoCalculadoSobreSaldoDevedorApurado);
+            }
         }
 
         public CBSIBSGrupoCreditoPresumido(gCredPresOper creditoPresumidoOperacao, gCredPresIBSZFM creditoPresumidoZFM)

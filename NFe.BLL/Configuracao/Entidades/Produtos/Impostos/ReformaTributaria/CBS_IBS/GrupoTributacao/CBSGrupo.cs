@@ -26,7 +26,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
                                                      aliquotaEfetiva)
         { }
 
-        public CBSGrupo(gIBSCBS ibsCbs) : base(eImpostoReformaTributariaTipo: Enumerators.EImpostoReformaTributariaTipo.IBSUF,
+        public CBSGrupo(gIBSCBS ibsCbs) : base(eImpostoReformaTributariaTipo: Enumerators.EImpostoReformaTributariaTipo.CBS,
                                                      aliquota: ibsCbs?.gCBS?.pCBS ?? 0,
                                                      valor: ibsCbs?.gCBS?.vCBS ?? 0,
                                                      percentualDiferimento: ibsCbs?.gCBS?.gDif?.pDif ?? 0,

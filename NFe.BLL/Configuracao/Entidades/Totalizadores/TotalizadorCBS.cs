@@ -10,8 +10,8 @@ namespace NFe.BLL.Configuracao.Entidades
             decimal creditoPresumidoValorTotal,
             decimal creditoPresumidoEmCondicaoSuspensivaValorTotal) : base(diferimentoValorTotal, devolucaoTributosValorTotal, valorTotal)
         {
-            creditoPresumidoValorTotal = CreditoPresumidoValorTotal;
-            creditoPresumidoEmCondicaoSuspensivaValorTotal = CreditoPresumidoEmCondicaoSuspensivaValorTotal;
+            CreditoPresumidoValorTotal = creditoPresumidoValorTotal;
+            CreditoPresumidoEmCondicaoSuspensivaValorTotal = creditoPresumidoEmCondicaoSuspensivaValorTotal;
         }
 
         public TotalizadorCBS(gCBSTotal total) : base(diferimentoValorTotal: total?.vDif ?? 0,

@@ -87,7 +87,7 @@ namespace NFe.BLL.Configuracao.ValueObjects
             MunicipioEstadoSigla = (Estado?)System.Enum.Parse(typeof(Estado), entrega.UF);
             PaisCodigo = entrega.cPais.GetValueOrDefault();
             PaisNome = entrega.xPais.SanitizeString();
-            CEP = entrega.CEP.ToString();
+            CEP = entrega.CEP.ToString("D8");
         }
         public Endereco(retirada retirada)
         {
@@ -105,7 +105,7 @@ namespace NFe.BLL.Configuracao.ValueObjects
             MunicipioEstadoSigla = (Estado?)System.Enum.Parse(typeof(Estado), retirada.UF);
             PaisCodigo = retirada.cPais.GetValueOrDefault();
             PaisNome = retirada.xPais.SanitizeString();
-            CEP = retirada.CEP.ToString();
+            CEP = retirada.CEP.ToString("D8");
         }
 
         public Endereco(transporta endereco)

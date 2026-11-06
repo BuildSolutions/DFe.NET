@@ -27,9 +27,9 @@ namespace NFe.BLL.Configuracao.Entidades
             }
             if (total?.gIBSMun?.vIBSMun > 0 || total?.gIBSMun?.vDif > 0 || total?.gIBSMun?.vDevTrib > 0)
             {
-                TotalizadorIBSMunicipio = new TotalizadorIBSMunicipio(diferimentoValorTotal: total?.gIBSUF?.vDif ?? 0,
-                devolucaoTributosValorTotal: total?.gIBSUF?.vDevTrib ?? 0,
-                valorTotal: total?.gIBSUF?.vIBSUF ?? 0);
+                TotalizadorIBSMunicipio = new TotalizadorIBSMunicipio(diferimentoValorTotal: total?.gIBSMun?.vDif ?? 0,
+                devolucaoTributosValorTotal: total?.gIBSMun?.vDevTrib ?? 0,
+                valorTotal: total?.gIBSMun?.vIBSMun ?? 0);
             }
 
             ValorTotal = total?.vIBS ?? 0;

@@ -20,8 +20,8 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
                                                 valorMonofasicoIBS) { }
 
         public CBSIBSGrupoMonofasicoTributado(gMonoPadrao monofasicoPadrao) : base(quantidade: monofasicoPadrao?.qBCMono ?? 0,
-                                                                                   aliquotaAdRemCBS: monofasicoPadrao?.qBCMono ?? 0,
-                                                                                   aliquotaAdRemIBS: monofasicoPadrao?.adRemCBS ?? 0,
+                                                                                   aliquotaAdRemCBS: monofasicoPadrao?.adRemCBS ?? 0,
+                                                                                   aliquotaAdRemIBS: monofasicoPadrao?.adRemIBS ?? 0,
                                                                                    valorMonofasicoCBS: monofasicoPadrao?.vCBSMono ?? 0,
                                                                                    valorMonofasicoIBS: monofasicoPadrao?.vIBSMono ?? 0) { }
     }

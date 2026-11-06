@@ -1260,8 +1260,8 @@ namespace NFe.BLL
 
             return new gTransfCred()
             {
-                vCBS = grupoTransferenciaCredito.ValorASerTransferidoIBS,
-                vIBS = grupoTransferenciaCredito.ValorASerTransferidoCBS,
+                vCBS = grupoTransferenciaCredito.ValorASerTransferidoCBS,
+                vIBS = grupoTransferenciaCredito.ValorASerTransferidoIBS,
             };
         }
 
@@ -1276,7 +1276,7 @@ namespace NFe.BLL
             {
                 pDifCBS = grupoMonofasicoDiferimento.PercentualMonofasicoCBSDiferimento,
                 pDifIBS = grupoMonofasicoDiferimento.PercentualMonofasicoIBSDiferimento,
-                vCBSMonoDif = grupoMonofasicoDiferimento.PercentualMonofasicoCBSDiferimento,
+                vCBSMonoDif = grupoMonofasicoDiferimento.ValorMonofasicoCBSDiferimento,
                 vIBSMonoDif = grupoMonofasicoDiferimento.ValorMonofasicoIBSDiferimento
             };
         }
@@ -1483,9 +1483,9 @@ namespace NFe.BLL
             var vICMSDeson = item.ValorICMSDesonerado;
             var motDesICMS = item.MotivoDesoneracao;
 
-            var qBCMonoRet = item.AliquotaAdRemICMSRetido;
+            var qBCMonoRet = item.BaseCalculoICMSRetido;
             var vICMSMonoRet = item.ValorICMSRetido;
-            var adRemICMSRet = item.BaseCalculoICMSRetido;
+            var adRemICMSRet = item.AliquotaAdRemICMSRetido;
 
             switch (CST)
             {

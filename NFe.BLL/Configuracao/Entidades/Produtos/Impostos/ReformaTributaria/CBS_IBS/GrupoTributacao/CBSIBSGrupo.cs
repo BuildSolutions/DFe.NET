@@ -30,6 +30,7 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
             GrupoTributacaoCompraGoverno = grupoTributacaoCompraGoverno;
             GrupoTributacaoMonofasico = grupoTributacaoMonofasico;
             GrupoTransferenciaCredito = grupoTransferenciaCredito;
+            GrupoCreditoPresumido = grupoCreditoPresumido;
         }
 
         public CBSIBSGrupo(IBSCBS ibsCbs)

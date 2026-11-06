@@ -19,8 +19,8 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
                                                        valorMonofasicoIBSRetencao) { }
 
         public CBSIBSGrupoMonofasicoSujeitoRetencao(gMonoReten monofasicoSujeitoRetencao) : base(quantidade: monofasicoSujeitoRetencao?.qBCMonoReten ?? 0,
-                                                                                                 aliquotaAdRemCBS: monofasicoSujeitoRetencao?.qBCMonoReten ?? 0,
-                                                                                                 aliquotaAdRemIBS: monofasicoSujeitoRetencao?.adRemCBSReten ?? 0,
+                                                                                                 aliquotaAdRemCBS: monofasicoSujeitoRetencao?.adRemCBSReten ?? 0,
+                                                                                                 aliquotaAdRemIBS: monofasicoSujeitoRetencao?.adRemIBSReten ?? 0,
                                                                                                  valorMonofasicoCBS: monofasicoSujeitoRetencao?.vCBSMonoReten ?? 0,
                                                                                                  valorMonofasicoIBS: monofasicoSujeitoRetencao?.vIBSMonoReten ?? 0) { }
     }
