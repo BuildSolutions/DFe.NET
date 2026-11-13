@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Xml.Serialization;
 
 namespace NFe.Classes.Informacoes.Identificacao.Tipos
@@ -543,6 +543,10 @@ namespace NFe.Classes.Informacoes.Identificacao.Tipos
         modelo2 = 2
     }
 
+    /// <summary>
+    /// BB02 - Tipo de ente governamental (TEnteGov). Administração pública direta e suas
+    /// autarquias e fundações.
+    /// </summary>
     public enum TipoEnteGov
     {
         [Description("União")]
@@ -559,21 +563,15 @@ namespace NFe.Classes.Informacoes.Identificacao.Tipos
 
         [Description("Município")]
         [XmlEnum("4")]
-        Municipio = 4
-    }
+        Municipio = 4,
 
-    public enum TipoOperGov
-    {
-        [Description("Fornecimento")]
-        [XmlEnum("1")]
-        Fornecimento = 1,
+        [Description("Consórcio Público")]
+        [XmlEnum("5")]
+        ConsorcioPublico = 5,
 
-        [Description("Recebimento do pagamento, conforme fato gerador do IBS/CBS definido no Art. 10 § 2º")]
-        [XmlEnum("2")]
-        RecebimentoPagamento = 2,
-        [Description("Recebimento do pagamento con fornecimento posterior")]
-        [XmlEnum("4")]
-        RecebimentoPagamentoFornecimentoPosterior = 4
+        [Description("Comitê Gestor do IBS")]
+        [XmlEnum("6")]
+        ComiteGestorIBS = 6
     }
 
     public enum indBemMovelUsado

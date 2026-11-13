@@ -2,6 +2,10 @@
 
 namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.Enumerators
 {
+    /// <summary>
+    /// Tipo de Nota de Débito (tpNFDebito). Os valores são os da TTpNFDebito do leiaute
+    /// da NF-e 4.00, por isso não podem ser renumerados.
+    /// </summary>
     public enum ENotaFiscalDebitoTipo : uint
     {
         [Description("NÃO SE APLICA")]
@@ -23,12 +27,12 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.Enu
         TransferenciaDeCreditoNaSucessao = 5,
 
         [Description("PAGAMENTO ANTECIPADO")]
-        PagamentoAntecipado = 5,
+        PagamentoAntecipado = 6,
 
-        [Description("PERDA EM ESTOQUE")]
-        PerdaEmEstoque = 5,
+        [Description("PERDA EM ESTOQUE (PERECIMENTO, PERDA, FURTO, ROUBO)")]
+        PerdaEmEstoque = 7,
 
         [Description("DESENQUADRAMENTO DO SN")]
-        DesenquadramentoDoSN = 5,
+        DesenquadramentoDoSN = 8,
     }
 }

@@ -12,12 +12,17 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
     public class IBSGrupoCreditoPresumido : GrupoCreditoPresumidoBase, IIBSGrupo
     {
         public IBSGrupoCreditoPresumido(decimal percentualCredito,
-            decimal valorCredito,
-            decimal valorCreditoEmCondicaoSuspensiva) : base(percentualCredito, valorCredito, valorCreditoEmCondicaoSuspensiva) { }
+            decimal? valorCredito,
+            decimal? valorCreditoEmCondicaoSuspensiva) : base(percentualCredito, valorCredito, valorCreditoEmCondicaoSuspensiva) { }
 
+        /// <summary>
+        /// Leitura: o braço do xs:choice é preservado. vCredPresCondSus presente no XML
+        /// significa crédito em condição suspensiva, e aí vCredPres fica nulo — mesmo que o
+        /// valor suspensivo seja zero.
+        /// </summary>
         public IBSGrupoCreditoPresumido(gIBSCredPres creditoPresumidoIBS)
             : base(percentualCredito: creditoPresumidoIBS?.pCredPres ?? 0,
-                  valorCredito: creditoPresumidoIBS?.vCredPres ?? 0,
-                  valorCreditoPresumidoEmCondicaoSuspensiva: creditoPresumidoIBS?.vCredPresCondSus ?? 0) { }
+                  valorCredito: creditoPresumidoIBS?.vCredPresCondSus == null ? creditoPresumidoIBS?.vCredPres : null,
+                  valorCreditoPresumidoEmCondicaoSuspensiva: creditoPresumidoIBS?.vCredPresCondSus) { }
     }
 }

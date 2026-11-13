@@ -33,5 +33,11 @@ namespace NFe.Classes.Informacoes.Detalhe.Tributacao
         }
 
         public bool ShouldSerializevCredPresCondSus() => vCredPresCondSus.HasValue;
+
+        /// <summary>
+        /// vCredPres e vCredPresCondSus estao num xs:choice em TCredPres
+        /// (DFeTiposBasicos_v1.00.xsd): somente um dos dois pode ser serializado.
+        /// </summary>
+        public bool ShouldSerializevCredPres() => !vCredPresCondSus.HasValue;
     }
 }

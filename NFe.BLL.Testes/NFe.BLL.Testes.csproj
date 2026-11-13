@@ -22,4 +22,9 @@
 		<ProjectReference Include="..\NFe.BLL\NFe.BLL.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<None Include="..\NFe.AppTeste\Schemas\DFeTiposBasicos_v1.00.xsd" Link="Schemas\DFeTiposBasicos_v1.00.xsd" CopyToOutputDirectory="PreserveNewest" />
+		<None Include="..\NFe.AppTeste\Schemas\tiposBasico_v4.00.xsd" Link="Schemas\tiposBasico_v4.00.xsd" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
+
 </Project>

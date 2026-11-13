@@ -16,20 +16,25 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
             decimal? valorDevolucaoTributos = null,
 
             decimal? percentualReducaoAliquota = null,
-            decimal? aliquotaEfetiva = null) : base(aliquota,
-                                                     valor,
-                                                     percentualDiferimento,
-                                                     valorDiferimento,
-                                                     valorDevolucaoTributos,
-                                                     percentualReducaoAliquota,
-                                                     aliquotaEfetiva) { }
+            decimal? aliquotaEfetiva = null,
+
+            bool exigeGrupoReducao = false) : base(aliquota: aliquota,
+                                                     valor: valor,
+                                                     percentualDiferimento: percentualDiferimento,
+                                                     valorDiferimento: valorDiferimento,
+                                                     valorDevolucaoTributos: valorDevolucaoTributos,
+                                                     percentualReducaoAliquota: percentualReducaoAliquota,
+                                                     aliquotaEfetiva: aliquotaEfetiva,
+                                                     exigeGrupoReducao: exigeGrupoReducao) { }
 
         public IBSMunicipioGrupo(gIBSCBS ibsCbs) : base(aliquota: ibsCbs?.gIBSMun?.pIBSMun ?? 0,
                                                      valor: ibsCbs?.gIBSMun?.vIBSMun ?? 0,
                                                      percentualDiferimento: ibsCbs?.gIBSMun?.gDif?.pDif ?? 0,
                                                      valorDiferimento: ibsCbs?.gIBSMun?.gDif?.vDif ?? 0,
                                                      valorDevolucaoTributos: ibsCbs?.gIBSMun?.gDevTrib?.vDevTrib ?? 0,
+                                                     percentualDevolucaoTributos: ibsCbs?.gIBSMun?.gDevTrib?.pDevTrib,
                                                      percentualReducaoAliquota: ibsCbs?.gIBSMun?.gRed?.pRedAliq ?? 0,
-                                                     aliquotaEfetiva: ibsCbs?.gIBSMun?.gRed?.pAliqEfet ?? 0) { }
+                                                     aliquotaEfetiva: ibsCbs?.gIBSMun?.gRed?.pAliqEfet ?? 0,
+                                                     exigeGrupoReducao: ibsCbs?.gIBSMun?.gRed != null) { }
     }
 }
