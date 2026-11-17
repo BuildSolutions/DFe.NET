@@ -10,7 +10,7 @@ namespace NFe.BLL.Validators.Produtos.Impostos
         public ImpostoValidator()
         {
             RuleFor(imposto => imposto.ICMS).NotNull().WithMessage("Imposto ICMS não informado!");
-            When(cst => cst.ICMS.CST.EValido(), () =>
+            When(cst => cst.ICMS?.CST.EValido() == true, () =>
             {
                 RuleFor(imposto => imposto.ICMS).SetValidator(new ICMS00Validator()).When(icms => icms.ICMS.CST == Classes.Informacoes.Detalhe.Tributacao.Estadual.Tipos.Csticms.Cst00).WithMessage("ICMS 00 Inválido");
                 RuleFor(imposto => imposto.ICMS).SetValidator(new ICMS10Validator()).When(icms => icms.ICMS.CST == Classes.Informacoes.Detalhe.Tributacao.Estadual.Tipos.Csticms.Cst10).WithMessage("ICMS 10 Inválido");
@@ -21,9 +21,8 @@ namespace NFe.BLL.Validators.Produtos.Impostos
             });
 
             RuleFor(imposto => imposto.ICMS).NotNull().WithMessage("Imposto ICMS não informado!");
-            When(cst => cst.ICMS.CSOSN.EValido(), () =>
+            When(cst => cst.ICMS?.CSOSN.EValido() == true, () =>
             {
-                RuleFor(imposto => imposto.ICMS).SetValidator(new ICMSSN101Validator()).When(icms => icms.ICMS.CSOSN == Classes.Informacoes.Detalhe.Tributacao.Estadual.Tipos.Csosnicms.Csosn101).WithMessage("ICMS 101 Inválido");
                 RuleFor(imposto => imposto.ICMS).SetValidator(new ICMSSN201Validator()).When(icms => icms.ICMS.CSOSN == Classes.Informacoes.Detalhe.Tributacao.Estadual.Tipos.Csosnicms.Csosn201).WithMessage("ICMS 201 Inválido");
                 RuleFor(imposto => imposto.ICMS).SetValidator(new ICMSSN202Validator()).When(icms => icms.ICMS.CSOSN == Classes.Informacoes.Detalhe.Tributacao.Estadual.Tipos.Csosnicms.Csosn202).WithMessage("ICMS 202 Inválido");
             });

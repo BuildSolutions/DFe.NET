@@ -144,6 +144,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GNRE.Wsdl.Standard", "GNRE.
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared.GNRE.Wsdl", "Shared.GNRE.Wsdl\Shared.GNRE.Wsdl.shproj", "{919EBECF-B9A9-485D-900D-6F365BC591A1}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NFe.BLL.Testes", "NFe.BLL.Testes\NFe.BLL.Testes.csproj", "{D7F6B14B-EF8B-409D-9683-9F6F37A22867}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -576,6 +578,14 @@ Global
 		{D868005D-1F35-43E0-BE57-7914D5BA1583}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D868005D-1F35-43E0-BE57-7914D5BA1583}.Release|x86.ActiveCfg = Release|Any CPU
 		{D868005D-1F35-43E0-BE57-7914D5BA1583}.Release|x86.Build.0 = Release|Any CPU
+		{D7F6B14B-EF8B-409D-9683-9F6F37A22867}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7F6B14B-EF8B-409D-9683-9F6F37A22867}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7F6B14B-EF8B-409D-9683-9F6F37A22867}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D7F6B14B-EF8B-409D-9683-9F6F37A22867}.Debug|x86.Build.0 = Debug|Any CPU
+		{D7F6B14B-EF8B-409D-9683-9F6F37A22867}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7F6B14B-EF8B-409D-9683-9F6F37A22867}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7F6B14B-EF8B-409D-9683-9F6F37A22867}.Release|x86.ActiveCfg = Release|Any CPU
+		{D7F6B14B-EF8B-409D-9683-9F6F37A22867}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

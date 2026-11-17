@@ -1,5 +1,4 @@
-﻿using System;
-using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.Interfaces;
+﻿using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.Interfaces;
 using NFe.Classes.Informacoes.Detalhe.Tributacao;
 
 namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS_IBS.GrupoTributacao
@@ -13,6 +12,8 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
             tpCredPresIBSZFM tipoCreditoPresumidoIBSZFM,
             decimal valorCreditoPresumidoIBSZFM)
         {
+            CompetenciaDeApuracao.Conferir(dataCompetenciaApuracao, "do crédito presumido de IBS da ZFM");
+
             AnoMesCompetenciaApuracao = dataCompetenciaApuracao;
             TipoCreditoPresumidoIBSZFM = tipoCreditoPresumidoIBSZFM;
             ValorCreditoPresumidoIBSZFM = valorCreditoPresumidoIBSZFM;
@@ -20,8 +21,8 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
 
         public IBSGrupoCreditoPresumidoZFM(gCredPresIBSZFM creditoPresumidoZFM)
         {
-            AnoMesCompetenciaApuracao = creditoPresumidoZFM.competApur;
-            TipoCreditoPresumidoIBSZFM = creditoPresumidoZFM.tpCredPresIBSZFM;
+            AnoMesCompetenciaApuracao = creditoPresumidoZFM?.competApur;
+            TipoCreditoPresumidoIBSZFM = creditoPresumidoZFM?.tpCredPresIBSZFM ?? default(tpCredPresIBSZFM);
             ValorCreditoPresumidoIBSZFM = creditoPresumidoZFM?.vCredPresIBSZFM ?? 0;
         }
 

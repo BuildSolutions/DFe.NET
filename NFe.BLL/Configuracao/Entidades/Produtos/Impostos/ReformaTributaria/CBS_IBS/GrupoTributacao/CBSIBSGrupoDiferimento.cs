@@ -11,7 +11,6 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
     /// </summary>
     public class CBSIBSGrupoDiferimento : ICBSIBSGrupo
     {
-        private readonly decimal _aliquotaEfetiva;
 
         public CBSIBSGrupoDiferimento(decimal percentualDiferimento,
             decimal valorDiferimento)

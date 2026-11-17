@@ -11,8 +11,6 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
     /// </summary>
     public class CBSIBSGrupo : ICBSIBSGrupo
     {
-        private readonly IBSUFGrupo _ibsUFGrupo;
-        private readonly IBSMunicipioGrupo _ibsMunicipioGrupo;
 
         public CBSIBSGrupo(decimal baseCalculo,
             IBSGrupo ibsGrupo,
@@ -21,7 +19,8 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
             CBSIBSGrupoTributacaoCompraGoverno grupoTributacaoCompraGoverno,
             CBSIBSGrupoMonofasico grupoTributacaoMonofasico,
             CBSIBSGrupoTransferenciaCredito grupoTransferenciaCredito,
-            CBSIBSGrupoCreditoPresumido grupoCreditoPresumido)
+            CBSIBSGrupoCreditoPresumido grupoCreditoPresumido,
+            CBSIBSGrupoAjusteCompetencia grupoAjusteCompetencia = null)
         {
             BaseCalculo = baseCalculo;
             IBSGrupo = ibsGrupo;
@@ -30,6 +29,8 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
             GrupoTributacaoCompraGoverno = grupoTributacaoCompraGoverno;
             GrupoTributacaoMonofasico = grupoTributacaoMonofasico;
             GrupoTransferenciaCredito = grupoTransferenciaCredito;
+            GrupoCreditoPresumido = grupoCreditoPresumido;
+            GrupoAjusteCompetencia = grupoAjusteCompetencia;
         }
 
         public CBSIBSGrupo(IBSCBS ibsCbs)
@@ -68,6 +69,11 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
             if (ibsCbs.gTransfCred != null)
             {
                 GrupoTransferenciaCredito = new CBSIBSGrupoTransferenciaCredito(transferenciaCredito: ibsCbs?.gTransfCred);
+            }
+
+            if (ibsCbs.gAjusteCompet != null)
+            {
+                GrupoAjusteCompetencia = new CBSIBSGrupoAjusteCompetencia(ajusteCompetencia: ibsCbs.gAjusteCompet);
             }
 
             if (ibsCbs.gCredPresOper != null
@@ -110,5 +116,8 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
         /// sem obrigatoriedade (permite, mas não exige)
         /// </summary>
         public CBSIBSGrupoCreditoPresumido GrupoCreditoPresumido { get; }
+
+        /// <summary>gAjusteCompet — Ajuste de competência do IBS e da CBS (UB118). Ocupa a mesma opção do xs:choice de gIBSCBS, gIBSCBSMono e gTransfCred.</summary>
+        public CBSIBSGrupoAjusteCompetencia GrupoAjusteCompetencia { get; }
     }
 }

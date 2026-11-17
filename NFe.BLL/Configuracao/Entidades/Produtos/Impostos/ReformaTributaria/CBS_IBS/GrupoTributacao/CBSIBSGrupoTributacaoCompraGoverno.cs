@@ -9,7 +9,6 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
     /// </summary>
     public class CBSIBSGrupoTributacaoCompraGoverno : ICBSIBSGrupo
     {
-        private readonly decimal _baseCalculo;
 
         public CBSIBSGrupoTributacaoCompraGoverno(decimal aliquotaPercentualCBS,
             decimal aliquotaPercentualIBSUF,

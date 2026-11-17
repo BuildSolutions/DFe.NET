@@ -115,7 +115,7 @@ namespace NFe.BLL
                 string dataBaixaContribuinte = retornoConsulta.Retorno.infCons?.infCad?.dBaixa;
                 if (!string.IsNullOrEmpty(dataBaixaContribuinte))
                 {
-                    dataBaixaContribuinte = string.Format("Empresa baixada em: {0:dd/MM/yyyy HH:mm:ss}", retornoConsulta.Retorno.infCons.infCad.dBaixa);
+                    dataBaixaContribuinte = "Empresa baixada em: " + dataBaixaContribuinte;
                 }
 
                 string contribuinteNaoHabilitado = string.Empty;
@@ -140,7 +140,7 @@ namespace NFe.BLL
         }
 
         /// <summary>
-        ///     Envia um evento do tipo "Carta de Correção"
+        ///     Envia um evento do tipo "Cancelamento"
         /// </summary>
         /// <returns>Retorna um objeto da classe <see cref="RetornoRecepcaoEvento"/> com o retorno do serviço <see cref="RecepcaoEvento"/></returns>
         public RetornoRecepcaoEvento RecepcaoEventoCancelamento(int idlote, int sequenciaEvento, string protocoloCancelamento,
@@ -152,7 +152,7 @@ namespace NFe.BLL
         }
 
         /// <summary>
-        ///     Envia um evento do tipo "Cancelamento"
+        ///     Envia um evento do tipo "Carta de Correção"
         /// </summary>
         /// <returns>Retorna um objeto da classe <see cref="RetornoRecepcaoEvento"/> com o retorno do serviço <see cref="RecepcaoEvento"/></returns>
         public RetornoRecepcaoEvento RecepcaoEventoCartaCorrecao(int idlote, int sequenciaEvento,
@@ -226,10 +226,22 @@ namespace NFe.BLL
                 return false;
             }
 
+            if (retornoEvento.ProcEventosNFe == null
+                || retornoEvento.ProcEventosNFe.Count == 0)
+            {
+                erro = string.Format("Lote do evento aceito ({0}) mas sem evento processado no retorno.",
+                    retornoEvento.Retorno.cStat);
+                return false;
+            }
+
             var tpEvento = retornoEvento.ProcEventosNFe[0]?.evento.infEvento.tpEvento;
             int strCStat = retornoEvento.ProcEventosNFe[0]?.retEvento?.infEvento?.cStat ?? 0;
-            string strchNFe = retornoEvento.ProcEventosNFe[0].evento.infEvento.chNFe;
-            int.TryParse(strchNFe.Substring(25, 9), out int nroNFe);
+            string strchNFe = retornoEvento.ProcEventosNFe[0]?.evento?.infEvento?.chNFe;
+            int nroNFe = 0;
+            if (strchNFe?.Length == 44)
+            {
+                int.TryParse(strchNFe.Substring(25, 9), out nroNFe);
+            }
             string xMotivo = retornoEvento.ProcEventosNFe[0]?.retEvento?.infEvento?.xMotivo;
 
             if (strCStat != 135
@@ -293,6 +305,14 @@ namespace NFe.BLL
                 // avisos, NT 2026.002) e 150 (fora de prazo). Tratar o 120 como erro
                 // faz o sistema abandonar nota que a SEFAZ autorizou, e a reemissao
                 // volta como 204 (duplicidade).
+                if (retornoAutorizacao.protNFe?.infProt == null)
+                {
+                    erro = string.Format("({0}) {1} - lote processado sem protocolo no retorno.",
+                        retornoAutorizacao.cStat,
+                        retornoAutorizacao.xMotivo);
+                    return false;
+                }
+
                 if (!NfeSituacao.Autorizada(retornoAutorizacao.protNFe.infProt.cStat))
                 {
                     erro = string.Format("({0}) {1}",
@@ -353,6 +373,16 @@ namespace NFe.BLL
                 }
 
                 erro = string.Format("({0}) {1}",
+                    retornoAutorizacao.cStat,
+                    retornoAutorizacao.xMotivo);
+                return false;
+            }
+
+            if (retornoAutorizacao.protNFe == null
+                || retornoAutorizacao.protNFe.Count == 0
+                || retornoAutorizacao.protNFe[0]?.infProt == null)
+            {
+                erro = string.Format("({0}) {1} - lote processado sem protocolo no retorno.",
                     retornoAutorizacao.cStat,
                     retornoAutorizacao.xMotivo);
                 return false;
@@ -489,8 +519,13 @@ namespace NFe.BLL
         private bool ValidarRetornoDistribuicaoDocumentosFiscais(retDistDFeInt retornoConsulta, out string erro)
         {
             erro = string.Empty;
-            if (retornoConsulta == null
-                || retornoConsulta.cStat != 138)
+            if (retornoConsulta == null)
+            {
+                erro = "Sem retorno do serviço de Distribuição de DF-e.";
+                return false;
+            }
+
+            if (retornoConsulta.cStat != 138)
             {
                 erro = string.Format("({0}) {1}",
                     retornoConsulta.cStat,

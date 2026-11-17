@@ -89,7 +89,10 @@ namespace NFe.BLL
 
         public Classes.NFe AssinaNFe()
         {
-            var assinado = NFeXML.Assina();
+            // A configuracao vai explicita: sem ela Assina cai em
+            // ConfiguracaoServico.Instancia e assinaria com o certificado do ultimo
+            // emitente que montou configuracao no processo.
+            var assinado = NFeXML.Assina(_cfgApp.CfgServico);
             NotaFiscal.AtualizarChaveAcesso(NFeXML?.infNFe?.Id?.Substring(3));
             return assinado;
         }
@@ -167,6 +170,49 @@ namespace NFe.BLL
             return true;
         }
 
+        /// <summary>
+        /// gCompraGov (ide) e gRed (item) sao dois niveis do XML que tem de concordar, e
+        /// quem monta um nao enxerga o outro: o grupo do documento sai de GetIdentificacao
+        /// e os impostos do item saem de GetProdutoCBSIBS. A conferencia fica aqui porque e
+        /// o unico ponto onde ide e det ja existem.
+        /// <para>Com gCompraGov informado, as UB26-20, UB45-20 e UB64-20 exigem o gRed nos
+        /// tres grupos do item - rejeicoes 1033, 1074 e 1079 - mesmo com pRedAliq zero. Sem
+        /// gCompraGov, a UB82a-30 proibe o gTribCompraGov no item (rejeicao 1144).</para>
+        /// <para>Sem esta conferencia o erro so aparecia na resposta da SEFAZ, sem dizer
+        /// qual item, e quem usa a biblioteca tinha de sincronizar os dois niveis na mao.</para>
+        /// </summary>
+        public static void ConferirCoerenciaDaCompraGovernamental(infNFe infNFe)
+        {
+            var temCompraGovernamental = infNFe.ide?.gCompraGov != null;
+
+            foreach (var item in infNFe.det ?? new List<det>())
+            {
+                var grupo = item.imposto?.IBSCBS?.gIBSCBS;
+
+                if (grupo == null)
+                {
+                    continue;
+                }
+
+                if (!temCompraGovernamental)
+                {
+                    if (grupo.gTribCompraGov != null)
+                    {
+                        throw new ArgumentException($"Item {item.nItem} informa o grupo de tributação em compra governamental (gTribCompraGov) e o documento não tem o grupo de compra governamental (ide/gCompraGov).");
+                    }
+
+                    continue;
+                }
+
+                if (grupo.gIBSUF?.gRed == null
+                    || grupo.gIBSMun?.gRed == null
+                    || grupo.gCBS?.gRed == null)
+                {
+                    throw new ArgumentException($"Item {item.nItem}: em compra governamental o grupo de redução de alíquota (gRed) é obrigatório no IBS da UF, no IBS do Município e na CBS, ainda que com pRedAliq zero.");
+                }
+            }
+        }
+
         private infNFe GetNFe()
         {
             var infNFe = new infNFe
@@ -182,6 +228,8 @@ namespace NFe.BLL
             infNFe.entrega = GetEnderecoEntrega();
             infNFe.retirada = GetEnderecoRetirada();
             infNFe.det = GetProdutos();
+
+            ConferirCoerenciaDaCompraGovernamental(infNFe);
             infNFe.total = GetTotal();
             infNFe.cobr = GetCobranca();
             infNFe.pag = GetPagamento();
@@ -291,13 +339,28 @@ namespace NFe.BLL
                 indPres = indPres,
                 procEmi = ProcessoEmissao.peAplicativoContribuinte,
                 verProc = verProc,
-                NFref = GetNFRef()
+                NFref = GetNFRef(NotaFiscal.DocumentosReferenciados)
             };
+
+            // B25.1/B25.2. Sem o tipo, a nota de credito e a de debito levam rejeicao 1202 -
+            // "cClassTrib incompativel com a finalidade da nota ou com o tipo de Nota de
+            // Debito ou Credito". O lado vem do finNFe, e os dois enums numeram pelo leiaute,
+            // igual a FinalidadeNFe: por isso e cast, nao switch.
+            if (finNFe == FinalidadeNFe.fnNotaCredito)
+            {
+                ide.tpNFCredito = (TipoNFeCredito?)NotaFiscal.TipoNotaCreditoDebito;
+            }
+            else if (finNFe == FinalidadeNFe.fnNotaDebito)
+            {
+                ide.tpNFDebito = (TipoNFeDebito?)NotaFiscal.TipoNotaCreditoDebito;
+            }
 
             if (indIntermed.EValido())
             {
                 ide.indIntermed = indIntermed;
             }
+
+            ide.gCompraGov = ObterCompraGovernamental(NotaFiscal.CompraGovernamental);
 
             if (ide.tpEmis != TipoEmissao.teNormal)
             {
@@ -531,23 +594,25 @@ namespace NFe.BLL
             var cPais = NotaFiscal.EnderecoEntrega.Endereco.PaisCodigo;
             var xPais = NotaFiscal.EnderecoEntrega.Endereco.PaisNome;
             string fone = !string.IsNullOrEmpty(NotaFiscal.EnderecoEntrega.Fone) ? NotaFiscal.EnderecoEntrega.Fone : null;
-            var email = !string.IsNullOrEmpty(NotaFiscal.EnderecoEntrega.Email) ? NotaFiscal.EnderecoEntrega.Email : null;
+            // TODO: entrega/retirada aceitam email (NT 2020.006) e ele nao e emitido aqui.
 
             string nome = !string.IsNullOrEmpty(NotaFiscal.EnderecoEntrega.Nome) ? NotaFiscal.EnderecoEntrega.Nome : null;
             string cnpj = null;
             string cpf = null;
             string ie = null;
-            if (NotaFiscal.EnderecoEntrega.CPFCNPJ.Length == 14)
+            if (NotaFiscal.EnderecoEntrega.CPFCNPJ?.Length == 14)
             {
                 cnpj = NotaFiscal.EnderecoEntrega.CPFCNPJ;
                 ie = NotaFiscal.EnderecoEntrega.RGIE;
             }
-            else if (NotaFiscal.EnderecoEntrega.CPFCNPJ.Length == 11)
+            else if (NotaFiscal.EnderecoEntrega.CPFCNPJ?.Length == 11)
             {
                 cpf = NotaFiscal.EnderecoEntrega.CPFCNPJ;
             }
 
-            long.TryParse(cep, out long lCEP);
+            // Extrai os digitos antes de converter: CEP guardado como "13000-000" passa no
+            // EnderecoValidator (que compara RetornaNumeros) mas iria para o XML como 0.
+            long.TryParse(cep.RetornaNumeros(), out long lCEP);
 
             return new entrega
             {
@@ -589,23 +654,23 @@ namespace NFe.BLL
             var cPais = NotaFiscal.EnderecoRetirada.Endereco.PaisCodigo;
             var xPais = NotaFiscal.EnderecoRetirada.Endereco.PaisNome;
             string fone = !string.IsNullOrEmpty(NotaFiscal.EnderecoRetirada.Fone) ? NotaFiscal.EnderecoRetirada.Fone : null;
-            var email = !string.IsNullOrEmpty(NotaFiscal.EnderecoRetirada.Email) ? NotaFiscal.EnderecoRetirada.Email : null;
+            // TODO: entrega/retirada aceitam email (NT 2020.006) e ele nao e emitido aqui.
 
             string nome = !string.IsNullOrEmpty(NotaFiscal.EnderecoRetirada.Nome) ? NotaFiscal.EnderecoRetirada.Nome : null;
             string cnpj = null;
             string cpf = null;
             string ie = null;
-            if (NotaFiscal.EnderecoRetirada.CPFCNPJ.Length == 14)
+            if (NotaFiscal.EnderecoRetirada.CPFCNPJ?.Length == 14)
             {
                 cnpj = NotaFiscal.EnderecoRetirada.CPFCNPJ;
                 ie = NotaFiscal.EnderecoRetirada.RGIE;
             }
-            else if (NotaFiscal.EnderecoRetirada.CPFCNPJ.Length == 11)
+            else if (NotaFiscal.EnderecoRetirada.CPFCNPJ?.Length == 11)
             {
                 cpf = NotaFiscal.EnderecoRetirada.CPFCNPJ;
             }
 
-            long.TryParse(cep, out long lCEP);
+            long.TryParse(cep.RetornaNumeros(), out long lCEP);
 
             return new retirada
             {
@@ -731,30 +796,90 @@ namespace NFe.BLL
             };
         }
 
-        private List<NFref> GetNFRef()
+        /// <summary>
+        /// Funcao pura: depende so da lista recebida, por isso e estatica e publica -
+        /// permite testar o mapeamento de NFref sem montar a NFe inteira.
+        /// </summary>
+        public static List<NFref> GetNFRef(IReadOnlyList<DocumentoReferenciado> documentosReferenciados)
         {
-            if (NotaFiscal.DocumentosReferenciados == null
-                || NotaFiscal.DocumentosReferenciados.Count == 0)
+            if (documentosReferenciados == null
+                || documentosReferenciados.Count == 0)
             {
                 return new List<NFref>();
             }
 
             var lstNFref = new List<NFref>();
 
-            foreach (var item in NotaFiscal.DocumentosReferenciados)
+            // Chave repetida no NFref e rejeicao. Acontece de verdade na NF-e de CFOP
+            // 5929/6929: a lista chega de duas fontes - o que o operador cadastrou e o que
+            // vem da venda (SAT/NFC-e) - e nada impede a mesma chave nas duas. A guarda
+            // fica aqui porque este e o unico caminho para o grupo BA.
+            var chavesJaIncluidas = new HashSet<string>();
+
+            // NFref e um xs:choice de seis formas: cada documento referenciado preenche
+            // exatamente uma. O switch deixa a exclusividade explicita - a versao anterior
+            // montava as tres opcoes com ternarios lado a lado, o que sugeria o contrario.
+            foreach (var item in documentosReferenciados)
             {
-                lstNFref.Add(new NFref
+                if (item == null)
                 {
-                    refNFe = item.TipoDocumento == EDocumentoReferenciado.NFe ? ((DocumentoReferenciadoNFe)item).ChaveAcesso : null,
-                    refNF = item.TipoDocumento == EDocumentoReferenciado.NF ? GetNotaFiscalReferenciada((DocumentoReferenciadoNF)item) : null,
-                    refECF = item.TipoDocumento == EDocumentoReferenciado.ECF ? GetCupomFiscalReferenciado((DocumentoReferenciadoECF)item) : null
-                });
+                    continue;
+                }
+
+                var porChave = item as DocumentoReferenciadoNFe;
+
+                if (porChave != null
+                    && !chavesJaIncluidas.Add($"{(int)item.TipoDocumento}|{porChave.ChaveAcesso}"))
+                {
+                    continue;
+                }
+
+                var nFref = new NFref();
+
+                switch (item.TipoDocumento)
+                {
+                    case EDocumentoReferenciado.NFe:
+                        nFref.refNFe = ((DocumentoReferenciadoNFe)item).ChaveAcesso;
+                        break;
+
+                    case EDocumentoReferenciado.NFeSigilosa:
+                        nFref.refNFeSig = ((DocumentoReferenciadoNFe)item).ChaveAcesso;
+                        break;
+
+                    case EDocumentoReferenciado.CTe:
+                        nFref.refCTe = ((DocumentoReferenciadoNFe)item).ChaveAcesso;
+                        break;
+
+                    case EDocumentoReferenciado.NF:
+                        nFref.refNF = GetNotaFiscalReferenciada((DocumentoReferenciadoNF)item);
+                        break;
+
+                    case EDocumentoReferenciado.ECF:
+                        nFref.refECF = GetCupomFiscalReferenciado((DocumentoReferenciadoECF)item);
+                        break;
+
+                    case EDocumentoReferenciado.NFProdutorRural:
+                        nFref.refNFP = GetNotaFiscalProdutorRuralReferenciada((DocumentoReferenciadoNFP)item);
+                        break;
+
+                    default:
+                        throw new ArgumentException($"Documento referenciado de tipo não tratado: {item.TipoDocumento}.");
+                }
+
+                lstNFref.Add(nFref);
+            }
+
+            // ide/NFref e maxOccurs=999 (leiauteNFe_v4.00.xsd). A contagem e DEPOIS da
+            // deduplicacao: chave repetida nao ocupa ocorrencia.
+            if (lstNFref.Count > 999)
+            {
+                throw new ArgumentException($"A nota informa {lstNFref.Count} documentos referenciados (ide/NFref); o leiaute aceita no máximo 999.");
             }
 
             return lstNFref;
         }
 
-        private refNF GetNotaFiscalReferenciada(DocumentoReferenciadoNF notaFiscalReferenciada)
+        private static refNF GetNotaFiscalReferenciada(DocumentoReferenciadoNF notaFiscalReferenciada)
         {
             return new refNF
             {
@@ -767,7 +892,26 @@ namespace NFe.BLL
             };
         }
 
-        private refECF GetCupomFiscalReferenciado(DocumentoReferenciadoECF cupomFiscalReferenciada)
+        /// <summary>
+        /// BA10 - refNFP. CNPJ e CPF sao um xs:choice: a entidade ja garante que so um dos
+        /// dois esta preenchido, e o outro vai nulo para nao sair no XML.
+        /// </summary>
+        private static refNFP GetNotaFiscalProdutorRuralReferenciada(DocumentoReferenciadoNFP notaProdutorRural)
+        {
+            return new refNFP
+            {
+                AAMM = notaProdutorRural.DataEmissao,
+                cUF = notaProdutorRural.EmitenteCodigoUF,
+                CNPJ = notaProdutorRural.EmitenteCNPJ,
+                CPF = notaProdutorRural.EmitenteCPF,
+                IE = notaProdutorRural.EmitenteInscricaoEstadual,
+                mod = notaProdutorRural.Modelo,
+                serie = notaProdutorRural.Serie,
+                nNF = notaProdutorRural.Numero
+            };
+        }
+
+        private static refECF GetCupomFiscalReferenciado(DocumentoReferenciadoECF cupomFiscalReferenciada)
         {
             return new refECF
             {
@@ -797,7 +941,9 @@ namespace NFe.BLL
                 nItem = nItem,
                 prod = GetProduto(item),
                 imposto = GetProdutoImposto(item),
-                impostoDevol = GetProdutoImpostoDevolucao(item.Impostos.IPI),
+                impostoDevol = _levaImpostoDoRegimeAntigo()
+                    ? GetProdutoImpostoDevolucao(item.Impostos.IPI)
+                    : null,
                 infAdProd = GetProdutoIndAdProd(item),
                 DFeReferenciado = GetDFeReferenciado(item),
             };
@@ -932,8 +1078,87 @@ namespace NFe.BLL
             return item.IBPTValor;
         }
 
+        /// <summary>
+        /// NF-e de credito (<c>finNFe = 5</c>) e de debito (<c>6</c>) <b>nao levam os grupos de
+        /// imposto do regime antigo</b> - ICMS, ICMSUFDest, IPI, II, PIS, COFINS e o
+        /// <c>impostoDevol</c>. Regra <b>B25-80</b>, rejeicao <b>1001</b>: o grupo e recusado
+        /// mesmo zerado, entao tem de ficar FORA do XML, nao ir com zero.
+        /// <para>O <c>IBSCBS</c> continua: e o motivo da nota. O <c>cClassTrib</c> 800xxx
+        /// (transferencia de credito) e 811xxx (ajustes) mora nele, e e ele que a rejeicao
+        /// <b>1202</b> cobra junto do <c>tpNFCredito</c>/<c>tpNFDebito</c>.</para>
+        /// <para><b>Quatro tipos sao excecao</b>, porque neles a mercadoria CIRCULA: credito
+        /// <c>03</c> (retorno por recusa total), <c>04</c> (reducao de valores) e <c>06</c>
+        /// (retorno por recusa parcial), e debito <c>07</c> (perda em estoque). Nesses o imposto
+        /// antigo continua saindo - por isso a decisao depende do TIPO, nao so da finalidade.</para>
+        /// <para>Esta e a resposta unica a pergunta: os grupos do item, o <c>impostoDevol</c> e
+        /// os totais do regime antigo no <c>ICMSTot</c> perguntam todos aqui. Governar so o item
+        /// deixaria total sem item correspondente, e o total tem de bater com a soma dos itens.</para>
+        /// <para>O <c>vTotTrib</c> sai junto, por ser valor de imposto e a regra falar em nao
+        /// levar imposto. Se algum dia a SEFAZ cobrar o campo nestas duas finalidades, a
+        /// rejeicao nomeia o campo - diferente da 1001, que so diz que o grupo nao e admitido.</para>
+        /// </summary>
+        /// <summary>
+        /// Nota de credito (<c>finNFe = 5</c>) ou de debito (<c>6</c>). Tres decisoes dependem
+        /// disto e precisam concordar: os grupos de imposto do item e os totais
+        /// (<see cref="FinalidadeLevaImpostoDoRegimeAntigo"/>), o <c>pag</c> e o <c>cobr</c>.
+        /// </summary>
+        public static bool EhNotaDeCreditoOuDebito(FinalidadeNFe finNFe)
+        {
+            return finNFe == FinalidadeNFe.fnNotaCredito
+                || finNFe == FinalidadeNFe.fnNotaDebito;
+        }
+
+        public static bool FinalidadeLevaImpostoDoRegimeAntigo(FinalidadeNFe finNFe, int? tipoNotaCreditoDebito)
+        {
+            if (finNFe == FinalidadeNFe.fnNotaCredito)
+            {
+                return tipoNotaCreditoDebito == (int)TipoNFeCredito.tcRetornoRecusaNaoLocalizacaoEntrega
+                    || tipoNotaCreditoDebito == (int)TipoNFeCredito.tcReducaoValores
+                    || tipoNotaCreditoDebito == (int)TipoNFeCredito.tcRetornoRecusaParcialEntrega;
+            }
+
+            if (finNFe == FinalidadeNFe.fnNotaDebito)
+            {
+                return tipoNotaCreditoDebito == (int)TipoNFeDebito.tdPerdaEmEstoque;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Atalho para quem ja tem a nota em mao - o <see cref="NotaFiscal"/> desta instancia.
+        /// </summary>
+        private bool _levaImpostoDoRegimeAntigo()
+        {
+            return FinalidadeLevaImpostoDoRegimeAntigo(NotaFiscal.EFinalidadeNFe,
+                NotaFiscal.TipoNotaCreditoDebito);
+        }
+
+        /// <summary>
+        /// O <c>vNF</c> da nota que nao leva imposto do regime antigo. Ele vinha do total
+        /// calculado no banco, que SOMA os impostos zerados pela B25-80: a <b>W16-10</b> refaz a
+        /// conta com o que esta no XML, e sobra rejeicao <b>610</b> - "Total da NF-e difere do
+        /// somatorio dos valores que compoem o valor total". Exemplo: produto 100 + IPI 10 grava
+        /// <c>vNF</c> 110 com <c>vIPI</c> 0 no XML.
+        /// <para>E a conta da propria W16-10, com as parcelas zeradas valendo zero. O
+        /// <c>vICMSDeson</c> nao aparece porque o <c>vDesc</c> montado aqui ja o inclui.</para>
+        /// </summary>
+        public static decimal TotalDaNotaSemImpostoDoRegimeAntigo(decimal vProd, decimal vDesc,
+            decimal vFrete, decimal vSeg, decimal vOutro)
+        {
+            return vProd - vDesc + vFrete + vSeg + vOutro;
+        }
+
         private imposto GetProdutoImposto(Produto item)
         {
+            if (!_levaImpostoDoRegimeAntigo())
+            {
+                return new imposto
+                {
+                    IBSCBS = GetProdutoCBSIBS(item.Impostos.CBSIBS)
+                };
+            }
+
             return new imposto
             {
                 vTotTrib = GetImpostoVTotTrib(item),
@@ -948,11 +1173,61 @@ namespace NFe.BLL
             };
         }
 
-        private IBSCBS GetProdutoCBSIBS(CBSIBSImposto cbiIbsImposto)
+        /// <summary>
+        /// gCompraGov e do documento, nao do item: o redutor entra na aliquota efetiva de
+        /// todos os itens. Emitir gTribCompraGov no item sem este grupo gera rejeicao 1033.
+        /// </summary>
+        private static gCompraGov ObterCompraGovernamental(CompraGovernamental compraGovernamental)
+        {
+            if (compraGovernamental == null)
+            {
+                return null;
+            }
+
+            return new gCompraGov()
+            {
+                tpEnteGov = compraGovernamental.TipoEnteGovernamental,
+                pRedutor = compraGovernamental.PercentualRedutor,
+                tpOperGov = compraGovernamental.TipoOperacaoGovernamental,
+                //Lista nova: o DTO e serializado e pode ser mexido por quem recebe, e a
+                //entidade guarda as chaves ja conferidas.
+                refDFeAnt = compraGovernamental.ChavesDocumentosAnteriores?.Count > 0
+                    ? new List<string>(compraGovernamental.ChavesDocumentosAnteriores)
+                    : null
+            };
+        }
+
+        public static IBSCBS GetProdutoCBSIBS(CBSIBSImposto cbiIbsImposto)
         {
             if(cbiIbsImposto == null)
             {
                 return null;
+            }
+
+            // gIBSCBS, gIBSCBSMono, gTransfCred e gAjusteCompet sao as quatro opcoes do
+            // primeiro xs:choice de TTribNFe. Em item monofasico, de transferencia ou de
+            // ajuste o grupo normal chega como casca - so a base de calculo, porque gCBS,
+            // gIBSUF e gIBSMun dependem de CST que exige CBS/IBS - e cede lugar ao irmao.
+            var grupoMonofasico = ObterCbsIbsGrupoMonofasico(cbiIbsImposto.CbsIbs?.GrupoTributacaoMonofasico);
+            var grupoTransferenciaCredito = ObterCbsIbsGrupoTransferenciaCredito(cbiIbsImposto.CbsIbs?.GrupoTransferenciaCredito);
+            var grupoAjusteCompetencia = ObterCbsIbsGrupoAjusteCompetencia(cbiIbsImposto.CbsIbs?.GrupoAjusteCompetencia);
+            gIBSCBS grupoNormal = null;
+
+            if (grupoMonofasico != null
+                || grupoTransferenciaCredito != null
+                || grupoAjusteCompetencia != null)
+            {
+                // A conferencia vem antes de montar o grupo normal de proposito: item
+                // monofasico com tributacao normal pela metade tem de acusar o conflito de
+                // grupos, nao "tributacao incompleta".
+                if (TemConteudoProprio(cbiIbsImposto.CbsIbs))
+                {
+                    throw new ArgumentException("O item informa tributação normal de IBS/CBS junto com grupo monofásico, de transferência de crédito ou de ajuste de competência: o leiaute aceita somente um desses grupos.");
+                }
+            }
+            else
+            {
+                grupoNormal = ObterCbsIbsGrupo(cbiIbsImposto.CbsIbs);
             }
 
             var ibsCbs = new IBSCBS()
@@ -961,16 +1236,18 @@ namespace NFe.BLL
                 CST = cbiIbsImposto.Cst,
                 cClassTrib = cbiIbsImposto.ClassificacaoTributaria,
 
-                gIBSCBS = ObterCbsIbsGrupo(cbiIbsImposto.CbsIbs),
-                gTransfCred = ObterCbsIbsGrupoTransferenciaCredito(cbiIbsImposto?.CbsIbs?.GrupoTransferenciaCredito),
-                gIBSCBSMono = ObterCbsIbsGrupoMonofasico(cbiIbsImposto?.CbsIbs?.GrupoTributacaoMonofasico),
-                gCredPresOper = ObterCbsIbsGrupoCreditoPresumidoOperacao(cbiIbsImposto?.CbsIbs?.GrupoCreditoPresumido),
-                gCredPresIBSZFM = ObterCbsIbsGrupoCreditoPresumidoZFM(cbiIbsImposto?.CbsIbs?.GrupoCreditoPresumido?.IBSGrupoCreditoPresumidoZFM),
-                gAjusteCompet = null,
-                gEstornoCred = null
+                gIBSCBS = grupoNormal,
+                gTransfCred = grupoTransferenciaCredito,
+                gIBSCBSMono = grupoMonofasico,
+                gCredPresOper = ObterCbsIbsGrupoCreditoPresumidoOperacao(cbiIbsImposto.CbsIbs?.GrupoCreditoPresumido),
+                gCredPresIBSZFM = ObterCbsIbsGrupoCreditoPresumidoZFM(cbiIbsImposto.CbsIbs?.GrupoCreditoPresumido?.IBSGrupoCreditoPresumidoZFM),
+                gAjusteCompet = grupoAjusteCompetencia,
+                gEstornoCred = ObterCbsIbsGrupoEstornoCredito(cbiIbsImposto.GrupoEstornoCredito)
             };
-            
-            if (cbiIbsImposto?.IsDoacao == true)
+
+            ConferirExclusividadeDosGruposCbsIbs(ibsCbs);
+
+            if (cbiIbsImposto.IsDoacao == true)
             {
                 ibsCbs.indDoacao = "1";
             }
@@ -978,26 +1255,91 @@ namespace NFe.BLL
             return ibsCbs;
         }
 
-        private gIBSCBS ObterCbsIbsGrupo(CBSIBSGrupo grupoCbsIbs)
+        /// <summary>
+        /// O grupo normal de IBS/CBS tem conteudo proprio, e nao e so a base de calculo que
+        /// acompanha qualquer item.
+        /// </summary>
+        private static bool TemConteudoProprio(CBSIBSGrupo grupoCbsIbs)
+        {
+            return grupoCbsIbs?.CBSGrupo != null
+                || grupoCbsIbs?.IBSGrupo != null
+                || grupoCbsIbs?.GrupoTributacaoRegular != null
+                || grupoCbsIbs?.GrupoTributacaoCompraGoverno != null;
+        }
+
+        /// <summary>
+        /// TTribNFe tem dois xs:choice (DFeTiposBasicos_v1.00.xsd): um entre gIBSCBS,
+        /// gIBSCBSMono, gTransfCred e gAjusteCompet, outro entre gCredPresOper e
+        /// gCredPresIBSZFM. gEstornoCred nao entra em nenhum dos dois - e irmao opcional do
+        /// primeiro choice. Mais de uma opcao preenchida gera XML que fere o schema, e a
+        /// rejeicao chega como erro generico de validacao sem apontar a causa.
+        /// </summary>
+        private static void ConferirExclusividadeDosGruposCbsIbs(IBSCBS ibsCbs)
+        {
+            var gruposDaOperacao = new List<string>();
+            if (ibsCbs.gIBSCBS != null) gruposDaOperacao.Add(nameof(IBSCBS.gIBSCBS));
+            if (ibsCbs.gIBSCBSMono != null) gruposDaOperacao.Add(nameof(IBSCBS.gIBSCBSMono));
+            if (ibsCbs.gTransfCred != null) gruposDaOperacao.Add(nameof(IBSCBS.gTransfCred));
+            if (ibsCbs.gAjusteCompet != null) gruposDaOperacao.Add(nameof(IBSCBS.gAjusteCompet));
+
+            if (gruposDaOperacao.Count > 1)
+            {
+                throw new ArgumentException($"O item informa mais de um grupo de IBS/CBS exclusivos entre si ({string.Join(", ", gruposDaOperacao)}): o leiaute aceita somente um deles.");
+            }
+
+            if (ibsCbs.gCredPresOper != null
+                && ibsCbs.gCredPresIBSZFM != null)
+            {
+                throw new ArgumentException("O item informa gCredPresOper e gCredPresIBSZFM: o leiaute aceita somente um dos dois.");
+            }
+        }
+
+        private static gIBSCBS ObterCbsIbsGrupo(CBSIBSGrupo grupoCbsIbs)
         {
             if (grupoCbsIbs == null)
             {
                 return null;
             }
 
+            var ibsUF = ObterCbsIbsGrupoIbsUF(grupoCbsIbs.IBSGrupo?.IBSUFGrupo);
+            var ibsMunicipio = ObterCbsIbsGrupoIbsMunicipio(grupoCbsIbs.IBSGrupo?.IBSMunicipioGrupo);
+            var cbs = ObterCbsIbsGrupoCbs(grupoCbsIbs.CBSGrupo);
+
+            // TCIBS_NFe (DFeTiposBasicos_v1.00.xsd) exige vBC, gIBSUF, gIBSMun, vIBS e
+            // gCBS juntos: o grupo e completo ou nao existe. Sem nenhuma parte o item nao
+            // tem tributacao normal de IBS/CBS - caso do monofasico e da transferencia de
+            // credito, que ocupam outra opcao do mesmo xs:choice.
+            if (ibsUF == null
+                && ibsMunicipio == null
+                && cbs == null
+                && grupoCbsIbs.GrupoTributacaoRegular == null
+                && grupoCbsIbs.GrupoTributacaoCompraGoverno == null)
+            {
+                return null;
+            }
+
+            // Parte presente e parte ausente nao da XML valido nem pode ser descartado em
+            // silencio: e dado incompleto no cadastro do item.
+            if (ibsUF == null
+                || ibsMunicipio == null
+                || cbs == null)
+            {
+                throw new ArgumentException("Tributação de IBS/CBS incompleta no item: o grupo gIBSCBS exige o IBS da UF, o IBS do município e a CBS juntos.");
+            }
+
             return new gIBSCBS()
             {
                 vBC = grupoCbsIbs.BaseCalculo,
-                gCBS = ObterCbsIbsGrupoCbs(grupoCbsIbs?.CBSGrupo),
-                gIBSUF = ObterCbsIbsGrupoIbsUF(grupoCbsIbs?.IBSGrupo?.IBSUFGrupo),
-                gIBSMun = ObterCbsIbsGrupoIbsMunicipio(grupoCbsIbs?.IBSGrupo?.IBSMunicipioGrupo),
-                gTribCompraGov = ObterCbsIbsGrupoCompraGovernamental(grupoCbsIbs?.GrupoTributacaoCompraGoverno),
-                gTribRegular = ObterCbsIbsGrupoTributacaoRegular(grupoCbsIbs?.GrupoTributacaoRegular),
-                vIBS = grupoCbsIbs?.IBSGrupo?.ValorTotal,
+                gCBS = cbs,
+                gIBSUF = ibsUF,
+                gIBSMun = ibsMunicipio,
+                gTribCompraGov = ObterCbsIbsGrupoCompraGovernamental(grupoCbsIbs.GrupoTributacaoCompraGoverno),
+                gTribRegular = ObterCbsIbsGrupoTributacaoRegular(grupoCbsIbs.GrupoTributacaoRegular),
+                vIBS = grupoCbsIbs.IBSGrupo?.ValorTotal,
             };
         }
 
-        private gCBS ObterCbsIbsGrupoCbs(CBSGrupo cbs)
+        private static gCBS ObterCbsIbsGrupoCbs(CBSGrupo cbs)
         {
             if (cbs == null)
             {
@@ -1011,11 +1353,32 @@ namespace NFe.BLL
                 gDif = ObterCbsIbsGrupoDiferimento(cbs?.GrupoDiferimento),
                 gDevTrib = ObterCbsIbsGrupoDevolucaoTributo(cbs?.GrupoDevolucaoTributo),
                 gRed = ObterCbsIbsGrupoReducaoAliquota(cbs?.GrupoReducao),
+                gALCZFMCBS = ObterCbsIbsGrupoAreaIncentivada(cbs?.GrupoAreaIncentivada),
                 vCBS = cbs.ValorTotal
             };
         }
 
-        private gIBSUF ObterCbsIbsGrupoIbsUF(IBSUFGrupo ibsUF)
+        /// <summary>
+        /// gALCZFMCBS (UB66a). A entidade ja conferiu o nProcSuframa exigido pelo tipo 2
+        /// (rejeicao 1192), entao aqui e so copia.
+        /// </summary>
+        private static gALCZFMCBS ObterCbsIbsGrupoAreaIncentivada(CBSGrupoAreaIncentivada areaIncentivada)
+        {
+            if (areaIncentivada == null)
+            {
+                return null;
+            }
+
+            return new gALCZFMCBS()
+            {
+                tpALCZFMCBS = areaIncentivada.TipoAplicacao,
+                nProcSuframa = areaIncentivada.NumeroProcessoSuframa,
+                pAliqEfetRegCBS = areaIncentivada.AliquotaEfetivaRegular,
+                vTribRegCBS = areaIncentivada.ValorTributoRegular
+            };
+        }
+
+        private static gIBSUF ObterCbsIbsGrupoIbsUF(IBSUFGrupo ibsUF)
         {
             if (ibsUF == null)
             {
@@ -1033,7 +1396,7 @@ namespace NFe.BLL
             };
         }
 
-        private gIBSMun ObterCbsIbsGrupoIbsMunicipio(IBSMunicipioGrupo ibsMunicipio)
+        private static gIBSMun ObterCbsIbsGrupoIbsMunicipio(IBSMunicipioGrupo ibsMunicipio)
         {
             if (ibsMunicipio == null)
             {
@@ -1051,7 +1414,7 @@ namespace NFe.BLL
             };
         }
 
-        private gDif ObterCbsIbsGrupoDiferimento(CBSIBSGrupoDiferimento diferimento)
+        private static gDif ObterCbsIbsGrupoDiferimento(CBSIBSGrupoDiferimento diferimento)
         {
             if (diferimento == null)
             {
@@ -1065,7 +1428,7 @@ namespace NFe.BLL
             };
         }
 
-        private gDevTrib ObterCbsIbsGrupoDevolucaoTributo(CBSIBSGrupoDevolucaoTributo devolucaoTributo)
+        private static gDevTrib ObterCbsIbsGrupoDevolucaoTributo(CBSIBSGrupoDevolucaoTributo devolucaoTributo)
         {
             if (devolucaoTributo == null)
             {
@@ -1074,11 +1437,12 @@ namespace NFe.BLL
 
             return new gDevTrib()
             {
+                pDevTrib = devolucaoTributo.PercentualDevolucao,
                 vDevTrib = devolucaoTributo.ValorDevolvido
             };
         }
 
-        private gRed ObterCbsIbsGrupoReducaoAliquota(CBSIBSGrupoReducao reducao)
+        private static gRed ObterCbsIbsGrupoReducaoAliquota(CBSIBSGrupoReducao reducao)
         {
             if (reducao == null)
             {
@@ -1092,7 +1456,7 @@ namespace NFe.BLL
             };
         }
 
-        private gTribCompraGov ObterCbsIbsGrupoCompraGovernamental(CBSIBSGrupoTributacaoCompraGoverno compraGovernamental)
+        private static gTribCompraGov ObterCbsIbsGrupoCompraGovernamental(CBSIBSGrupoTributacaoCompraGoverno compraGovernamental)
         {
             if (compraGovernamental == null)
             {
@@ -1110,7 +1474,7 @@ namespace NFe.BLL
             };
         }
 
-        private gTribRegular ObterCbsIbsGrupoTributacaoRegular(CBSIBSGrupoTributacaoRegular tributacaoRegular)
+        private static gTribRegular ObterCbsIbsGrupoTributacaoRegular(CBSIBSGrupoTributacaoRegular tributacaoRegular)
         {
             if (tributacaoRegular == null)
             {
@@ -1130,9 +1494,13 @@ namespace NFe.BLL
             };
         }
 
-        private gCredPresOper ObterCbsIbsGrupoCreditoPresumidoOperacao(CBSIBSGrupoCreditoPresumido creditoPresumido)
+        private static gCredPresOper ObterCbsIbsGrupoCreditoPresumidoOperacao(CBSIBSGrupoCreditoPresumido creditoPresumido)
         {
-            if (creditoPresumido == null)
+            // O que diz se a operacao existe e o cCredPres, nao os subgrupos: gIBSCredPres
+            // e gCBSCredPres sao minOccurs=0 em TCredPresOper, logo operacao sem nenhum dos
+            // dois e valida. Item que so tem credito presumido de ZFM nao informa cCredPres
+            // e sai apenas no gCredPresIBSZFM, que e a outra opcao do mesmo xs:choice.
+            if (creditoPresumido?.CodigoClassificacaoCreditoPresumido == null)
             {
                 return null;
             }
@@ -1140,28 +1508,38 @@ namespace NFe.BLL
             return new gCredPresOper()
             {
                 vBCCredPres = creditoPresumido.BaseCalculoCreditoPresumido,
-                cCredPres = creditoPresumido.CodigoClassificacaoCreditoPresumido,
-                gCBSCredPres = ObterCbsIbsGrupoCreditoPresumido(creditoPresumido?.CBSGrupoCreditoPresumido),
-                gIBSCredPres = ObterCbsIbsGrupoCreditoPresumido(creditoPresumido?.IBSGrupoCreditoPresumido),
+                cCredPres = creditoPresumido.CodigoClassificacaoCreditoPresumido.Value,
+                gCBSCredPres = ObterCbsIbsGrupoCreditoPresumido(creditoPresumido.CBSGrupoCreditoPresumido, "da CBS"),
+                gIBSCredPres = ObterCbsIbsGrupoCreditoPresumido(creditoPresumido.IBSGrupoCreditoPresumido, "do IBS"),
             };
         }
 
-        private gIBSCredPres ObterCbsIbsGrupoCreditoPresumido(GrupoCreditoPresumidoBase creditoPresumido)
+        private static gIBSCredPres ObterCbsIbsGrupoCreditoPresumido(GrupoCreditoPresumidoBase creditoPresumido, string tributo)
         {
             if (creditoPresumido == null)
             {
                 return null;
             }
 
+            // TCredPres tem um xs:choice entre vCredPres e vCredPresCondSus: o credito ou
+            // esta aproveitado, ou esta em condicao suspensiva, nunca os dois. Quem decide
+            // e a presenca do valor, nao o valor ser diferente de zero - credito suspensivo
+            // de valor zero existe no XML e tem de voltar no mesmo braco do choice.
+            if (creditoPresumido.ValorCredito.HasValue
+                && creditoPresumido.ValorCreditoEmCondicaoSuspensiva.HasValue)
+            {
+                throw new ArgumentException($"Crédito presumido {tributo} informa valor aproveitado e valor em condição suspensiva ao mesmo tempo: o leiaute aceita somente um dos dois.");
+            }
+
             return new gIBSCredPres()
             {
                 pCredPres = creditoPresumido.PercentualCredito,
-                vCredPres = creditoPresumido.ValorCredito,
+                vCredPres = creditoPresumido.ValorCredito ?? 0,
                 vCredPresCondSus = creditoPresumido.ValorCreditoEmCondicaoSuspensiva
             };
         }
 
-        private gCredPresIBSZFM ObterCbsIbsGrupoCreditoPresumidoZFM(IBSGrupoCreditoPresumidoZFM creditoPresumidoZFM)
+        private static gCredPresIBSZFM ObterCbsIbsGrupoCreditoPresumidoZFM(IBSGrupoCreditoPresumidoZFM creditoPresumidoZFM)
         {
             if (creditoPresumidoZFM == null)
             {
@@ -1176,80 +1554,228 @@ namespace NFe.BLL
             };
         }
 
-        private gIBSCBSMono ObterCbsIbsGrupoMonofasico(CBSIBSGrupoMonofasico grupoMonofasico)
+        /// <summary>
+        /// gAjusteCompet e uma das opcoes do xs:choice de TTribNFe: quando sai, nem gIBSCBS
+        /// nem gIBSCBSMono nem gTransfCred podem sair.
+        /// </summary>
+        private static gAjusteCompet ObterCbsIbsGrupoAjusteCompetencia(CBSIBSGrupoAjusteCompetencia ajusteCompetencia)
+        {
+            if (ajusteCompetencia == null)
+            {
+                return null;
+            }
+
+            return new gAjusteCompet()
+            {
+                competApur = ajusteCompetencia.AnoMesCompetenciaApuracao,
+                vIBS = ajusteCompetencia.ValorAjusteIBS,
+                vCBS = ajusteCompetencia.ValorAjusteCBS
+            };
+        }
+
+        /// <summary>
+        /// gEstornoCred nao participa de xs:choice nenhum: convive com qualquer grupo da
+        /// operacao. vIBSEstCred e vCBSEstCred sao obrigatorios dentro do grupo, por isso
+        /// grupo com os dois valores zerados nao e emitido.
+        /// </summary>
+        private static gEstornoCred ObterCbsIbsGrupoEstornoCredito(CBSIBSGrupoEstornoCredito estornoCredito)
+        {
+            if (estornoCredito == null
+                || (estornoCredito.ValorEstornoIBS == 0
+                    && estornoCredito.ValorEstornoCBS == 0))
+            {
+                return null;
+            }
+
+            return new gEstornoCred()
+            {
+                vIBSEstCred = estornoCredito.ValorEstornoIBS,
+                vCBSEstCred = estornoCredito.ValorEstornoCBS
+            };
+        }
+
+        /// <summary>
+        /// TMonofasia do PL_010f: o IBS vai em gIBSMonoAdRem OU gIBSMonoAdValorem, a CBS
+        /// em gCBSMonoAdRem OU gCBSMonoAdValorem, e cada invólucro carrega gMonoPadrao,
+        /// gMonoReten, gMonoRet e gpBioDiferenca. As entidades de monofasia desta BLL só
+        /// guardam quantidade e alíquota ad rem, por isso o mapeamento usa os dois
+        /// invólucros ad rem. Ad valorem e gpBioDiferenca exigem campos que as entidades
+        /// não têm e ficam de fora.
+        /// <para>O grupo de diferimento da monofasia saiu do leiaute e por isso deixou de
+        /// ser emitido. A entidade continua lendo o grupo de documentos já autorizados.</para>
+        /// </summary>
+        private static gIBSCBSMono ObterCbsIbsGrupoMonofasico(CBSIBSGrupoMonofasico grupoMonofasico)
         {
             if (grupoMonofasico == null)
             {
                 return null;
             }
 
+            // TMonofasia deixa as duas sequencias como minOccurs=0, mas vTotIBSMonoItem
+            // e vTotCBSMonoItem sao obrigatorios: grupo so com os totais e valido no
+            // schema (conferido contra o PL_010f) e e o que sai ao reemitir documento
+            // antigo cuja unica monofasia era o gMonoDif, que saiu do leiaute.
             return new gIBSCBSMono()
             {
-                gMonoPadrao = ObterCbsIbsGrupoMonofasicoPadrao(grupoMonofasico?.GrupoMonofasicoTributado),
-                gMonoReten = ObterCbsIbsGrupoMonofasicoSujeitoRetencao(grupoMonofasico?.GrupoMonofasicoSujeitoRetencao),
-                gMonoRet = ObterCbsIbsGrupoMonofasicoRetido(grupoMonofasico?.GrupoMonofasicoRetido),
-                gMonoDif = ObterCbsIbsGrupoMonofasicoDiferimento(grupoMonofasico?.GrupoMonofasicoDiferido),
+                gIBSMonoAdRem = ObterCbsIbsMonofasicoIbsAdRem(grupoMonofasico),
+                gCBSMonoAdRem = ObterCbsIbsMonofasicoCbsAdRem(grupoMonofasico),
 
                 vTotCBSMonoItem = grupoMonofasico.ValorTotalMonofasicoCBS,
                 vTotIBSMonoItem = grupoMonofasico.ValorTotalMonofasicoIBS
             };
         }
 
-        private gMonoPadrao ObterCbsIbsGrupoMonofasicoPadrao(CBSIBSGrupoMonofasicoTributado grupoMonofasicoTributado)
+        private static gIBSMonoAdRem ObterCbsIbsMonofasicoIbsAdRem(CBSIBSGrupoMonofasico grupoMonofasico)
         {
-            if(grupoMonofasicoTributado == null
-                || grupoMonofasicoTributado.Quantidade == 0)
+            var padrao = ObterCbsIbsMonofasicoIbsPadrao(grupoMonofasico.GrupoMonofasicoTributado);
+            var retencao = ObterCbsIbsMonofasicoIbsRetencao(grupoMonofasico.GrupoMonofasicoSujeitoRetencao);
+            var retido = ObterCbsIbsMonofasicoIbsRetido(grupoMonofasico.GrupoMonofasicoRetido);
+
+            if (padrao == null && retencao == null && retido == null)
             {
                 return null;
             }
 
-            return new gMonoPadrao()
+            return new gIBSMonoAdRem()
+            {
+                gMonoPadrao = padrao,
+                gMonoReten = retencao,
+                gMonoRet = retido
+            };
+        }
+
+        private static gCBSMonoAdRem ObterCbsIbsMonofasicoCbsAdRem(CBSIBSGrupoMonofasico grupoMonofasico)
+        {
+            var padrao = ObterCbsIbsMonofasicoCbsPadrao(grupoMonofasico.GrupoMonofasicoTributado);
+            var retencao = ObterCbsIbsMonofasicoCbsRetencao(grupoMonofasico.GrupoMonofasicoSujeitoRetencao);
+            var retido = ObterCbsIbsMonofasicoCbsRetido(grupoMonofasico.GrupoMonofasicoRetido);
+
+            if (padrao == null && retencao == null && retido == null)
+            {
+                return null;
+            }
+
+            return new gCBSMonoAdRem()
+            {
+                gMonoPadrao = padrao,
+                gMonoReten = retencao,
+                gMonoRet = retido
+            };
+        }
+
+        /// <summary>
+        /// A entidade guarda IBS e CBS no mesmo objeto, mas no leiaute cada tributo tem o
+        /// seu invólucro e os dois são independentes. Por isso a guarda é pelo dado DAQUELE
+        /// tributo: com a guarda só na quantidade (que é compartilhada), ler um XML que
+        /// trouxesse apenas o IBS fazia a reescrita fabricar um grupo de CBS zerado.
+        /// <para>A quantidade é uma só nos dois grupos: é a mesma quantidade física de
+        /// combustível, e o leiaute repete o qBCMono em cada invólucro.</para>
+        /// </summary>
+        private static gMonoPadraoIBSAdRem ObterCbsIbsMonofasicoIbsPadrao(CBSIBSGrupoMonofasicoTributado grupoMonofasicoTributado)
+        {
+            if (grupoMonofasicoTributado == null
+                || grupoMonofasicoTributado.Quantidade == 0
+                || (grupoMonofasicoTributado.AliquotaAdRemIBS == 0
+                    && grupoMonofasicoTributado.ValorMonofasicoIBS == 0))
+            {
+                return null;
+            }
+
+            return new gMonoPadraoIBSAdRem()
             {
                 qBCMono = grupoMonofasicoTributado.Quantidade,
-                adRemCBS = grupoMonofasicoTributado.AliquotaAdRemCBS,
                 adRemIBS = grupoMonofasicoTributado.AliquotaAdRemIBS,
-                vCBSMono = grupoMonofasicoTributado.ValorMonofasicoCBS,
                 vIBSMono = grupoMonofasicoTributado.ValorMonofasicoIBS
             };
         }
 
-        private gMonoReten ObterCbsIbsGrupoMonofasicoSujeitoRetencao(CBSIBSGrupoMonofasicoSujeitoRetencao grupoMonofasicoSujeitoRetencao)
+        private static gMonoPadraoCBSAdRem ObterCbsIbsMonofasicoCbsPadrao(CBSIBSGrupoMonofasicoTributado grupoMonofasicoTributado)
         {
-            if (grupoMonofasicoSujeitoRetencao == null
-                || grupoMonofasicoSujeitoRetencao.Quantidade == 0)
+            if (grupoMonofasicoTributado == null
+                || grupoMonofasicoTributado.Quantidade == 0
+                || (grupoMonofasicoTributado.AliquotaAdRemCBS == 0
+                    && grupoMonofasicoTributado.ValorMonofasicoCBS == 0))
             {
                 return null;
             }
 
-            return new gMonoReten()
+            return new gMonoPadraoCBSAdRem()
+            {
+                qBCMono = grupoMonofasicoTributado.Quantidade,
+                adRemCBS = grupoMonofasicoTributado.AliquotaAdRemCBS,
+                vCBSMono = grupoMonofasicoTributado.ValorMonofasicoCBS
+            };
+        }
+
+        private static gMonoRetenIBSAdRem ObterCbsIbsMonofasicoIbsRetencao(CBSIBSGrupoMonofasicoSujeitoRetencao grupoMonofasicoSujeitoRetencao)
+        {
+            if (grupoMonofasicoSujeitoRetencao == null
+                || grupoMonofasicoSujeitoRetencao.Quantidade == 0
+                || (grupoMonofasicoSujeitoRetencao.AliquotaAdRemIBS == 0
+                    && grupoMonofasicoSujeitoRetencao.ValorMonofasicoIBS == 0))
+            {
+                return null;
+            }
+
+            return new gMonoRetenIBSAdRem()
             {
                 qBCMonoReten = grupoMonofasicoSujeitoRetencao.Quantidade,
-                adRemCBSReten = grupoMonofasicoSujeitoRetencao.AliquotaAdRemCBS,
                 adRemIBSReten = grupoMonofasicoSujeitoRetencao.AliquotaAdRemIBS,
-                vCBSMonoReten = grupoMonofasicoSujeitoRetencao.ValorMonofasicoCBS,
                 vIBSMonoReten = grupoMonofasicoSujeitoRetencao.ValorMonofasicoIBS
             };
         }
 
-        private gMonoRet ObterCbsIbsGrupoMonofasicoRetido(CBSIBSMonofasicoGrupoBase grupoMonofasicoRetido)
+        private static gMonoRetenCBSAdRem ObterCbsIbsMonofasicoCbsRetencao(CBSIBSGrupoMonofasicoSujeitoRetencao grupoMonofasicoSujeitoRetencao)
         {
-            if (grupoMonofasicoRetido == null
-                || grupoMonofasicoRetido.Quantidade == 0)
+            if (grupoMonofasicoSujeitoRetencao == null
+                || grupoMonofasicoSujeitoRetencao.Quantidade == 0
+                || (grupoMonofasicoSujeitoRetencao.AliquotaAdRemCBS == 0
+                    && grupoMonofasicoSujeitoRetencao.ValorMonofasicoCBS == 0))
             {
                 return null;
             }
 
-            return new gMonoRet()
+            return new gMonoRetenCBSAdRem()
             {
-                qBCMonoRet = grupoMonofasicoRetido.Quantidade,
-                adRemCBSRet = grupoMonofasicoRetido.AliquotaAdRemCBS,
-                adRemIBSRet = grupoMonofasicoRetido.AliquotaAdRemIBS,
-                vCBSMonoRet = grupoMonofasicoRetido.ValorMonofasicoCBS,
+                qBCMonoReten = grupoMonofasicoSujeitoRetencao.Quantidade,
+                adRemCBSReten = grupoMonofasicoSujeitoRetencao.AliquotaAdRemCBS,
+                vCBSMonoReten = grupoMonofasicoSujeitoRetencao.ValorMonofasicoCBS
+            };
+        }
+
+        /// <summary>
+        /// gMonoRet só tem o valor retido no leiaute atual: quantidade e alíquota do grupo
+        /// retido não têm para onde ir, por isso a guarda é pelo valor.
+        /// </summary>
+        private static gMonoRetIBS ObterCbsIbsMonofasicoIbsRetido(CBSIBSMonofasicoGrupoBase grupoMonofasicoRetido)
+        {
+            if (grupoMonofasicoRetido == null
+                || grupoMonofasicoRetido.ValorMonofasicoIBS == 0)
+            {
+                return null;
+            }
+
+            return new gMonoRetIBS()
+            {
                 vIBSMonoRet = grupoMonofasicoRetido.ValorMonofasicoIBS
             };
         }
 
-        private gTransfCred ObterCbsIbsGrupoTransferenciaCredito(CBSIBSGrupoTransferenciaCredito grupoTransferenciaCredito)
+        private static gMonoRetCBS ObterCbsIbsMonofasicoCbsRetido(CBSIBSMonofasicoGrupoBase grupoMonofasicoRetido)
+        {
+            if (grupoMonofasicoRetido == null
+                || grupoMonofasicoRetido.ValorMonofasicoCBS == 0)
+            {
+                return null;
+            }
+
+            return new gMonoRetCBS()
+            {
+                vCBSMonoRet = grupoMonofasicoRetido.ValorMonofasicoCBS
+            };
+        }
+
+        private static gTransfCred ObterCbsIbsGrupoTransferenciaCredito(CBSIBSGrupoTransferenciaCredito grupoTransferenciaCredito)
         {
             if (grupoTransferenciaCredito == null
                 || (grupoTransferenciaCredito.ValorASerTransferidoIBS == 0
@@ -1260,24 +1786,8 @@ namespace NFe.BLL
 
             return new gTransfCred()
             {
-                vCBS = grupoTransferenciaCredito.ValorASerTransferidoIBS,
-                vIBS = grupoTransferenciaCredito.ValorASerTransferidoCBS,
-            };
-        }
-
-        private gMonoDif ObterCbsIbsGrupoMonofasicoDiferimento(CBSIBSGrupoMonofasicoDiferimento grupoMonofasicoDiferimento)
-        {
-            if (grupoMonofasicoDiferimento == null)
-            {
-                return null;
-            }
-
-            return new gMonoDif()
-            {
-                pDifCBS = grupoMonofasicoDiferimento.PercentualMonofasicoCBSDiferimento,
-                pDifIBS = grupoMonofasicoDiferimento.PercentualMonofasicoIBSDiferimento,
-                vCBSMonoDif = grupoMonofasicoDiferimento.PercentualMonofasicoCBSDiferimento,
-                vIBSMonoDif = grupoMonofasicoDiferimento.ValorMonofasicoIBSDiferimento
+                vCBS = grupoTransferenciaCredito.ValorASerTransferidoCBS,
+                vIBS = grupoTransferenciaCredito.ValorASerTransferidoIBS,
             };
         }
 
@@ -1446,14 +1956,9 @@ namespace NFe.BLL
                         adRemICMSRet = adRemICMSRet,
                     };
 
-                    //default:
-                    //    throw new ArgumentException(string.Format("CSOSN inválido ou não informado no cadastro do produto:{0}{0}({1}) {2}",
-                    //        Environment.NewLine,
-                    //        item.NfProd_REFERENCIA,
-                    //        item.NfProd_PRODUTODESCRICAO));
             }
 
-            return null;
+            throw new ArgumentException($"CSOSN do ICMS inválido ou não implementado no sistema: {CSOSN}.");
         }
 
         private ICMSBasico InformarICMS(Configuracao.Entidades.Produtos.Impostos.ICMS.ICMS item)
@@ -1483,9 +1988,9 @@ namespace NFe.BLL
             var vICMSDeson = item.ValorICMSDesonerado;
             var motDesICMS = item.MotivoDesoneracao;
 
-            var qBCMonoRet = item.AliquotaAdRemICMSRetido;
+            var qBCMonoRet = item.BaseCalculoICMSRetido;
             var vICMSMonoRet = item.ValorICMSRetido;
-            var adRemICMSRet = item.BaseCalculoICMSRetido;
+            var adRemICMSRet = item.AliquotaAdRemICMSRetido;
 
             switch (CST)
             {
@@ -1523,7 +2028,7 @@ namespace NFe.BLL
                         pICMS = pICMS,
                         vICMS = vICMS,
 
-                        modBCST = (DeterminacaoBaseIcmsSt)modBCST,
+                        modBCST = modBCST.GetValueOrDefault(),
                         vBCST = vBCST,
                         pICMSST = pICMSST,
                         vICMSST = vICMSST,
@@ -1670,17 +2175,14 @@ namespace NFe.BLL
                 case Csticms.CstPart90:
                 case Csticms.CstPart10:
                 case Csticms.CstRep41:
-                    // TODO: 
-                    return null;
-
-                    //default:
-                    //    throw new ArgumentException(string.Format("CSOSN inválido ou não informado no cadastro do produto:{0}{0}({1}) {2}",
-                    //        Environment.NewLine,
-                    //        item.NfProd_REFERENCIA,
-                    //        item.NfProd_PRODUTODESCRICAO));
+                    // Partilha (ICMSPart) e repasse (ICMSST) nao sao montados: a entidade ICMS
+                    // nao tem os campos do grupo (pBCOp, UFST, vBCSTRet, vBCSTDest). Devolver
+                    // null deixava o item com <ICMS> vazio, e a rejeicao chegava como erro
+                    // generico de schema, sem apontar a causa.
+                    throw new ArgumentException($"CST {CST} do ICMS (partilha/repasse) não implementado no sistema.");
             }
 
-            return null;
+            throw new ArgumentException($"CST do ICMS inválido ou não implementado no sistema: {CST}.");
         }
 
         private impostoDevol GetProdutoImpostoDevolucao(IPI item)
@@ -2320,6 +2822,36 @@ namespace NFe.BLL
                 vIPIDevol = NotaFiscal.Total.TotalizadorICMS.IPI;
             }
 
+            // Os totais acompanham os ITENS. Com os grupos do regime antigo fora do item
+            // (B25-80, rejeicao 1001), um vICMS ou vPIS diferente de zero aqui seria total
+            // sem item que o componha - e o total tem de bater com a soma dos itens.
+            //
+            // ZERA, nao omite: o ICMSTot e obrigatorio no leiaute e os campos dele tambem.
+            // Os valores do DOCUMENTO ficam: vProd, vFrete, vSeg, vDesc e vOutro nao sao
+            // imposto. O vNF e recalculado logo abaixo, porque ele SOMA imposto.
+            if (!_levaImpostoDoRegimeAntigo())
+            {
+                vICMSBC = 0;
+                vICMS = 0;
+                vICMSDeson = 0;
+                vBCST = 0;
+                vST = 0;
+                vFCPST = 0;
+                vICMSUFDest = 0;
+                vICMSUFRemet = 0;
+                vFCPUFDest = 0;
+                vII = 0;
+                vIPI = 0;
+                vIPIDevol = 0;
+                vPIS = 0;
+                vCOFINS = 0;
+                vTotTrib = 0;
+                qBCMonoRet = 0;
+                vICMSMonoRet = 0;
+
+                vNF = TotalDaNotaSemImpostoDoRegimeAntigo(vProd, vDesc, vFrete, vSeg, vOutro);
+            }
+
             return new ICMSTot
             {
                 vBC = vICMSBC,
@@ -2353,6 +2885,18 @@ namespace NFe.BLL
         private cobr GetCobranca()
         {
             if (_cfgApp.CfgServico.ModeloDocumento == ModeloDocumento.NFCe)
+            {
+                return null;
+            }
+
+            // Nota de credito e de debito saem SEM cobranca. O pag delas ja vai com
+            // fpSemPagamento e vPag = 0, e o vNF e recalculado sem os impostos do regime
+            // antigo: a fatura montada do total do banco declararia valor que a nota nao tem -
+            // produto 100 + IPI 10 dava vNF 100, vPag 0 e vLiq 110.
+            //
+            // Ajuste e devolucao continuam com cobr: o vNF deles nao e recalculado, entao a
+            // fatura fecha com o total.
+            if (EhNotaDeCreditoOuDebito(NotaFiscal.EFinalidadeNFe))
             {
                 return null;
             }
@@ -2485,8 +3029,14 @@ namespace NFe.BLL
             List<detPag> pagamentos = new List<detPag>();
             decimal? troco = null;
 
+            // Credito e debito entram aqui junto com ajuste e devolucao: sao documentos de
+            // acerto, nao tem pagamento. E o vPag precisa ser ZERO, nao o total do banco: o
+            // vNF dessas notas e recalculado sem os impostos do regime antigo
+            // (TotalDaNotaSemImpostoDoRegimeAntigo), e o ramo de baixo copiaria o total
+            // antigo para o vPag, que e justamente a divergencia que se quer evitar.
             if (NotaFiscal.EFinalidadeNFe == FinalidadeNFe.fnAjuste
-                || NotaFiscal.EFinalidadeNFe == FinalidadeNFe.fnDevolucao)
+                || NotaFiscal.EFinalidadeNFe == FinalidadeNFe.fnDevolucao
+                || EhNotaDeCreditoOuDebito(NotaFiscal.EFinalidadeNFe))
             {
                 pagamentos.Add(new detPag
                 {

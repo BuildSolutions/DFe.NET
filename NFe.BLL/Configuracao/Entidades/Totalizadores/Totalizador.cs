@@ -36,7 +36,7 @@ namespace NFe.BLL.Configuracao.Entidades.Totalizadores
                 quantidadeBaseCalculoMonofasicoRetido: total?.ICMSTot?.qBCMonoRet ?? 0M,
                 valorIRRetido: 0);
 
-            TotalizadorCBSIBS = new TotalizadorCBSIBS(total.IBSCBSTot);
+            TotalizadorCBSIBS = new TotalizadorCBSIBS(total?.IBSCBSTot);
         }
 
         public TotalizadorICMS TotalizadorICMS { get; }

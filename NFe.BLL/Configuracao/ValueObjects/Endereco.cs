@@ -66,7 +66,7 @@ namespace NFe.BLL.Configuracao.ValueObjects
             Bairro = endereco.xBairro.SanitizeString();
             MunicipioCodigoIBGE = endereco.cMun;
             MunicipioNome = endereco.xMun.SanitizeString();
-            MunicipioEstadoSigla = (Estado?)System.Enum.Parse(typeof(Estado), endereco.UF);
+            MunicipioEstadoSigla = System.Enum.TryParse(endereco.UF, out Estado estado) ? estado : (Estado?)null;
             PaisCodigo = endereco.cPais.GetValueOrDefault();
             PaisNome = endereco.xPais.SanitizeString();
             CEP = endereco.CEP.SanitizeString();
@@ -84,10 +84,10 @@ namespace NFe.BLL.Configuracao.ValueObjects
             Bairro = entrega.xBairro.SanitizeString();
             MunicipioCodigoIBGE = entrega.cMun;
             MunicipioNome = entrega.xMun.SanitizeString();
-            MunicipioEstadoSigla = (Estado?)System.Enum.Parse(typeof(Estado), entrega.UF);
+            MunicipioEstadoSigla = System.Enum.TryParse(entrega.UF, out Estado estado) ? estado : (Estado?)null;
             PaisCodigo = entrega.cPais.GetValueOrDefault();
             PaisNome = entrega.xPais.SanitizeString();
-            CEP = entrega.CEP.ToString();
+            CEP = entrega.CEP.ToString("D8");
         }
         public Endereco(retirada retirada)
         {
@@ -102,10 +102,10 @@ namespace NFe.BLL.Configuracao.ValueObjects
             Bairro = retirada.xBairro.SanitizeString();
             MunicipioCodigoIBGE = retirada.cMun;
             MunicipioNome = retirada.xMun.SanitizeString();
-            MunicipioEstadoSigla = (Estado?)System.Enum.Parse(typeof(Estado), retirada.UF);
+            MunicipioEstadoSigla = System.Enum.TryParse(retirada.UF, out Estado estado) ? estado : (Estado?)null;
             PaisCodigo = retirada.cPais.GetValueOrDefault();
             PaisNome = retirada.xPais.SanitizeString();
-            CEP = retirada.CEP.ToString();
+            CEP = retirada.CEP.ToString("D8");
         }
 
         public Endereco(transporta endereco)

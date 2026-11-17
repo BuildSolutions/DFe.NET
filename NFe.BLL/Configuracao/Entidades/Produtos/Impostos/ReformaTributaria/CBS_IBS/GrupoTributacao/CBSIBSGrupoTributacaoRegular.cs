@@ -12,7 +12,6 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
     /// </summary>
     public class CBSIBSGrupoTributacaoRegular : IIBSGrupo, ICBSGrupo
     {
-        private readonly decimal _baseCalculo;
 
         public CBSIBSGrupoTributacaoRegular(CSTIBSCBS cstRegular,
             int cClassTribRegular,

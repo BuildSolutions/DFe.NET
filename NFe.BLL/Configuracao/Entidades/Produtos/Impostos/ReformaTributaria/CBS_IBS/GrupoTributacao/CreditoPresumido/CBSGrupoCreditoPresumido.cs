@@ -1,5 +1,4 @@
-﻿using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.Enumerators;
-using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.Interfaces;
+﻿using NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.Interfaces;
 using NFe.Classes.Informacoes.Detalhe.Tributacao;
 
 namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS_IBS.CreditoPresumido
@@ -13,13 +12,17 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
     public class CBSGrupoCreditoPresumido : GrupoCreditoPresumidoBase, ICBSGrupo
     {
         public CBSGrupoCreditoPresumido(decimal percentualCredito,
-            decimal valorCredito,
-            decimal valorCreditoEmCondicaoSuspensiva) : base(EImpostoReformaTributariaTipoSimplificado.CBS, percentualCredito, valorCredito,valorCreditoEmCondicaoSuspensiva) { }
+            decimal? valorCredito,
+            decimal? valorCreditoEmCondicaoSuspensiva) : base(percentualCredito, valorCredito,valorCreditoEmCondicaoSuspensiva) { }
 
+        /// <summary>
+        /// Leitura: o braço do xs:choice é preservado. vCredPresCondSus presente no XML
+        /// significa crédito em condição suspensiva, e aí vCredPres fica nulo — mesmo que o
+        /// valor suspensivo seja zero.
+        /// </summary>
         public CBSGrupoCreditoPresumido(gIBSCredPres creditoPresumidoCBS)
-                : base(eImpostoReformaTributariaTipoSimplificado: EImpostoReformaTributariaTipoSimplificado.CBS,
-                      percentualCredito: creditoPresumidoCBS?.pCredPres ?? 0,
-                      valorCredito: creditoPresumidoCBS?.vCredPres ?? 0,
-                      valorCreditoPresumidoEmCondicaoSuspensiva: creditoPresumidoCBS?.vCredPresCondSus ?? 0) { }
+                : base(percentualCredito: creditoPresumidoCBS?.pCredPres ?? 0,
+                      valorCredito: creditoPresumidoCBS?.vCredPresCondSus == null ? creditoPresumidoCBS?.vCredPres : null,
+                      valorCreditoPresumidoEmCondicaoSuspensiva: creditoPresumidoCBS?.vCredPresCondSus) { }
     }
 }

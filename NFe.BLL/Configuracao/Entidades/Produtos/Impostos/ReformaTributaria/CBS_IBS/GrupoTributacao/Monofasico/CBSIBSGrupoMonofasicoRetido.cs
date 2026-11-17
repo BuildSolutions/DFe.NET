@@ -21,8 +21,8 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
                                                      valorMonofasicoIBSRetido) { }
 
         public CBSIBSGrupoMonofasicoRetido(gMonoRet monofasicoRetido) : base(quantidade: monofasicoRetido?.qBCMonoRet ?? 0,
-                                                                             aliquotaAdRemCBS: monofasicoRetido?.qBCMonoRet ?? 0,
-                                                                             aliquotaAdRemIBS: monofasicoRetido?.adRemCBSRet ?? 0,
+                                                                             aliquotaAdRemCBS: monofasicoRetido?.adRemCBSRet ?? 0,
+                                                                             aliquotaAdRemIBS: monofasicoRetido?.adRemIBSRet ?? 0,
                                                                              valorMonofasicoCBS: monofasicoRetido?.vCBSMonoRet ?? 0,
                                                                              valorMonofasicoIBS: monofasicoRetido?.vIBSMonoRet ?? 0) { }
     }

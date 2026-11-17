@@ -72,16 +72,32 @@ namespace NFe.Classes.Informacoes.Detalhe.Tributacao
 
     public class gDevTrib
     {
-        private decimal _vDevTrib { get; set; }
+        private decimal? _pDevTrib;
+        private decimal _vDevTrib;
+
+        /// <summary>
+        /// UB24a - Percentual de devolução do tributo, conforme LC 214/25 art. 118.
+        /// <para>Opcional no leiaute (<c>TDevTrib</c>, minOccurs 0), e por isso anulável: a
+        /// CBS da NF-e exige o percentual, e os demais grupos não o levam.</para>
+        /// </summary>
+        [XmlElement(Order = 1)]
+        public decimal? pDevTrib
+        {
+            get => _pDevTrib.Arredondar(4);
+            set => _pDevTrib = value?.Arredondar(4);
+        }
 
         /// <summary>
         /// UB25 - Valor do tributo devolvido
         /// </summary>
+        [XmlElement(Order = 2)]
         public decimal vDevTrib
         {
             get => _vDevTrib.Arredondar(2);
             set => _vDevTrib = value.Arredondar(2);
         }
+
+        public bool ShouldSerializepDevTrib() => pDevTrib.HasValue;
     }
 
     public class gRed

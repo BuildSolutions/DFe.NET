@@ -4,6 +4,7 @@ using DFe.Utils.Extensoes;
 using NFe.BLL.Configuracao.Entidades.Produtos;
 using NFe.BLL.Configuracao.Entidades.Totalizadores;
 using NFe.Classes.Informacoes;
+using NFe.Classes.Informacoes.Identificacao;
 using NFe.Classes.Informacoes.Identificacao.Tipos;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,10 @@ namespace NFe.BLL.Configuracao.Entidades
             Protocolo protocolo = null,
             Intermediador intermediador = null,
             bool deveValidarValorTotalDaNfeEDuplicatas = true,
-            bool deveValidarDataEmissaoAtrasada = true)
+            bool deveValidarDataEmissaoAtrasada = true,
+            CompraGovernamental compraGovernamental = null,
+            int? tipoNotaCreditoDebito = null
+            )
         {
             var emitenteUf = emitente?.Pessoa?.Endereco?.MunicipioEstadoSigla.GetValueOrDefault();
             var destinatarioUf = destinatario?.Pessoa?.Endereco?.MunicipioEstadoSigla.GetValueOrDefault();
@@ -75,10 +79,12 @@ namespace NFe.BLL.Configuracao.Entidades
             IsZonaFrancaManaus = isZonaFrancaManaus;
             Protocolo = protocolo;
             DadosIntermediador = intermediador;
-            CNf = Protocolo?.ObterCNf() ?? new Random().Next(1, 99999999).ToString("00000000");
+            CNf = Protocolo?.ObterCNf() ?? GerarCNf();
             
             DeveValidarValorTotalDaNfeEDuplicatas = deveValidarValorTotalDaNfeEDuplicatas;
             DeveValidarDataEmissaoAtrasada = deveValidarDataEmissaoAtrasada;
+            CompraGovernamental = compraGovernamental;
+            TipoNotaCreditoDebito = tipoNotaCreditoDebito;
         }
 
         public NotaFiscal(Classes.nfeProc notafiscalProcessada)
@@ -94,7 +100,7 @@ namespace NFe.BLL.Configuracao.Entidades
                 transportadora = new Transporte(nfe.infNFe.transp);
             }
 
-            nfe.infNFe.cobr?.dup.ForEach(item => duplicatas.Add(new Duplicata(item.nDup, item.dVenc.GetValueOrDefault(), item.vDup)));
+            nfe.infNFe.cobr?.dup?.ForEach(item => duplicatas.Add(new Duplicata(item.nDup, item.dVenc.GetValueOrDefault(), item.vDup)));
 
             // A chave e o nItem de origem seguem com o produto para permitir o
             // referenciamento por item na devolucao (grupo VC01 DFeReferenciado).
@@ -139,7 +145,7 @@ namespace NFe.BLL.Configuracao.Entidades
                 enderecoRetirada = new EnderecoRetirada(nfe.infNFe.retirada);
             }
 
-            if (nfe.infNFe.retirada != null)
+            if (nfe.infNFe.infIntermed != null)
             {
                 intermediador = new Intermediador(nfe.infNFe.infIntermed);
             }
@@ -158,6 +164,7 @@ namespace NFe.BLL.Configuracao.Entidades
             EPresencaComprador = nfe.infNFe.ide.indPres.GetValueOrDefault();
             EIndicadorIntermediador = nfe.infNFe.ide.indIntermed;
             EFinalidadeNFe = nfe.infNFe.ide.finNFe;
+            TipoNotaCreditoDebito = (int?)nfe.infNFe.ide.tpNFCredito ?? (int?)nfe.infNFe.ide.tpNFDebito;
             EDestinoOperacao = nfe.infNFe.ide.idDest.GetValueOrDefault();
             IsImportacao = Destinatario?.Pessoa?.Endereco?.MunicipioEstadoSigla == Estado.EX && ETipoNFe == TipoNFe.tnEntrada;
             IsExportacao = Destinatario?.Pessoa?.Endereco?.MunicipioEstadoSigla == Estado.EX && ETipoNFe == TipoNFe.tnSaida;
@@ -168,10 +175,21 @@ namespace NFe.BLL.Configuracao.Entidades
             DadosAdicionaisFisco = nfe.infNFe.infAdic?.infAdFisco;
             DadosAdicionaisContribuinte = nfe.infNFe.infAdic?.infCpl;
             Produtos = produtos;
-            Protocolo = new Protocolo(notafiscalProcessada.protNFe.infProt);
+            // XML sem protocolo é caso válido, como diz o comentário de chaveAcessoOrigem
+            // acima: a nota fica sem protocolo em vez de estourar.
+            Protocolo = notafiscalProcessada.protNFe?.infProt == null
+                ? null
+                : new Protocolo(notafiscalProcessada.protNFe.infProt);
             FormasPagamento = pagamentos;
             DadosIntermediador = intermediador;
-            CNf = Protocolo?.ObterCNf() ?? new Random().Next(1, 99999999).ToString("00000000");
+
+            if (nfe.infNFe.ide?.gCompraGov != null)
+            {
+                CompraGovernamental = new CompraGovernamental(nfe.infNFe.ide.gCompraGov);
+            }
+
+            DocumentosReferenciados = ObterDocumentosReferenciados(nfe.infNFe.ide?.NFref);
+            CNf = Protocolo?.ObterCNf() ?? GerarCNf();
             DeveValidarValorTotalDaNfeEDuplicatas = true;
             DeveValidarDataEmissaoAtrasada = true;
         }
@@ -196,6 +214,9 @@ namespace NFe.BLL.Configuracao.Entidades
         public TipoNFe ETipoNFe { get; private set; }
 
         public Destinatario Destinatario { get; private set; }
+
+        /// <summary>gCompraGov — Grupo de compras governamentais (BB01), no nível do documento.</summary>
+        public CompraGovernamental CompraGovernamental { get; private set; }
         
         public EnderecoEntrega EnderecoEntrega { get; private set; }
         
@@ -206,6 +227,17 @@ namespace NFe.BLL.Configuracao.Entidades
         public IndicadorIntermediador? EIndicadorIntermediador { get; private set; }
 
         public FinalidadeNFe EFinalidadeNFe { get; private set; }
+
+        /// <summary>
+        /// Codigo de <c>tpNFCredito</c> (B25.1) ou <c>tpNFDebito</c> (B25.2). Qual dos dois
+        /// depende da <see cref="EFinalidadeNFe"/>: 5 e credito, 6 e debito - fora dessas
+        /// duas finalidades o campo nao existe no leiaute.
+        /// <para>UM valor, e nao dois: o lado ja esta na finalidade, e guardar o lado de novo
+        /// permitiria finalidade de credito com tipo de debito preenchido. Os codigos se
+        /// repetem com significados diferentes entre os dois enums, entao o numero nao se le
+        /// sozinho.</para>
+        /// </summary>
+        public int? TipoNotaCreditoDebito { get; private set; }
 
         public DestinoOperacao EDestinoOperacao { get; private set; }
 
@@ -278,9 +310,157 @@ namespace NFe.BLL.Configuracao.Entidades
             }
         }
 
+        private static readonly Random _geradorCNf = new Random();
+
+        /// <summary>
+        /// Gera o cNF quando a nota ainda não tem chave de acesso. O gerador é único e com
+        /// lock: <see cref="Random"/> não é thread-safe e, sem semente explícita, instâncias
+        /// criadas no mesmo tick repetem a sequência — duas notas montadas juntas sairiam
+        /// com o mesmo cNF.
+        /// </summary>
+        private static string GerarCNf()
+        {
+            lock (_geradorCNf)
+            {
+                return _geradorCNf.Next(1, 99999999).ToString("00000000");
+            }
+        }
+
         public static ISet<PresencaComprador> IntermediadorObrigadorio = new HashSet<PresencaComprador>()
         {
              PresencaComprador.pcInternet, PresencaComprador.pcTeleatendimento, PresencaComprador.pcEntregaDomicilio, PresencaComprador.pcOutros
         };
+
+        /// <summary>
+        /// Le ide/NFref de volta para as entidades. Antes o construtor de leitura nao
+        /// preenchia DocumentosReferenciados: a referencia entrava por um caminho e nao
+        /// voltava pelo outro, logo quem lia um XML autorizado perdia o grupo BA.
+        /// <para><b>Ler tolera, emitir recusa.</b> A referencia que nao monta e PULADA, e nao
+        /// estoura: este construtor tambem le XML de TERCEIRO - NFeEntradaOperacoes usa ele
+        /// na importacao de NF-e de entrada, na devolucao, na transferencia de estoque e na
+        /// complementar por XML - e derrubar a importacao por causa de uma referencia que
+        /// ninguem consome seria trocar um dado inutil por uma tela que nao abre. Quem
+        /// recusa chave invalida e o construtor da entidade, no caminho da emissao, que e
+        /// onde o XML e NOSSO.</para>
+        /// </summary>
+        private static List<DocumentoReferenciado> ObterDocumentosReferenciados(List<Classes.Informacoes.Identificacao.NFref> nFref)
+        {
+            var documentosReferenciados = new List<DocumentoReferenciado>();
+
+            if (nFref == null)
+            {
+                return documentosReferenciados;
+            }
+
+            foreach (var referencia in nFref)
+            {
+                if (!string.IsNullOrWhiteSpace(referencia.refNFe))
+                {
+                    AdicionarReferenciaPorChave(documentosReferenciados, referencia.refNFe,
+                        Enums.EDocumentoReferenciado.NFe);
+                }
+                else if (!string.IsNullOrWhiteSpace(referencia.refNFeSig))
+                {
+                    AdicionarReferenciaPorChave(documentosReferenciados, referencia.refNFeSig,
+                        Enums.EDocumentoReferenciado.NFeSigilosa);
+                }
+                else if (!string.IsNullOrWhiteSpace(referencia.refCTe))
+                {
+                    AdicionarReferenciaPorChave(documentosReferenciados, referencia.refCTe,
+                        Enums.EDocumentoReferenciado.CTe);
+                }
+                else if (referencia.refNF != null)
+                {
+                    var dataEmissao = ObterDataDeEmissaoReferenciada(referencia.refNF.AAMM);
+
+                    if (dataEmissao.HasValue)
+                    {
+                        documentosReferenciados.Add(new DocumentoReferenciadoNF(dataEmissao: dataEmissao.Value,
+                            emitenteCNPJ: referencia.refNF.CNPJ,
+                            emitenteUF: referencia.refNF.cUF,
+                            serie: referencia.refNF.serie,
+                            numeroNotaFiscal: referencia.refNF.nNF));
+                    }
+                }
+                else if (referencia.refECF != null)
+                {
+                    documentosReferenciados.Add(new DocumentoReferenciadoECF(
+                        numeroECF: referencia.refECF.nECF,
+                        numeroCOO: referencia.refECF.nCOO));
+                }
+                else if (referencia.refNFP != null)
+                {
+                    var dataEmissao = ObterDataDeEmissaoReferenciada(referencia.refNFP.AAMM);
+
+                    if (dataEmissao.HasValue)
+                    {
+                        AdicionarReferenciaDeProdutorRural(documentosReferenciados, referencia.refNFP, dataEmissao.Value);
+                    }
+                }
+            }
+
+            return documentosReferenciados;
+        }
+
+        /// <summary>
+        /// refNF e refNFP guardam so AAMM (BA04 e BA12); a entidade pede DateTime, entao o
+        /// dia vira o 1o. AAMM fora do padrao devolve null e a referencia e DESCARTADA:
+        /// fabricar 01/01/0001 - que volta como "0101" na reescrita - trocaria um dado
+        /// ausente por um dado errado, que e pior.
+        /// </summary>
+        private static DateTime? ObterDataDeEmissaoReferenciada(string anoMes)
+        {
+            if (DateTime.TryParseExact(anoMes, "yyMM",
+                System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.None, out DateTime dataEmissao))
+            {
+                return dataEmissao;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// refNFP exige CNPJ ou CPF, e so um dos dois. XML de terceiro com os dois campos
+        /// vazios, ou com os dois preenchidos, e descartado na LEITURA pelo mesmo motivo da
+        /// chave invalida: ler tolera, emitir recusa.
+        /// </summary>
+        private static void AdicionarReferenciaDeProdutorRural(List<DocumentoReferenciado> documentosReferenciados,
+            refNFP referencia,
+            DateTime dataEmissao)
+        {
+            try
+            {
+                documentosReferenciados.Add(new DocumentoReferenciadoNFP(dataEmissao: dataEmissao,
+                    emitenteUF: referencia.cUF,
+                    emitenteInscricaoEstadual: referencia.IE,
+                    modelo: referencia.mod,
+                    serie: referencia.serie,
+                    numeroNotaFiscal: referencia.nNF,
+                    emitenteCNPJ: referencia.CNPJ,
+                    emitenteCPF: referencia.CPF));
+            }
+            catch (ArgumentException)
+            {
+            }
+        }
+
+        /// <summary>
+        /// Chave que a entidade recusa - fora do padrao TChNFe ou com digito verificador
+        /// errado - e descartada na LEITURA. Ver a observacao em
+        /// <see cref="ObterDocumentosReferenciados"/>.
+        /// </summary>
+        private static void AdicionarReferenciaPorChave(List<DocumentoReferenciado> documentosReferenciados,
+            string chaveAcesso,
+            Enums.EDocumentoReferenciado tipoDocumento)
+        {
+            try
+            {
+                documentosReferenciados.Add(new DocumentoReferenciadoNFe(chaveAcesso, tipoDocumento));
+            }
+            catch (ArgumentException)
+            {
+            }
+        }
     }
 }

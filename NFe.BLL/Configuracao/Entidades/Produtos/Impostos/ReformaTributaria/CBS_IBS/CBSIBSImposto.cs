@@ -9,11 +9,17 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
     /// </summary>
     public class CBSIBSImposto
     {
-        public CBSIBSImposto(CSTIBSCBS cst, int classificacaoTributaria, bool isDoacao, CBSIBSGrupo cbsIbs)
+        public CBSIBSImposto(CSTIBSCBS cst,
+            int classificacaoTributaria,
+            bool isDoacao,
+            CBSIBSGrupo cbsIbs,
+            CBSIBSGrupoEstornoCredito grupoEstornoCredito = null)
         {
             Cst = cst;
             ClassificacaoTributaria = classificacaoTributaria.ToString("D6");
+            IsDoacao = isDoacao;
             CbsIbs = cbsIbs;
+            GrupoEstornoCredito = grupoEstornoCredito;
         }
 
         public CBSIBSImposto(IBSCBS ibsCbs)
@@ -25,14 +31,19 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
 
             Cst = ibsCbs.CST;
             ClassificacaoTributaria = ibsCbs.cClassTrib;
+            IsDoacao = ibsCbs.indDoacao == "1";
             CbsIbs = new CBSIBSGrupo(ibsCbs);
+
+            if (ibsCbs.gEstornoCred != null)
+            {
+                GrupoEstornoCredito = new CBSIBSGrupoEstornoCredito(estornoCredito: ibsCbs.gEstornoCred);
+            }
         }
 
-        /// <summary>cClassTrib - Código de Situação Tributária do IBS e CBS (UB13)
-        /// Utilizar tabela CÓDIGO DE CLASSIFICAÇÃO TRIBUTÁRIA DO IBS E DA CBS</summary>
+        /// <summary>CST - Código de Situação Tributária do IBS e CBS (UB13)</summary>
         public CSTIBSCBS Cst { get; }
 
-        /// <summary>CST - Código de Classificação Tributária do IBS e CBS (UB14)
+        /// <summary>cClassTrib - Código de Classificação Tributária do IBS e CBS (UB14)
         /// Utilizar tabela CÓDIGO DE CLASSIFICAÇÃO TRIBUTÁRIA DO IBS E DA CBS</summary>
         public string ClassificacaoTributaria { get; }
 
@@ -42,5 +53,9 @@ namespace NFe.BLL.Configuracao.Entidades.Produtos.Impostos.ReformaTributaria.CBS
 
         /// <summary>Tag: IBSCBS/gIBSCBS (UB15)</summary>
         public CBSIBSGrupo CbsIbs { get; }
+
+        /// <summary>gEstornoCred — Estorno de crédito do IBS e da CBS (UB119).
+        /// Irmão opcional do xs:choice em TTribNFe, logo convive com qualquer grupo da operação.</summary>
+        public CBSIBSGrupoEstornoCredito GrupoEstornoCredito { get; }
     }
 }
