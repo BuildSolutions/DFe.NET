@@ -342,6 +342,19 @@ namespace NFe.BLL
                 NFref = GetNFRef(NotaFiscal.DocumentosReferenciados)
             };
 
+            // B25.1/B25.2. Sem o tipo, a nota de credito e a de debito levam rejeicao 1202 -
+            // "cClassTrib incompativel com a finalidade da nota ou com o tipo de Nota de
+            // Debito ou Credito". O lado vem do finNFe, e os dois enums numeram pelo leiaute,
+            // igual a FinalidadeNFe: por isso e cast, nao switch.
+            if (finNFe == FinalidadeNFe.fnNotaCredito)
+            {
+                ide.tpNFCredito = (TipoNFeCredito?)NotaFiscal.TipoNotaCreditoDebito;
+            }
+            else if (finNFe == FinalidadeNFe.fnNotaDebito)
+            {
+                ide.tpNFDebito = (TipoNFeDebito?)NotaFiscal.TipoNotaCreditoDebito;
+            }
+
             if (indIntermed.EValido())
             {
                 ide.indIntermed = indIntermed;
@@ -928,7 +941,9 @@ namespace NFe.BLL
                 nItem = nItem,
                 prod = GetProduto(item),
                 imposto = GetProdutoImposto(item),
-                impostoDevol = GetProdutoImpostoDevolucao(item.Impostos.IPI),
+                impostoDevol = _levaImpostoDoRegimeAntigo()
+                    ? GetProdutoImpostoDevolucao(item.Impostos.IPI)
+                    : null,
                 infAdProd = GetProdutoIndAdProd(item),
                 DFeReferenciado = GetDFeReferenciado(item),
             };
@@ -1063,8 +1078,87 @@ namespace NFe.BLL
             return item.IBPTValor;
         }
 
+        /// <summary>
+        /// NF-e de credito (<c>finNFe = 5</c>) e de debito (<c>6</c>) <b>nao levam os grupos de
+        /// imposto do regime antigo</b> - ICMS, ICMSUFDest, IPI, II, PIS, COFINS e o
+        /// <c>impostoDevol</c>. Regra <b>B25-80</b>, rejeicao <b>1001</b>: o grupo e recusado
+        /// mesmo zerado, entao tem de ficar FORA do XML, nao ir com zero.
+        /// <para>O <c>IBSCBS</c> continua: e o motivo da nota. O <c>cClassTrib</c> 800xxx
+        /// (transferencia de credito) e 811xxx (ajustes) mora nele, e e ele que a rejeicao
+        /// <b>1202</b> cobra junto do <c>tpNFCredito</c>/<c>tpNFDebito</c>.</para>
+        /// <para><b>Quatro tipos sao excecao</b>, porque neles a mercadoria CIRCULA: credito
+        /// <c>03</c> (retorno por recusa total), <c>04</c> (reducao de valores) e <c>06</c>
+        /// (retorno por recusa parcial), e debito <c>07</c> (perda em estoque). Nesses o imposto
+        /// antigo continua saindo - por isso a decisao depende do TIPO, nao so da finalidade.</para>
+        /// <para>Esta e a resposta unica a pergunta: os grupos do item, o <c>impostoDevol</c> e
+        /// os totais do regime antigo no <c>ICMSTot</c> perguntam todos aqui. Governar so o item
+        /// deixaria total sem item correspondente, e o total tem de bater com a soma dos itens.</para>
+        /// <para>O <c>vTotTrib</c> sai junto, por ser valor de imposto e a regra falar em nao
+        /// levar imposto. Se algum dia a SEFAZ cobrar o campo nestas duas finalidades, a
+        /// rejeicao nomeia o campo - diferente da 1001, que so diz que o grupo nao e admitido.</para>
+        /// </summary>
+        /// <summary>
+        /// Nota de credito (<c>finNFe = 5</c>) ou de debito (<c>6</c>). Tres decisoes dependem
+        /// disto e precisam concordar: os grupos de imposto do item e os totais
+        /// (<see cref="FinalidadeLevaImpostoDoRegimeAntigo"/>), o <c>pag</c> e o <c>cobr</c>.
+        /// </summary>
+        public static bool EhNotaDeCreditoOuDebito(FinalidadeNFe finNFe)
+        {
+            return finNFe == FinalidadeNFe.fnNotaCredito
+                || finNFe == FinalidadeNFe.fnNotaDebito;
+        }
+
+        public static bool FinalidadeLevaImpostoDoRegimeAntigo(FinalidadeNFe finNFe, int? tipoNotaCreditoDebito)
+        {
+            if (finNFe == FinalidadeNFe.fnNotaCredito)
+            {
+                return tipoNotaCreditoDebito == (int)TipoNFeCredito.tcRetornoRecusaNaoLocalizacaoEntrega
+                    || tipoNotaCreditoDebito == (int)TipoNFeCredito.tcReducaoValores
+                    || tipoNotaCreditoDebito == (int)TipoNFeCredito.tcRetornoRecusaParcialEntrega;
+            }
+
+            if (finNFe == FinalidadeNFe.fnNotaDebito)
+            {
+                return tipoNotaCreditoDebito == (int)TipoNFeDebito.tdPerdaEmEstoque;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Atalho para quem ja tem a nota em mao - o <see cref="NotaFiscal"/> desta instancia.
+        /// </summary>
+        private bool _levaImpostoDoRegimeAntigo()
+        {
+            return FinalidadeLevaImpostoDoRegimeAntigo(NotaFiscal.EFinalidadeNFe,
+                NotaFiscal.TipoNotaCreditoDebito);
+        }
+
+        /// <summary>
+        /// O <c>vNF</c> da nota que nao leva imposto do regime antigo. Ele vinha do total
+        /// calculado no banco, que SOMA os impostos zerados pela B25-80: a <b>W16-10</b> refaz a
+        /// conta com o que esta no XML, e sobra rejeicao <b>610</b> - "Total da NF-e difere do
+        /// somatorio dos valores que compoem o valor total". Exemplo: produto 100 + IPI 10 grava
+        /// <c>vNF</c> 110 com <c>vIPI</c> 0 no XML.
+        /// <para>E a conta da propria W16-10, com as parcelas zeradas valendo zero. O
+        /// <c>vICMSDeson</c> nao aparece porque o <c>vDesc</c> montado aqui ja o inclui.</para>
+        /// </summary>
+        public static decimal TotalDaNotaSemImpostoDoRegimeAntigo(decimal vProd, decimal vDesc,
+            decimal vFrete, decimal vSeg, decimal vOutro)
+        {
+            return vProd - vDesc + vFrete + vSeg + vOutro;
+        }
+
         private imposto GetProdutoImposto(Produto item)
         {
+            if (!_levaImpostoDoRegimeAntigo())
+            {
+                return new imposto
+                {
+                    IBSCBS = GetProdutoCBSIBS(item.Impostos.CBSIBS)
+                };
+            }
+
             return new imposto
             {
                 vTotTrib = GetImpostoVTotTrib(item),
@@ -2728,6 +2822,36 @@ namespace NFe.BLL
                 vIPIDevol = NotaFiscal.Total.TotalizadorICMS.IPI;
             }
 
+            // Os totais acompanham os ITENS. Com os grupos do regime antigo fora do item
+            // (B25-80, rejeicao 1001), um vICMS ou vPIS diferente de zero aqui seria total
+            // sem item que o componha - e o total tem de bater com a soma dos itens.
+            //
+            // ZERA, nao omite: o ICMSTot e obrigatorio no leiaute e os campos dele tambem.
+            // Os valores do DOCUMENTO ficam: vProd, vFrete, vSeg, vDesc e vOutro nao sao
+            // imposto. O vNF e recalculado logo abaixo, porque ele SOMA imposto.
+            if (!_levaImpostoDoRegimeAntigo())
+            {
+                vICMSBC = 0;
+                vICMS = 0;
+                vICMSDeson = 0;
+                vBCST = 0;
+                vST = 0;
+                vFCPST = 0;
+                vICMSUFDest = 0;
+                vICMSUFRemet = 0;
+                vFCPUFDest = 0;
+                vII = 0;
+                vIPI = 0;
+                vIPIDevol = 0;
+                vPIS = 0;
+                vCOFINS = 0;
+                vTotTrib = 0;
+                qBCMonoRet = 0;
+                vICMSMonoRet = 0;
+
+                vNF = TotalDaNotaSemImpostoDoRegimeAntigo(vProd, vDesc, vFrete, vSeg, vOutro);
+            }
+
             return new ICMSTot
             {
                 vBC = vICMSBC,
@@ -2761,6 +2885,18 @@ namespace NFe.BLL
         private cobr GetCobranca()
         {
             if (_cfgApp.CfgServico.ModeloDocumento == ModeloDocumento.NFCe)
+            {
+                return null;
+            }
+
+            // Nota de credito e de debito saem SEM cobranca. O pag delas ja vai com
+            // fpSemPagamento e vPag = 0, e o vNF e recalculado sem os impostos do regime
+            // antigo: a fatura montada do total do banco declararia valor que a nota nao tem -
+            // produto 100 + IPI 10 dava vNF 100, vPag 0 e vLiq 110.
+            //
+            // Ajuste e devolucao continuam com cobr: o vNF deles nao e recalculado, entao a
+            // fatura fecha com o total.
+            if (EhNotaDeCreditoOuDebito(NotaFiscal.EFinalidadeNFe))
             {
                 return null;
             }
@@ -2893,8 +3029,14 @@ namespace NFe.BLL
             List<detPag> pagamentos = new List<detPag>();
             decimal? troco = null;
 
+            // Credito e debito entram aqui junto com ajuste e devolucao: sao documentos de
+            // acerto, nao tem pagamento. E o vPag precisa ser ZERO, nao o total do banco: o
+            // vNF dessas notas e recalculado sem os impostos do regime antigo
+            // (TotalDaNotaSemImpostoDoRegimeAntigo), e o ramo de baixo copiaria o total
+            // antigo para o vPag, que e justamente a divergencia que se quer evitar.
             if (NotaFiscal.EFinalidadeNFe == FinalidadeNFe.fnAjuste
-                || NotaFiscal.EFinalidadeNFe == FinalidadeNFe.fnDevolucao)
+                || NotaFiscal.EFinalidadeNFe == FinalidadeNFe.fnDevolucao
+                || EhNotaDeCreditoOuDebito(NotaFiscal.EFinalidadeNFe))
             {
                 pagamentos.Add(new detPag
                 {

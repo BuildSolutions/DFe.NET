@@ -41,7 +41,8 @@ namespace NFe.BLL.Configuracao.Entidades
             Intermediador intermediador = null,
             bool deveValidarValorTotalDaNfeEDuplicatas = true,
             bool deveValidarDataEmissaoAtrasada = true,
-            CompraGovernamental compraGovernamental = null
+            CompraGovernamental compraGovernamental = null,
+            int? tipoNotaCreditoDebito = null
             )
         {
             var emitenteUf = emitente?.Pessoa?.Endereco?.MunicipioEstadoSigla.GetValueOrDefault();
@@ -83,6 +84,7 @@ namespace NFe.BLL.Configuracao.Entidades
             DeveValidarValorTotalDaNfeEDuplicatas = deveValidarValorTotalDaNfeEDuplicatas;
             DeveValidarDataEmissaoAtrasada = deveValidarDataEmissaoAtrasada;
             CompraGovernamental = compraGovernamental;
+            TipoNotaCreditoDebito = tipoNotaCreditoDebito;
         }
 
         public NotaFiscal(Classes.nfeProc notafiscalProcessada)
@@ -162,6 +164,7 @@ namespace NFe.BLL.Configuracao.Entidades
             EPresencaComprador = nfe.infNFe.ide.indPres.GetValueOrDefault();
             EIndicadorIntermediador = nfe.infNFe.ide.indIntermed;
             EFinalidadeNFe = nfe.infNFe.ide.finNFe;
+            TipoNotaCreditoDebito = (int?)nfe.infNFe.ide.tpNFCredito ?? (int?)nfe.infNFe.ide.tpNFDebito;
             EDestinoOperacao = nfe.infNFe.ide.idDest.GetValueOrDefault();
             IsImportacao = Destinatario?.Pessoa?.Endereco?.MunicipioEstadoSigla == Estado.EX && ETipoNFe == TipoNFe.tnEntrada;
             IsExportacao = Destinatario?.Pessoa?.Endereco?.MunicipioEstadoSigla == Estado.EX && ETipoNFe == TipoNFe.tnSaida;
@@ -224,6 +227,17 @@ namespace NFe.BLL.Configuracao.Entidades
         public IndicadorIntermediador? EIndicadorIntermediador { get; private set; }
 
         public FinalidadeNFe EFinalidadeNFe { get; private set; }
+
+        /// <summary>
+        /// Codigo de <c>tpNFCredito</c> (B25.1) ou <c>tpNFDebito</c> (B25.2). Qual dos dois
+        /// depende da <see cref="EFinalidadeNFe"/>: 5 e credito, 6 e debito - fora dessas
+        /// duas finalidades o campo nao existe no leiaute.
+        /// <para>UM valor, e nao dois: o lado ja esta na finalidade, e guardar o lado de novo
+        /// permitiria finalidade de credito com tipo de debito preenchido. Os codigos se
+        /// repetem com significados diferentes entre os dois enums, entao o numero nao se le
+        /// sozinho.</para>
+        /// </summary>
+        public int? TipoNotaCreditoDebito { get; private set; }
 
         public DestinoOperacao EDestinoOperacao { get; private set; }
 

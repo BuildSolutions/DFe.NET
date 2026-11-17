@@ -15,6 +15,13 @@ namespace NFe.BLL.Validators
             RuleFor(nfe => nfe.NaturezaOperacaoDescricao).NotNull().WithMessage("Operação Fiscal não informada!");
             RuleFor(nfe => nfe.ETipoNFe).Must(tipo => tipo.EValido()).WithMessage("Tipo da NFe é inválido!");
             RuleFor(nfe => nfe.EFinalidadeNFe).Must(finalidade => finalidade.EValido()).WithMessage("Finalidade da NFe é inválido!");
+            RuleFor(nfe => nfe.TipoNotaCreditoDebito).NotNull().When(nfe => nfe.EFinalidadeNFe == Classes.Informacoes.Identificacao.Tipos.FinalidadeNFe.fnNotaCredito || nfe.EFinalidadeNFe == Classes.Informacoes.Identificacao.Tipos.FinalidadeNFe.fnNotaDebito).WithMessage("Tipo da Nota de Crédito/Débito não informado!");
+            // Credito ENTRA, debito SAI. Rejeicao 1161 confirmada em homologacao em 16/11/2026
+            // (finNFe 5 transmitida como saida); a 1162 e o par dela, para o debito. A recusa
+            // tambem esta na tela de NF-e, onde a mensagem aponta o cadastro da operacao
+            // fiscal; aqui ela cobre quem emite por outro caminho.
+            RuleFor(nfe => nfe.ETipoNFe).Equal(Classes.Informacoes.Identificacao.Tipos.TipoNFe.tnEntrada).When(nfe => nfe.EFinalidadeNFe == Classes.Informacoes.Identificacao.Tipos.FinalidadeNFe.fnNotaCredito).WithMessage("NF-e de Crédito tem de ser de ENTRADA (tpNF 0)!");
+            RuleFor(nfe => nfe.ETipoNFe).Equal(Classes.Informacoes.Identificacao.Tipos.TipoNFe.tnSaida).When(nfe => nfe.EFinalidadeNFe == Classes.Informacoes.Identificacao.Tipos.FinalidadeNFe.fnNotaDebito).WithMessage("NF-e de Débito tem de ser de SAÍDA (tpNF 1)!");
             RuleFor(nfe => nfe.EPresencaComprador).Must(indPres => indPres.EValido()).WithMessage("Indicador de Presença do Comprador da NFe é inválido!");
             //RuleFor(nfe => nfe.EIndicadorIntermediador).Null().When(indPres => !NotaFiscal.IntermediadorObrigadorio.Contains(indPres.EPresencaComprador)).WithMessage("Indicador de Intermediador Obrigatório para os tipos de intermediário (2, 3, 4, 9)!");
             //RuleFor(nfe => nfe.EIndicadorIntermediador).NotNull().When(indPres => NotaFiscal.IntermediadorObrigadorio.Contains(indPres.EPresencaComprador)).WithMessage("Indicador de Intermediador Obrigatório para os tipos de intermediário (2, 3, 4, 9)!");
