@@ -8,13 +8,18 @@ namespace NFe.BLL.Validators
 {
     public class DestinatarioValidator : AbstractValidator<Destinatario>
     {
-        public DestinatarioValidator()
+        /// <summary>
+        /// <paramref name="isNFCe"/> vem do modelo do documento e chega ate o PessoaValidator, que usa o
+        /// indicador para dispensar a IE do destinatario na NFC-e. O padrao false mantem o comportamento
+        /// de quem valida NF-e e GNRE.
+        /// </summary>
+        public DestinatarioValidator(bool isNFCe = false)
         {
             RuleFor(destinatario => destinatario.SuframaNumero).NotEmpty().When(destinatario => destinatario.IsSuframa).WithMessage("Destinatário informado com suframa e código suframa não informado!");
             RuleFor(destinatario => destinatario.EConsumidorFinal).Must(consumidorFinal => consumidorFinal.EValido()).WithMessage("Destinatário (Enum)Consumidor Final é inválido!");
             RuleFor(destinatario => destinatario.Pessoa).NotNull().WithMessage("Destinatário dados não informado!").DependentRules(() =>
              {
-                 RuleFor(destinatario => destinatario.Pessoa).SetValidator(new PessoaValidator(Enums.EPessoa.Destinatario));
+                 RuleFor(destinatario => destinatario.Pessoa).SetValidator(new PessoaValidator(Enums.EPessoa.Destinatario, isNFCe));
                  RuleFor(destinatario => destinatario.EConsumidorFinal).Equal(ConsumidorFinal.cfConsumidorFinal).When(destinatario => destinatario.Pessoa.InscricaoEstadualIsento && !_isEstrangeiro(destinatario.Pessoa.Endereco?.MunicipioEstadoSigla)).WithMessage($"Destinatário com IE isenta não foi informado como consumidor final!");
              });
         }
